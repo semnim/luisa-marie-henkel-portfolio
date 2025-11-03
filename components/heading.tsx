@@ -20,7 +20,7 @@ export const Heading = ({
     HERO: {
       title: 'text-5xl tracking-heading uppercase font-light',
       subtitle:
-        'text-lg tracking-subheading text-muted-foreground uppercase font-light',
+        'text-md mt-4 tracking-heading text-muted-foreground uppercase font-light',
     },
     DEFAULT: {
       title: 'text-3xl text-center font-light tracking-heading',
