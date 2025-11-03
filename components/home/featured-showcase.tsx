@@ -1,3 +1,4 @@
+import { createSlugForWorkItem } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -37,7 +38,7 @@ export const FeaturedShowcase = () => {
               : ''
           }`}
           key={index}
-          href="/"
+          href={`/work/${createSlugForWorkItem(item.title)}`}
         >
           <figure className="flex flex-1">
             <Image
