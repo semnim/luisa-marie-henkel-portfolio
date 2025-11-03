@@ -7,13 +7,7 @@ const DimmedOverlay = () => {
     <div className="absolute inset-0 bg-radial from-transparent to-black/75" />
   );
 };
-const ChildContainer = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="relative z-10 text-center h-full flex flex-col items-center justify-center">
-      {children}
-    </div>
-  );
-};
+
 export const BackgroundVideo = ({ children, url }: Props) => {
   return (
     <>
@@ -27,7 +21,6 @@ export const BackgroundVideo = ({ children, url }: Props) => {
       >
         <source src={url} type="video/mp4" />
       </video>
-      <ChildContainer>{children}</ChildContainer>
       {children}
     </>
   );

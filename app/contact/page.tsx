@@ -16,7 +16,11 @@ export default function ContactPage() {
     <Container>
       <Section variant="HERO">
         <BackgroundVideo url="/assets/hero_bg_falls_2.mp4">
-          <Heading title="REACH OUT" context={<ContactInfo />} />
+          <Heading
+            title="REACH OUT"
+            context={<ContactInfo />}
+            containerClassName="h-full"
+          />
         </BackgroundVideo>
       </Section>
     </Container>

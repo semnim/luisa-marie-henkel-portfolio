@@ -29,12 +29,13 @@ export default function Home() {
               variant="HERO"
               title="Luisa-Marie Henkel"
               subtitle="Art Director & Stylist"
+              containerClassName="h-full"
             />
           </BackgroundVideo>
         </Suspense>
       </Section>
       <Section>
-        <Heading secondary title="FEATURED" />
+        <Heading secondary title="FEATURED" subtitle="SELECTED PROJECTS" />
         <FeaturedShowcase />
       </Section>
     </Container>

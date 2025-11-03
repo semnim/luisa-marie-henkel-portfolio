@@ -1,9 +1,12 @@
+import { cn } from '@/lib/utils';
+
 type Props = {
   title: string;
   subtitle?: string;
   context?: React.ReactNode;
   secondary?: boolean;
   variant?: 'DEFAULT' | 'HERO' | 'CARD';
+  containerClassName?: string;
 };
 export const Heading = ({
   title,
@@ -11,6 +14,7 @@ export const Heading = ({
   context,
   secondary,
   variant = 'DEFAULT',
+  containerClassName,
 }: Props) => {
   const variants = {
     HERO: {
@@ -19,8 +23,9 @@ export const Heading = ({
         'text-lg tracking-subheading text-muted-foreground uppercase font-light',
     },
     DEFAULT: {
-      title: 'text-3xl text-center font-light tracking-subheading',
-      subtitle: '',
+      title: 'text-3xl text-center font-light tracking-heading',
+      subtitle:
+        'text-lg tracking-subheading text-muted-foreground uppercase font-light',
     },
     CARD: {
       title:
@@ -44,10 +49,15 @@ export const Heading = ({
 
   const Component = secondary ? 'h2' : 'h1';
   return (
-    <>
+    <div
+      className={cn(
+        'relative z-10 text-center flex flex-col items-center justify-center',
+        containerClassName
+      )}
+    >
       <Component className={variants[variant].title}>{title}</Component>
       <p className={variants[variant].subtitle}>{subtitle}</p>
       {context}
-    </>
+    </div>
   );
 };
