@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
-        <header className="absolute inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 py-4">
+        <header className="absolute inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 py-4 bg-linear-to-b from-black/75 to-transparent h-25">
           <MobileDrawer triggerClassName="md:hidden" />
           <DesktopNavMenu className="hidden md:flex" />
         </header>

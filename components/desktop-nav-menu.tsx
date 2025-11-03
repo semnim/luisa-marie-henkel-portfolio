@@ -10,7 +10,7 @@ export const DesktopNavMenu = ({ className }: Props) => {
   return (
     <nav
       className={cn(
-        'flex-1 max-w-md mx-auto pt-4 justify-between uppercase',
+        'flex-1 max-w-md mx-auto justify-between uppercase',
         className
       )}
     >
