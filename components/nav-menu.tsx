@@ -3,14 +3,14 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 type Props = {
-  className: string;
+  className?: string;
 };
 
-export const DesktopNavMenu = ({ className }: Props) => {
+export const NavMenu = ({ className }: Props) => {
   return (
     <nav
       className={cn(
-        'flex-1 max-w-md mx-auto justify-between uppercase',
+        'flex-1 max-w-md mx-auto justify-between uppercase flex',
         className
       )}
     >

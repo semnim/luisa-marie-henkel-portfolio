@@ -1,5 +1,5 @@
 'use client';
-import { DesktopNavMenu } from '@/components/desktop-nav-menu';
+import { NavMenu } from '@/components/nav-menu';
 import './globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
-        <header className="bottom-0 md:top-0 absolute inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 md:px-8 py-4 bg-linear-to-t md:bg-linear-to-b from-black/75 to-transparent h-10 md:h-25">
-          <DesktopNavMenu className="flex" />
+        <header className="bottom-0 lg:top-0 absolute inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 lg:px-8 py-4 bg-linear-to-t lg:bg-linear-to-b from-black/75 to-transparent h-10 lg:h-25">
+          <NavMenu />
         </header>
         <ThemeProvider
           attribute="class"
