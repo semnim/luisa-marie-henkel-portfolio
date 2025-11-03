@@ -6,7 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function createSlugForWorkItem(title: string) {
-  return title.split(' ').join('-');
+  return title
+    .split(' ')
+    .map((item) => item.toLowerCase())
+    .join('-');
 }
 
 export function getWorkItemTitleFromSlug(title: string) {

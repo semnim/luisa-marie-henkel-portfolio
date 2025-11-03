@@ -4,22 +4,22 @@ import Link from 'next/link';
 
 const PLACEHOLDER_IMAGES = [
   {
-    src: '/placeholders/1/1.jpg',
+    src: '/placeholders/1/1.webp',
     title: 'Been Down For So Long',
     type: 'EDITORIAL',
   },
   {
-    src: '/placeholders/2/1.JPG',
+    src: '/placeholders/2/1.webp',
     title: 'Lonely At The Top',
     type: 'COMMERCIAL',
   },
   {
-    src: '/placeholders/3/1.JPG',
+    src: '/placeholders/3/1.webp',
     title: 'Madame Rêve',
     type: 'EDITORIAL',
   },
   {
-    src: '/placeholders/4/1.JPG',
+    src: '/placeholders/4/1.webp',
     title: 'Fading Ties',
     type: 'COMMERCIAL',
   },

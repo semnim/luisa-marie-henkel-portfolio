@@ -21,6 +21,7 @@ export default function Home() {
               src="/assets/hero_fallback.webp"
               alt="background video fallback image for hero"
               width={5851}
+              height={3901}
             />
           }
         >
