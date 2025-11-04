@@ -1,12 +1,15 @@
+'use client';
 import { routes } from '@/lib/routes';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type Props = {
   className?: string;
 };
 
 export const NavMenu = ({ className }: Props) => {
+  const pathname = usePathname();
   return (
     <nav
       className={cn(
@@ -15,9 +18,16 @@ export const NavMenu = ({ className }: Props) => {
       )}
     >
       {routes.map((route) => (
-        <Link key={route.id} className="hover:text-foreground" href={route.url}>
-          {route.id}
-        </Link>
+        <div key={route.id} className="relative">
+          <Link
+            className={`hover:text-foreground ${
+              pathname === route.url ? 'text-foreground' : ''
+            }`}
+            href={route.url}
+          >
+            {route.id}
+          </Link>
+        </div>
       ))}
     </nav>
   );
