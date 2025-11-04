@@ -64,7 +64,7 @@ export const ContactInfoList = () => {
 
   return (
     <>
-      <div className="text-lg tracking-[0.25rem] flex items-start pt-4 gap-4 font-light">
+      <div className="text-lg tracking-item-subheading flex items-start pt-4 gap-4 font-light">
         {SOCIAL_ITEMS.map((item) => {
           const Icon = ICONS[item];
           return (

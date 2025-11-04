@@ -10,7 +10,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <Container>
-      <Section>
+      <Section className="pt-8 pb-8 lg:pb-16 lg:pt-32">
         <Heading title="BACKGROUND" />
       </Section>
     </Container>

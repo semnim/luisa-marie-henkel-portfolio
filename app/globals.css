@@ -41,8 +41,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --tracking-heading: 0.5rem;
-  --tracking-subheading: 0.75rem;
+  --tracking-hero-heading: 0.5rem;
+  --tracking-hero-subheading: 0.75rem;
+  --tracking-item-heading: 0.1rem;
+  --tracking-item-subheading: 0.2rem;
 }
 
 :root {

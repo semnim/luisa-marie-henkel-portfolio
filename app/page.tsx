@@ -35,7 +35,7 @@ export default function Home() {
           </BackgroundVideo>
         </Suspense>
       </Section>
-      <Section>
+      <Section className="pt-8 pb-8 lg:pb-16 lg:pt-32">
         <Heading secondary title="FEATURED" subtitle="SELECTED PROJECTS" />
         <FeaturedShowcase />
       </Section>

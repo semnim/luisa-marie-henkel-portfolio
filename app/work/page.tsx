@@ -1,15 +1,13 @@
-'use client';
 import { Container } from '@/components/container';
 import { Heading } from '@/components/heading';
 import { Section } from '@/components/section';
-import { useIsMobile } from '@/hooks/use-is-mobile';
 import { createSlugForWorkItem } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-// export const metadata = {
-//   title: 'Work | Luisa-Marie Henkel',
-//   description: 'Art director & Stylist portfolio',
-// };
+export const metadata = {
+  title: 'Work | Luisa-Marie Henkel',
+  description: 'Art director & Stylist portfolio',
+};
 
 const PROJECTS = [
   {
@@ -41,14 +39,14 @@ const PROJECTS = [
   // null,
 ];
 export default function WorkPage() {
-  // container heading: bg-transparent absolute top-0 top-0 left-0 right-0 lg:pt-20 pt-8
-  const isMobile = useIsMobile();
-
   return (
-    <Container disableScrollSnap>
-      <Heading title="PROJECTS" containerClassName="fixed top-20 inset-x-0" />
-      <Section className="overflow-y-scroll max-h-dvh snap-y snap-mandatory pt-0 lg:pt-32">
-        <div className="grid grid-cols-1 lg:grid-cols-3 relative">
+    <Container disableScroll disableScrollSnap>
+      <Heading
+        title="PROJECTS"
+        containerClassName="fixed top-8 lg:top-32 inset-x-0"
+      />
+      <Section className="overflow-y-scroll max-h-dvh snap-y snap-mandatory lg:pt-64 lg:overflow-y-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 relative lg:overflow-y-scroll">
           {PROJECTS.map((item, index) => {
             if (item === null) {
               return <div className="h-0" key={'empty' + index} />;
@@ -69,13 +67,8 @@ export default function WorkPage() {
                     fill
                     className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
                   />
-                  <figcaption className="absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-center items-center h-full bg-radial from-transparent to-black/50">
-                    <p className="font-bold text-xl w-full px-4 text-center flex items-start justify-center pt-4 lg:pt-8">
-                      {item.title}
-                    </p>
-                    {/* <span className="text-xs font-light text-foreground lowercase tracking-[0.2rem]">
-                    {item.type}
-                  </span> */}
+                  <figcaption className="backdrop-brightness-75 absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-center items-center h-full">
+                    <Heading variant="ITEM" title={item.title} />
                   </figcaption>
                 </figure>
               </Link>

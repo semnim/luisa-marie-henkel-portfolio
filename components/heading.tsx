@@ -5,7 +5,7 @@ type Props = {
   subtitle?: string;
   context?: React.ReactNode;
   secondary?: boolean;
-  variant?: 'DEFAULT' | 'HERO' | 'CARD';
+  variant?: 'SECTION' | 'HERO' | 'ITEM';
   containerClassName?: string;
 };
 export const Heading = ({
@@ -13,37 +13,37 @@ export const Heading = ({
   subtitle,
   context,
   secondary,
-  variant = 'DEFAULT',
+  variant = 'SECTION',
   containerClassName,
 }: Props) => {
   const variants = {
     HERO: {
-      title: 'text-5xl tracking-heading uppercase font-light',
+      title: 'text-5xl tracking-hero-heading uppercase font-light',
       subtitle:
-        'text-md mt-4 tracking-heading text-muted-foreground uppercase font-light',
+        'text-md mt-4 tracking-hero-heading text-muted-foreground uppercase font-light',
     },
-    DEFAULT: {
-      title: 'text-3xl text-center font-light tracking-heading',
+    SECTION: {
+      title: 'text-3xl text-center font-light tracking-hero-heading uppercase',
       subtitle:
-        'text-lg tracking-subheading text-muted-foreground uppercase font-light',
+        'text-xs tracking-item-subheading text-muted-foreground uppercase font-light mt-2',
     },
-    CARD: {
+    ITEM: {
       title:
-        'font-bold text-xl w-full px-4 text-center flex items-start justify-center pt-4 lg:pt-8',
+        'text-xl w-full px-4 text-center flex items-start justify-center tracking-item-heading',
       subtitle:
-        'text-xs font-light text-foreground lowercase tracking-[0.2rem]',
+        'text-xs font-light text-foreground lowercase tracking-item-subheading mt-1',
     },
   };
 
-  if (variant === 'CARD') {
+  if (variant === 'ITEM') {
     return (
-      <>
+      <div className={cn(containerClassName, 'text-center z-20')}>
         <p className={variants[variant].title}>{title}</p>
         {subtitle && (
           <span className={variants[variant].subtitle}>{subtitle}</span>
         )}
         {context}
-      </>
+      </div>
     );
   }
 
