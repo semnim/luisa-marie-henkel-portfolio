@@ -29,7 +29,7 @@ export const Heading = ({
     },
     ITEM: {
       title:
-        'text-xl w-full px-4 text-center flex items-start justify-center tracking-item-heading',
+        'text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading',
       subtitle:
         'text-xs font-light text-foreground lowercase tracking-item-subheading mt-1',
     },

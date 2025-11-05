@@ -2,6 +2,7 @@ import { Container } from '@/components/container';
 import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
 import { Section } from '@/components/section';
+import { MasonryGrid } from '@/components/work/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import Link from 'next/link';
 import { fetchProjects } from './actions';
@@ -13,13 +14,13 @@ export const metadata = {
 export default async function WorkPage() {
   const projects = await fetchProjects();
   return (
-    <Container disableScroll disableScrollSnap>
+    <Container disableScrollSnap disableScroll>
       <Heading
         title="PROJECTS"
-        containerClassName="fixed top-8 lg:top-32 inset-x-0"
+        containerClassName="fixed inset-x-0 md:relative pt-8 lg:pt-32 lg:pb-8"
       />
-      <Section className="overflow-y-scroll max-h-dvh snap-y snap-mandatory lg:pt-64 lg:overflow-y-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-3 relative lg:overflow-y-scroll">
+      <Section className="overflow-y-scroll md:overflow-y-hidden max-h-dvh snap-y snap-mandatory md:snap-none md:hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 relative">
           {projects.map((item, index) => {
             if (item === null) {
               return <div className="h-0" key={'empty' + index} />;
@@ -48,6 +49,20 @@ export default async function WorkPage() {
             );
           })}
         </div>
+      </Section>
+      <Section>
+        <MasonryGrid
+          images={projects.map((project) => ({
+            id: project.id,
+            publicId: project.thumbnailPublicId,
+            imageUrl: project.thumbnailUrl,
+            width: null,
+            height: null,
+            title: project.title,
+          }))}
+          title={'Projects'}
+        />
+        )
       </Section>
     </Container>
   );

@@ -30,10 +30,10 @@ const FEATURED_IMAGES = [
 
 export const FeaturedShowcase = () => {
   return (
-    <div className="max-w-screen min-h-0 flex flex-col lg:flex-row flex-1 py-8">
+    <div className="max-w-screen min-h-0 grid grid-cols-2 lg:flex lg:flex-row flex-1 py-8">
       {FEATURED_IMAGES.map((item, index) => (
         <Link
-          className={`group relative overflow-hidden aspect-square flex flex-1 lg:max-h-full`}
+          className={`group relative overflow-hidden flex flex-1 lg:max-h-full`}
           key={index}
           href={`/work/${createSlugFromProjectTitle(item.title)}`}
         >
@@ -42,7 +42,7 @@ export const FeaturedShowcase = () => {
               src={item.publicId}
               alt={item.title}
               fill
-              className="object-cover object-[0%_10%] md:object-[0%_10%] lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
+              className="object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
             />
             <figcaption className="absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center h-50 bg-linear-to-b from-black/75 to-transparent mb-auto">
               <Heading
