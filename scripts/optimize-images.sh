@@ -2,8 +2,8 @@
 
 set -e
 
-SOURCE_DIR="source_images"
-OUTPUT_DIR="optimized_images"
+SOURCE_DIR="resources/images/uncompressed"
+OUTPUT_DIR="resources/images/compressed"
 
 # Check if source directory exists
 if [ ! -d "$SOURCE_DIR" ]; then
