@@ -1,35 +1,37 @@
-import { createSlugFromProjectTitle } from '@/lib/utils';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Heading } from '../heading';
+'use client';
 
-const PLACEHOLDER_IMAGES = [
+import { Heading } from '@/components/heading';
+import { Image } from '@/components/image';
+import { createSlugFromProjectTitle } from '@/lib/utils';
+import Link from 'next/link';
+
+const FEATURED_IMAGES = [
   {
-    src: '/placeholders/1/1.webp',
-    title: 'Been Down For So Long',
+    publicId: '5_qtexvy',
+    title: 'fading ties',
     type: 'EDITORIAL',
   },
   {
-    src: '/placeholders/2/1.webp',
-    title: 'Lonely At The Top',
-    type: 'COMMERCIAL',
-  },
-  {
-    src: '/placeholders/3/1.webp',
-    title: 'Madame Rêve',
+    publicId: 'thumbnail_iw3lif',
+    title: 'party',
     type: 'EDITORIAL',
   },
   {
-    src: '/placeholders/4/1.webp',
-    title: 'Fading Ties',
-    type: 'COMMERCIAL',
+    publicId: 'thumbnail_sgkqnb',
+    title: 'mythical creature',
+    type: 'EDITORIAL',
+  },
+  {
+    publicId: 'thumbnail_candidate_1_qejy52',
+    title: 'tangled manners',
+    type: 'EDITORIAL',
   },
 ];
 
 export const FeaturedShowcase = () => {
   return (
     <div className="max-w-screen min-h-0 flex flex-col lg:flex-row flex-1 py-8">
-      {PLACEHOLDER_IMAGES.map((item, index) => (
+      {FEATURED_IMAGES.map((item, index) => (
         <Link
           className={`group relative overflow-hidden aspect-square flex flex-1 lg:max-h-full`}
           key={index}
@@ -37,10 +39,10 @@ export const FeaturedShowcase = () => {
         >
           <figure className="flex flex-1">
             <Image
-              src={item.src}
+              src={item.publicId}
               alt={item.title}
               fill
-              className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
+              className="object-cover object-top sm:object-[0%_10%] md:object-[0%_10%] lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
             />
             <figcaption className="absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center h-50 bg-linear-to-b from-black/75 to-transparent mb-auto">
               <Heading

@@ -16,7 +16,7 @@ export default async function DetailPage({
   const { slug } = await params;
   return (
     <Container>
-      <Section>
+      <Section className="pt-8 pb-8 lg:pb-16 lg:pt-32">
         <Heading title={decodeURI(getProjectTitleFromSlug(slug))} />
       </Section>
     </Container>
