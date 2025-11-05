@@ -42,7 +42,7 @@ export const FeaturedShowcase = () => {
               src={item.publicId}
               alt={item.title}
               fill
-              className="object-cover object-top sm:object-[0%_10%] md:object-[0%_10%] lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
+              className="object-cover object-[0%_10%] md:object-[0%_10%] lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
             />
             <figcaption className="absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center h-50 bg-linear-to-b from-black/75 to-transparent mb-auto">
               <Heading
