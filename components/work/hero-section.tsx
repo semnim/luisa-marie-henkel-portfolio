@@ -35,6 +35,7 @@ export function HeroSection({
           src={heroImage.publicId}
           alt={heroImage.alt}
           fill
+          preload
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-linear-to-b from-black/75 via-black/40 to-transparent">

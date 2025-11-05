@@ -62,7 +62,6 @@ export default async function WorkPage() {
           }))}
           title={'Projects'}
         />
-        )
       </Section>
     </Container>
   );
