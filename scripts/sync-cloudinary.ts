@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { shootingImages, shootings } from '@/lib/schema';
+import { projectImages, projects } from '@/lib/schema';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import { v2 as cloudinary, ResourceApiResponse } from 'cloudinary';
 import { eq } from 'drizzle-orm';
@@ -51,13 +51,13 @@ async function syncFromCloudinary() {
 
 // =================================== <DB OPS> ===================================
 async function syncWithDb(projectName: string, resources: CloudinaryAsset[]) {
-  const shootingId = await insertShooting(projectName, resources);
-  if (shootingId) {
-    await insertShootingImages(shootingId, resources);
+  const projectSlug = await insertProject(projectName, resources);
+  if (projectSlug) {
+    await insertProjectImages(projectSlug, resources);
   }
 }
 
-async function insertShooting(
+async function insertProject(
   projectName: string,
   resources: CloudinaryAsset[]
 ) {
@@ -74,17 +74,17 @@ async function insertShooting(
     // Check if shooting already exists
     const existing = await db
       .select()
-      .from(shootings)
-      .where(eq(shootings.slug, projectName))
+      .from(projects)
+      .where(eq(projects.slug, projectName))
       .limit(1);
 
     if (existing.length > 0) {
       console.log(`  ℹ️  Shooting already exists: ${projectName}`);
-      return existing[0].id;
+      return existing[0].slug;
     }
 
     const result = await db
-      .insert(shootings)
+      .insert(projects)
       .values({
         slug: projectName,
         title: getProjectTitleFromSlug(projectName),
@@ -95,18 +95,18 @@ async function insertShooting(
         thumbnailPublicId: thumbnailResource.public_id,
         client: null,
       })
-      .returning({ id: shootings.id });
+      .returning({ slug: projects.slug });
 
     console.log(`  ✅ Inserted shooting: ${projectName}`);
-    return result[0].id;
+    return result[0].slug;
   } catch (error) {
     console.error(`  ❌ Error inserting shooting ${projectName}:`, error);
     return null;
   }
 }
 
-async function insertShootingImages(
-  shootingId: number,
+async function insertProjectImages(
+  projectSlug: string,
   resources: CloudinaryAsset[]
 ) {
   // Filter out thumbnail
@@ -121,8 +121,8 @@ async function insertShootingImages(
 
   try {
     for (const [index, resource] of imageResources.entries()) {
-      await db.insert(shootingImages).values({
-        shootingId,
+      await db.insert(projectImages).values({
+        projectSlug,
         imageUrl: resource.secure_url,
         publicId: resource.public_id,
         width: resource.width,

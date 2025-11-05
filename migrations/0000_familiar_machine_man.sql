@@ -1,7 +1,7 @@
 CREATE TYPE "public"."category" AS ENUM('editorial', 'commercial');--> statement-breakpoint
-CREATE TABLE "shooting_images" (
+CREATE TABLE "project_images" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"shooting_id" integer,
+	"project_slug" text,
 	"image_url" text NOT NULL,
 	"public_id" text NOT NULL,
 	"width" integer,
@@ -10,7 +10,7 @@ CREATE TABLE "shooting_images" (
 	"order" integer DEFAULT 0
 );
 --> statement-breakpoint
-CREATE TABLE "shootings" (
+CREATE TABLE "projects" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"slug" text NOT NULL,
 	"title" text NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE "shootings" (
 	"thumbnail_public_id" text NOT NULL,
 	"client" text,
 	"created_at" timestamp DEFAULT now(),
-	CONSTRAINT "shootings_slug_unique" UNIQUE("slug")
+	CONSTRAINT "projects_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
-ALTER TABLE "shooting_images" ADD CONSTRAINT "shooting_images_shooting_id_shootings_id_fk" FOREIGN KEY ("shooting_id") REFERENCES "public"."shootings"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "project_images" ADD CONSTRAINT "project_images_project_slug_projects_slug_fk" FOREIGN KEY ("project_slug") REFERENCES "public"."projects"("slug") ON DELETE no action ON UPDATE no action;

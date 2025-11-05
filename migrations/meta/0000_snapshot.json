@@ -1,11 +1,11 @@
 {
-  "id": "3c6f2f02-c904-4206-9c9e-9a94875351dd",
+  "id": "1d11ad26-e4a5-497f-9741-fd0b750ed37e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.shooting_images": {
-      "name": "shooting_images",
+    "public.project_images": {
+      "name": "project_images",
       "schema": "",
       "columns": {
         "id": {
@@ -14,9 +14,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "shooting_id": {
-          "name": "shooting_id",
-          "type": "integer",
+        "project_slug": {
+          "name": "project_slug",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -60,15 +60,15 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shooting_images_shooting_id_shootings_id_fk": {
-          "name": "shooting_images_shooting_id_shootings_id_fk",
-          "tableFrom": "shooting_images",
-          "tableTo": "shootings",
+        "project_images_project_slug_projects_slug_fk": {
+          "name": "project_images_project_slug_projects_slug_fk",
+          "tableFrom": "project_images",
+          "tableTo": "projects",
           "columnsFrom": [
-            "shooting_id"
+            "project_slug"
           ],
           "columnsTo": [
-            "id"
+            "slug"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -80,8 +80,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shootings": {
-      "name": "shootings",
+    "public.projects": {
+      "name": "projects",
       "schema": "",
       "columns": {
         "id": {
@@ -151,8 +151,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "shootings_slug_unique": {
-          "name": "shootings_slug_unique",
+        "projects_slug_unique": {
+          "name": "projects_slug_unique",
           "nullsNotDistinct": false,
           "columns": [
             "slug"

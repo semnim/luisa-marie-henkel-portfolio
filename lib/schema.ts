@@ -9,7 +9,7 @@ import {
 
 export const categoryEnum = pgEnum('category', ['editorial', 'commercial']);
 
-export const shootings = pgTable('shootings', {
+export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
@@ -25,9 +25,9 @@ export const shootings = pgTable('shootings', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-export const shootingImages = pgTable('shooting_images', {
+export const projectImages = pgTable('project_images', {
   id: serial('id').primaryKey(),
-  shootingId: integer('shooting_id').references(() => shootings.id),
+  projectSlug: text('project_slug').references(() => projects.slug),
 
   // Cloudinary references
   imageUrl: text('image_url').notNull(),
