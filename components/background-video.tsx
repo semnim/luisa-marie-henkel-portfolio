@@ -4,7 +4,7 @@ type Props = {
 };
 const DimmedOverlay = () => {
   return (
-    <div className="absolute inset-0 bg-radial from-transparent to-black/75" />
+    <div className="absolute inset-0 bg-radial from-transparent to-black/25" />
   );
 };
 
