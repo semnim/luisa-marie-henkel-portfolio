@@ -1,7 +1,7 @@
 import { Container } from '@/components/container';
 import { Heading } from '@/components/heading';
 import { Section } from '@/components/section';
-import { createSlugForWorkItem } from '@/lib/utils';
+import { createSlugFromProjectTitle } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 export const metadata = {
@@ -53,7 +53,7 @@ export default function WorkPage() {
             }
             return (
               <Link
-                href={`/work/${createSlugForWorkItem(item.title)}`}
+                href={`/work/${createSlugFromProjectTitle(item.title)}`}
                 key={item.id}
                 className={` group overflow-hidden snap-center relative h-dvh lg:h-[500px]`}
               >

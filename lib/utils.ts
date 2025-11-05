@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function createSlugForWorkItem(title: string) {
+export function createSlugFromProjectTitle(title: string) {
   return title
     .split(' ')
     .map((item) => item.toLowerCase())
     .join('-');
 }
 
-export function getWorkItemTitleFromSlug(title: string) {
+export function getProjectTitleFromSlug(title: string) {
   return title.split('-').join(' ');
 }

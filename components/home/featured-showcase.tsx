@@ -1,4 +1,4 @@
-import { createSlugForWorkItem } from '@/lib/utils';
+import { createSlugFromProjectTitle } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heading } from '../heading';
@@ -33,7 +33,7 @@ export const FeaturedShowcase = () => {
         <Link
           className={`group relative overflow-hidden aspect-square flex flex-1 lg:max-h-full`}
           key={index}
-          href={`/work/${createSlugForWorkItem(item.title)}`}
+          href={`/work/${createSlugFromProjectTitle(item.title)}`}
         >
           <figure className="flex flex-1">
             <Image
