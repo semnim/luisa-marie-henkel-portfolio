@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
-        <header className="bottom-0 lg:top-0 fixed inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 lg:px-8 py-4 bg-linear-to-t lg:bg-linear-to-b lg:from-black/75 from-black from-0% lg:via-black/40 via-black/75 via-50% to-transparent to-100% h-10 lg:h-25">
+        <header className="bottom-0 lg:top-0 fixed inset-x-0 z-50 text-muted-foreground items-center flex justify-end px-8 lg:px-8 py-4 bg-linear-to-t lg:bg-linear-to-b lg:from-background from-black from-0% lg:via-background/40 via-background/75 via-50% to-transparent to-100% h-20">
           <NavMenu />
         </header>
         <ThemeProvider
