@@ -50,7 +50,7 @@ export default async function WorkPage() {
           })}
         </div>
       </Section>
-      <Section>
+      <Section className="hidden md:block">
         <MasonryGrid
           images={projects.map((project) => ({
             id: project.id,

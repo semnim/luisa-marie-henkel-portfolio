@@ -19,12 +19,7 @@ export const NavMenu = ({ className }: Props) => {
     >
       {routes.map((route) => (
         <div key={route.id} className="relative">
-          <Link
-            className={`hover:text-foreground ${
-              pathname === route.url ? 'text-foreground' : ''
-            }`}
-            href={route.url}
-          >
+          <Link className={`text-foreground`} href={route.url}>
             {route.id}
           </Link>
         </div>

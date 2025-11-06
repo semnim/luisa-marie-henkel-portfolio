@@ -12,24 +12,13 @@ type CreditItemProps = {
 
 function CreditItem({ label, value }: CreditItemProps) {
   return (
-    <div className="flex flex-col gap-1 my-auto">
-      <dt className="text-sm md:text-2xl text-left tracking-wide text-foreground font-light">
+    <div className="flex flex-col gap-1 lg:my-0 my-auto">
+      <dt className="text-sm md:text-md text-left tracking-wide text-foreground font-light">
         {label}
       </dt>
-      {typeof value === 'string' && (
-        <dd className="text-left text-xs md:text-lg text-muted-foreground">
-          {value}
-        </dd>
-      )}
-      {Array.isArray(value) && (
-        <dd className="text-sm text-left text-md md:text-lg text-muted-foreground">
-          <ul>
-            {value.map((val) => (
-              <li key={val}>{val}</li>
-            ))}
-          </ul>
-        </dd>
-      )}
+      <dd className="text-left text-xs md:text-md text-muted-foreground">
+        {Array.isArray(value) ? value.join(', ') : value}
+      </dd>
     </div>
   );
 }
@@ -43,7 +32,8 @@ export function ProjectMetadata({
     { label: 'Photography', value: 'Ravishankar Arunasalam' },
     { label: 'Styling', value: 'Luisa-Marie Henkel' },
     { label: 'Models', value: ['Model 1', 'Model 2'] },
-    { label: 'Hair & Makeup', value: ['Hair stylist X', 'Makeup artist Y'] },
+    { label: 'Hair', value: 'Stylist X' },
+    { label: 'Make-up', value: 'Stylist Y' },
     { label: 'Location', value: 'Berlin' },
     {
       label: 'Category',
@@ -51,35 +41,36 @@ export function ProjectMetadata({
     },
   ];
 
-  // Placeholder narrative - will be replaced with DB data later
-  const narrative =
-    'This editorial shoot explores the intersection of contemporary fashion and artistic expression. Through carefully curated styling and dynamic compositions, we sought to create a visual narrative that challenges conventional perspectives and celebrates individual creativity. Each image tells a story of transformation and self-discovery, capturing moments of raw emotion and refined elegance.';
-
   return (
-    <section className="p-8 lg:p-32 w-full snap-center md:snap-proximity min-h-dvh flex flex-col">
-      <h2 className="text-3xl md:text-4xl text-center font-light tracking-wide">
-        ABOUT THIS PROJECT
-      </h2>
-      <div className="mx-auto mt-8 px-4 max-w-2xl flex flex-col flex-1 gap-8">
+    <div className="p-8 flex-1 mb-20 md:mb-0 max-h-dvh md:h-auto w-full lg:flex-1 flex flex-col snap-start md:snap-align-none md:max-h-fit">
+      <div className="mx-auto px-4 flex flex-col justify-around flex-1 gap-4">
         {description && (
-          <p className="leading-relaxed text-justify text-xs md:text-sm text-muted-foreground">
-            {description}
-          </p>
+          <div className="mb-4">
+            <h2 className="md:hidden mb-3 text-2xl tracking-wide">
+              BACKGROUND
+            </h2>
+            <p className="leading-relaxed text-justify text-md md:text-sm text-muted-foreground">
+              {description}
+            </p>
+          </div>
         )}
-        {/* Credits Grid */}
-        <div className="my-auto flex-1 flex items-start">
-          <dl className="flex-1 flex flex-col gap-1 md:gap-4 h-full mx-auto">
-            {credits.map((credit, index) => (
-              <React.Fragment key={credit.label}>
-                <CreditItem label={credit.label} value={credit.value} />
-                {index !== credits.length - 1 && (
-                  <hr className={`w-full mr-auto`} />
-                )}
-              </React.Fragment>
-            ))}
-          </dl>
+        <div className="md:max-h-fit">
+          {/* Credits Grid */}
+          <h2 className="md:hidden mb-3 text-2xl tracking-wide">TEAM</h2>
+          <div className="h-fit flex items-start max-h-fit">
+            <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
+              {credits.map((credit, index) => (
+                <React.Fragment key={credit.label}>
+                  <CreditItem label={credit.label} value={credit.value} />
+                  {index !== credits.length - 1 && (
+                    <hr className={`md:hidden w-full mr-auto`} />
+                  )}
+                </React.Fragment>
+              ))}
+            </dl>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

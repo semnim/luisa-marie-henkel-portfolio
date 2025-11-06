@@ -1,7 +1,6 @@
 import { Container } from '@/components/container';
 import { HeroSection } from '@/components/work/hero-section';
 import { ProjectGallery } from '@/components/work/project-gallery';
-import { ProjectMetadata } from '@/components/work/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import { fetchProjectImages } from './actions';
 
@@ -56,13 +55,9 @@ export default async function DetailPage({
         client={projectData.client}
         category={projectData.category}
         publishedAt={projectData.publishedAt}
-      />
-
-      <ProjectGallery images={galleryImages} title={title} />
-      <ProjectMetadata
         description={projectData.description}
-        category={projectData.category}
       />
+      <ProjectGallery images={galleryImages} title={title} />
     </Container>
   );
 }
