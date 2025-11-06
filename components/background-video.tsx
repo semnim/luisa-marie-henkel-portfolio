@@ -22,8 +22,7 @@ export const BackgroundVideo = ({ children, url, poster }: Props) => {
     <>
       <DimmedOverlay />
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Fallback poster image */}
-        {poster && (
+        {/* {poster && (
           <Image
             src={poster}
             alt="Background"
@@ -31,20 +30,34 @@ export const BackgroundVideo = ({ children, url, poster }: Props) => {
             className="object-cover"
             priority
           />
-        )}
-        {/* Vimeo iframe */}
-        <iframe
-          title="vimeo-player"
-          src="https://player.vimeo.com/video/1026452324?autoplay=1&loop=1&muted=1&background=1#t=6s"
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78dvh] h-dvh border-0 transition-opacity duration-1000 ${
-            isVideoLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          allow="autoplay; fullscreen; picture-in-picture"
-          onLoad={() => {
-            // Delay showing video to ensure Vimeo content is ready
-            setTimeout(() => setIsVideoLoaded(true), 2000);
-          }}
+        )} */}
+
+        <Image
+          src={'/assets/hero_fallback.webp'}
+          className="object-cover"
+          fill
+          alt="fallback"
         />
+        {/* <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover -z-10"
+        >
+          <source
+            src={
+              'https://res.cloudinary.com/luisa-marie-henkel/video/upload/q_auto:best,fps_24/v1762423988/hero-bg-trimmed_hbsmrn.webm'
+            }
+            type="video/mp4"
+          />
+          <source
+            src={
+              'https://res.cloudinary.com/luisa-marie-henkel/video/upload/q_auto:best,fps_24/v1762423988/hero-bg-trimmed_hbsmrn.mp4'
+            }
+            type="video/mp4"
+          />
+        </video> */}
       </div>
       {children}
     </>

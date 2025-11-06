@@ -19,7 +19,7 @@ export default function Home() {
           fallback={
             <Image
               src={'/public/assets/hero_fallback.webp'}
-              objectFit="cover"
+              className="object-cover"
               fill
               alt="fallback"
             />
