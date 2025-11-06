@@ -45,31 +45,28 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
 
   if (images.length === 0) {
     return (
-      <div className="md:hidden flex items-center justify-center h-dvh bg-gray-100">
+      <div className="md:hidden flex items-center justify-start h-dvh bg-gray-100">
         <p className="text-gray-500">No images available</p>
       </div>
     );
   }
 
   return (
-    <div className="md:hidden flex flex-col justify-center h-dvh">
-      <Carousel
-        className="w-full flex-1 flex flex-col justify-center"
-        setApi={setApi}
-      >
+    <div className="relative md:hidden flex flex-col justify-start h-dvh">
+      <Carousel className="flex-1 flex flex-col justify-center" setApi={setApi}>
         <CarouselContent className="h-full">
           {images.map((img, index) => (
             <CarouselItem
               key={img.id}
               className="flex items-center justify-center"
             >
-              <div className="relative w-full aspect-3/4 max-h-[70vh]">
+              <div className="relative w-full h-dvh">
                 <Image
                   loading="eager"
                   src={img.publicId}
                   alt={`${title} - Image ${index + 1}`}
                   fill
-                  className="object-contain"
+                  className="object-cover"
                 />
               </div>
             </CarouselItem>
@@ -80,7 +77,7 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
       </Carousel>
 
       {/* Dot Indicators */}
-      <div className="flex justify-center gap-2 mt-4 pb-2">
+      <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2">
         {images.map((_, index) => (
           <button
             key={index}
@@ -98,7 +95,7 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
       </div>
 
       {/* Image Counter */}
-      <div className="text-center text-sm text-gray-600 pb-4">
+      <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 bottom-18">
         {current + 1} / {count}
       </div>
     </div>
