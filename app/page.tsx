@@ -1,7 +1,4 @@
-import { Container } from '@/components/container';
-import { Heading } from '@/components/heading';
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
-import { Section } from '@/components/section';
 import Image from 'next/image';
 
 export const metadata = {
@@ -11,37 +8,29 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <Container>
-      <Section variant="HERO">
-        {/* <Suspense
-          fallback={
-            <Image
-              src={'/public/assets/hero_fallback.webp'}
-              className="object-cover"
-              fill
-              alt="fallback"
-            />
-          }
-        > */}
+    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
+      <section className={`relative gradient-easing h-dvh snap-start`}>
         <Image
           src={'/assets/hero_fallback.webp'}
-          className="object-cover"
+          className="object-cover z-0"
           fill
           alt="fallback"
         />
-        <Heading
-          variant="HERO"
-          title="Luisa-Marie Henkel"
-          subtitle="Art Director & Stylist"
-          containerClassName="h-full"
-        />
-        {/* </BackgroundVideo> */}
-        {/* </Suspense> */}
-      </Section>
-      <Section className="pt-8 md:pt-32">
-        <Heading secondary title="FEATURED" />
+        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
+          <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
+            LUISA-MARIE HENKEL
+          </h1>
+          <p className="text-xs md:text-md mt-4 tracking-hero-heading text-muted-foreground font-light">
+            ART DIRECTOR & STYLIST
+          </p>
+        </div>
+      </section>
+      <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
+        <h2 className="text-lg md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 sticky -top-15 bg-background flex items-center">
+          FEATURED
+        </h2>
         <FeaturedShowcase />
-      </Section>
-    </Container>
+      </section>
+    </main>
   );
 }

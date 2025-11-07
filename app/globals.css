@@ -134,3 +134,34 @@
     mix-blend-mode: overlay;
   } */
 }
+
+@layer utilities {
+  .gradient-easing::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    background: linear-gradient(
+      to bottom,
+      oklch(from var(--background) l c h / 0) 0%,
+      oklch(from var(--background) l c h / 0.013) 8.1%,
+      oklch(from var(--background) l c h / 0.049) 15.5%,
+      oklch(from var(--background) l c h / 0.104) 22.5%,
+      oklch(from var(--background) l c h / 0.175) 29%,
+      oklch(from var(--background) l c h / 0.259) 35.3%,
+      oklch(from var(--background) l c h / 0.352) 41.2%,
+      oklch(from var(--background) l c h / 0.450) 47.1%,
+      oklch(from var(--background) l c h / 0.550) 52.9%,
+      oklch(from var(--background) l c h / 0.648) 58.8%,
+      oklch(from var(--background) l c h / 0.741) 64.7%,
+      oklch(from var(--background) l c h / 0.825) 71%,
+      oklch(from var(--background) l c h / 0.896) 77.5%,
+      oklch(from var(--background) l c h / 0.951) 84.5%,
+      oklch(from var(--background) l c h / 0.987) 91.9%,
+      oklch(from var(--background) l c h / 1) 100%
+    );
+    z-index: 1;
+  }
+}

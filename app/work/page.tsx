@@ -1,4 +1,3 @@
-import { Container } from '@/components/container';
 import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
 import { Section } from '@/components/section';
@@ -14,12 +13,12 @@ export const metadata = {
 export default async function WorkPage() {
   const projects = await fetchProjects();
   return (
-    <Container disableScrollSnap disableScroll>
+    <main className="h-dvh md:h-screen">
       <Heading
         title="PROJECTS"
         containerClassName="fixed inset-x-0 md:relative pt-8 lg:pt-32 lg:pb-8"
       />
-      <Section className="overflow-y-scroll md:overflow-y-hidden max-h-dvh snap-y snap-mandatory md:snap-none md:hidden">
+      <Section className="overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 relative">
           {projects.map((item, index) => {
             if (item === null) {
@@ -63,6 +62,6 @@ export default async function WorkPage() {
           title={'Projects'}
         />
       </Section>
-    </Container>
+    </main>
   );
 }
