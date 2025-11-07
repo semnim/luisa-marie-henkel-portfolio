@@ -1,6 +1,5 @@
 import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
-import { Section } from '@/components/section';
 import { MasonryGrid } from '@/components/work/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import Link from 'next/link';
@@ -13,12 +12,11 @@ export const metadata = {
 export default async function WorkPage() {
   const projects = await fetchProjects();
   return (
-    <main className="h-dvh md:h-screen">
-      <Heading
-        title="PROJECTS"
-        containerClassName="fixed inset-x-0 md:relative pt-8 lg:pt-32 lg:pb-8"
-      />
-      <Section className="overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden">
+    <main className="md:h-screen">
+      <h2 className="text-lg md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 fixed top-0 left-1/2 -translate-x-1/2 bg-background flex items-center">
+        PROJECTS
+      </h2>
+      <section className="h-dvh md:h-screen md:max-h-screen flex flex-col overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden snap-mandatory snap-y">
         <div className="grid grid-cols-1 lg:grid-cols-3 relative">
           {projects.map((item, index) => {
             if (item === null) {
@@ -28,7 +26,7 @@ export default async function WorkPage() {
               <Link
                 href={`/work/${createSlugFromProjectTitle(item.title)}`}
                 key={item.id}
-                className={` group overflow-hidden snap-center relative h-dvh lg:h-[500px]`}
+                className={` group overflow-hidden snap-start relative h-dvh lg:h-[500px]`}
               >
                 <figure
                   key={item.id}
@@ -48,8 +46,8 @@ export default async function WorkPage() {
             );
           })}
         </div>
-      </Section>
-      <Section className="hidden md:block">
+      </section>
+      <section className="mt-15 h-dvh max-h-dvh md:h-screen md:max-h-screen flex-col hidden md:block">
         <MasonryGrid
           images={projects.map((project) => ({
             id: project.id,
@@ -61,7 +59,7 @@ export default async function WorkPage() {
           }))}
           title={'Projects'}
         />
-      </Section>
+      </section>
     </main>
   );
 }

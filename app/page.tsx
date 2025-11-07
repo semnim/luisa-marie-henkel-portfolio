@@ -9,7 +9,7 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
-      <section className={`relative gradient-easing h-dvh snap-start`}>
+      <section className="relative gradient-easing h-dvh snap-start">
         <Image
           src={'/assets/hero_fallback.webp'}
           className="object-cover z-0"
