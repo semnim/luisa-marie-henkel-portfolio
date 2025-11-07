@@ -9,14 +9,14 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
-      <section className="relative gradient-easing h-dvh snap-start">
+      <section className="relative h-dvh snap-start">
         <Image
           src={'/assets/hero_fallback.webp'}
           className="object-cover z-0"
           fill
           alt="fallback"
         />
-        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center bg-linear-to-t from-background to-30%">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
             LUISA-MARIE HENKEL
           </h1>

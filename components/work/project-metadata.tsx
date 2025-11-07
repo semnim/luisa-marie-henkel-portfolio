@@ -13,7 +13,7 @@ type CreditItemProps = {
 function CreditItem({ label, value }: CreditItemProps) {
   return (
     <div className="flex flex-col gap-1 lg:my-0 my-auto">
-      <dt className="text-sm md:text-md text-left tracking-wide text-foreground font-light">
+      <dt className="text-xs md:text-md text-left tracking-wide text-foreground font-light">
         {label}
       </dt>
       <dd className="text-left text-xs md:text-md text-muted-foreground">
@@ -42,21 +42,23 @@ export function ProjectMetadata({
   ];
 
   return (
-    <div className="p-8 flex-1 max-h-[calc(100dvh-60px)] md:h-auto w-full lg:flex-1 flex flex-col snap-start md:snap-align-none md:max-h-fit">
+    <div className="px-8 md:pb-8 flex-1 max-h-[calc(100dvh-60px)] md:h-auto w-full lg:flex-1 flex flex-col snap-start md:snap-align-none md:max-h-fit">
       <div className="mx-auto px-4 flex flex-col justify-around flex-1 gap-4">
         {description && (
           <div className="mb-4">
-            <h2 className="md:hidden mb-3 text-2xl tracking-wide">
+            <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
               BACKGROUND
             </h2>
-            <p className="leading-relaxed text-justify text-md md:text-sm text-muted-foreground">
+            <p className="leading-relaxed text-justify text-xs md:text-md text-muted-foreground">
               {description}
             </p>
           </div>
         )}
         <div className="md:max-h-fit">
           {/* Credits Grid */}
-          <h2 className="md:hidden mb-3 text-2xl tracking-wide">TEAM</h2>
+          <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
+            TEAM
+          </h2>
           <div className="h-fit flex items-start max-h-fit">
             <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
               {credits.map((credit, index) => (
