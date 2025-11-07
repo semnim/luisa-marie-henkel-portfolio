@@ -1,6 +1,5 @@
 'use client';
 
-import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
 import { ProjectMetadata } from './project-metadata';
 
@@ -32,8 +31,8 @@ export function HeroSection({
   };
 
   return (
-    <section className="relative h-[200dvh] md:h-dvh  w-full flex flex-col snap-start bg-linear-to-b from-black to-background">
-      <figure className="relative h-dvh max-h-dvh md:max-h-auto w-full flex-4">
+    <section className="relative h-[200dvh] md:h-dvh w-full flex flex-col">
+      <figure className="relative h-dvh max-h-[calc(100dvh-60px)] md:max-h-auto w-full flex-4 snap-start overflow-hidden">
         <Image
           src={heroImage.publicId}
           alt={heroImage.alt}
@@ -41,28 +40,34 @@ export function HeroSection({
           preload
           className="object-cover object-top"
         />
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 gradient-easing">
           <div className="mx-auto h-full flex flex-col justify-end">
-            <Heading
-              title={title}
-              containerClassName="pb-16 md:pb-8 bg-linear-to-t from-black via-black/75 via-75% via-black/40 via-50% to-transparent"
-              context={
-                <div className="flex flex-wrap gap-2 md:gap-4 items-center text-white/80 justify-center md:justify-start text-xs md:text-sm mb-4 md:mb-0">
-                  <span className="uppercase tracking-wide">{category}</span>
-                  {client && (
-                    <>
-                      <span>·</span>
-                      <span>{client}</span>
-                    </>
-                  )}
-                  <span>·</span>
-                  <time dateTime={publishedAt.toISOString()}>
-                    {formatDate(publishedAt)}
-                  </time>
-                </div>
+            <div
+              className={
+                'relative z-10 text-center flex flex-col items-center justify-center pb-16 md:pb-8'
               }
-              variant="SECTION"
-            />
+            >
+              <h1
+                className={
+                  'text-3xl text-center font-light tracking-hero-heading uppercase'
+                }
+              >
+                {title}
+              </h1>
+              <div className="flex flex-wrap gap-2 md:gap-4 items-center text-white/80 justify-center md:justify-start text-xs md:text-sm mb-4 md:mb-0">
+                <span className="uppercase tracking-wide">{category}</span>
+                {client && (
+                  <>
+                    <span>·</span>
+                    <span>{client}</span>
+                  </>
+                )}
+                <span>·</span>
+                <time dateTime={publishedAt.toISOString()}>
+                  {formatDate(publishedAt)}
+                </time>
+              </div>
+            </div>
           </div>
         </div>
       </figure>

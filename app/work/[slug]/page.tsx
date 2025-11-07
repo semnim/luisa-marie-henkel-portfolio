@@ -25,7 +25,7 @@ export default async function DetailPage({
         <div className="h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-light mb-4">{title}</h1>
-            <p className="text-gray-500">Images coming soon</p>
+            <p className="text-muted-foreground">Images coming soon</p>
           </div>
         </div>
       </Container>
@@ -45,7 +45,11 @@ export default async function DetailPage({
   };
 
   return (
-    <Container>
+    <main
+      className={
+        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] mt-15 md:h-screen md:max-h-screen md:mt-0 overflow-y-scroll snap-y snap-mandatory'
+      }
+    >
       <HeroSection
         heroImage={{
           publicId: heroImage.publicId,
@@ -58,6 +62,6 @@ export default async function DetailPage({
         description={projectData.description}
       />
       <ProjectGallery images={galleryImages} title={title} />
-    </Container>
+    </main>
   );
 }

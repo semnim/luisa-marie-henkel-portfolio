@@ -52,8 +52,11 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
   }
 
   return (
-    <div className="relative md:hidden flex flex-col justify-start h-dvh">
-      <Carousel className="flex-1 flex flex-col justify-center" setApi={setApi}>
+    <div className="relative md:hidden flex flex-col justify-start max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)]">
+      <Carousel
+        className="flex-1 flex flex-col justify-center max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)]"
+        setApi={setApi}
+      >
         <CarouselContent className="h-full">
           {images.map((img, index) => (
             <CarouselItem
