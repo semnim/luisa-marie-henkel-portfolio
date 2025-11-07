@@ -9,22 +9,22 @@ import { useRef, useState } from 'react';
 
 const FEATURED_IMAGES = [
   {
-    publicId: '5_qtexvy',
+    publicId: '5_taqgpt',
     title: 'fading ties',
     type: 'EDITORIAL',
   },
   {
-    publicId: 'thumbnail_iw3lif',
+    publicId: 'thumbnail_lzubo7',
     title: 'party',
     type: 'EDITORIAL',
   },
   {
-    publicId: 'thumbnail_sgkqnb',
+    publicId: 'thumbnail_q3r8bc',
     title: 'mythical creature',
     type: 'EDITORIAL',
   },
   {
-    publicId: 'thumbnail_candidate_1_qejy52',
+    publicId: 'thumbnail_candidate_1_msexrm',
     title: 'tangled manners',
     type: 'EDITORIAL',
   },
