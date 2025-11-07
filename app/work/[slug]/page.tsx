@@ -1,6 +1,7 @@
 import { Container } from '@/components/container';
 import { HeroSection } from '@/components/work/hero-section';
 import { ProjectGallery } from '@/components/work/project-gallery';
+import { ProjectMetadata } from '@/components/work/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import { fetchProjectImages } from './actions';
 
@@ -47,7 +48,7 @@ export default async function DetailPage({
   return (
     <main
       className={
-        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] mt-15 md:h-screen md:max-h-screen md:mt-0 overflow-y-scroll snap-y snap-mandatory'
+        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] mt-15 overflow-y-scroll snap-y snap-mandatory'
       }
     >
       <HeroSection
@@ -59,7 +60,10 @@ export default async function DetailPage({
         client={projectData.client}
         category={projectData.category}
         publishedAt={projectData.publishedAt}
+      />
+      <ProjectMetadata
         description={projectData.description}
+        category={projectData.category}
       />
       <ProjectGallery images={galleryImages} title={title} />
     </main>

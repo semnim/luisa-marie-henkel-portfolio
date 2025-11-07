@@ -16,7 +16,7 @@ export default function Home() {
           fill
           alt="fallback"
         />
-        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center bg-linear-to-t from-background to-30%">
+        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center gradient-easing">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
             LUISA-MARIE HENKEL
           </h1>

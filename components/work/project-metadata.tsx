@@ -42,7 +42,7 @@ export function ProjectMetadata({
   ];
 
   return (
-    <div className="px-8 md:pb-8 flex-1 max-h-[calc(100dvh-60px)] md:h-auto w-full lg:flex-1 flex flex-col snap-start md:snap-align-none md:max-h-fit">
+    <section className="snap-start px-8 md:pb-8 flex-1 h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] md:h-[150px] md:max-h-[150px] w-full lg:flex-1 flex flex-col md:snap-align-none">
       <div className="mx-auto px-4 flex flex-col justify-around flex-1 gap-4">
         {description && (
           <div className="mb-4">
@@ -73,6 +73,6 @@ export function ProjectMetadata({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

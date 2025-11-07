@@ -139,7 +139,7 @@
   .gradient-easing::before {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 0%;
     left: 0;
     right: 0;
     height: 70%;
@@ -160,7 +160,7 @@
       oklch(from var(--background) l c h / 0.896) 77.5%,
       oklch(from var(--background) l c h / 0.951) 84.5%,
       oklch(from var(--background) l c h / 0.987) 91.9%,
-      oklch(from var(--background) l c h / 1) 100%
+      var(--background) 100%
     );
     z-index: 1;
   }

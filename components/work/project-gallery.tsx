@@ -19,7 +19,7 @@ type ProjectGalleryProps = {
 
 export function ProjectGallery({ images, title }: ProjectGalleryProps) {
   return (
-    <section className="snap-start h-[calc(100dvh-60px)] md:pt-15 md:h-auto">
+    <section className="snap-start h-[calc(100dvh-60px)] md:h-auto">
       <MobileSlideshow images={images} title={title} />
       <MasonryGrid images={images} title={title} />
     </section>
