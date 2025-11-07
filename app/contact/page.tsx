@@ -1,26 +1,193 @@
-import { BackgroundVideo } from '@/components/background-video';
-import { ContactInfoList } from '@/components/contact/contact-info-list';
-import { Container } from '@/components/container';
-import { Heading } from '@/components/heading';
-import { Section } from '@/components/section';
+'use client';
 
-export const metadata = {
-  title: 'Contact | Luisa-Marie Henkel',
-  description: 'Art director & Stylist portfolio',
-};
+import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
+import { Heading } from '@/components/heading';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const contactFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name too long'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email({ message: 'Invalid email address' }),
+  message: z
+    .string()
+    .min(10, 'Message must be at least 10 characters')
+    .max(1000, 'Message too long'),
+});
+
+type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
+  const [formState, setFormState] = useState<FormState>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      message: '',
+    },
+  });
+
+  const onSubmit = async (data: ContactFormData) => {
+    setFormState('loading');
+    setErrorMessage('');
+
+    const result = await submitContactForm(data);
+
+    if (result.success) {
+      setFormState('success');
+      form.reset();
+    } else {
+      setFormState('error');
+      setErrorMessage(result.error || 'An error occurred. Please try again.');
+    }
+  };
+
+  const handleReset = () => {
+    setFormState('idle');
+    setErrorMessage('');
+    form.reset();
+  };
+
   return (
-    <Container>
-      <Section variant="HERO">
-        <BackgroundVideo url="/assets/hero_bg_falls_2.mp4">
+    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
+      <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
+        <div className="w-full max-w-2xl">
           <Heading
-            title="REACH OUT"
-            context={<ContactInfoList />}
-            containerClassName="h-full"
+            variant="SECTION"
+            title="GET IN TOUCH"
+            containerClassName="mb-12"
           />
-        </BackgroundVideo>
-      </Section>
-    </Container>
+
+          {formState === 'success' ? (
+            <div className="text-center space-y-6">
+              <div className="space-y-3">
+                <p className="text-2xl font-light tracking-wide">
+                  Message sent successfully!
+                </p>
+                <p className="text-muted-foreground font-light">
+                  Thanks for reaching out. I&apos;ll get back to you soon.
+                </p>
+              </div>
+              <Button
+                onClick={handleReset}
+                variant="outline"
+                className="uppercase tracking-item-subheading font-light"
+              >
+                Send Another Message
+              </Button>
+            </div>
+          ) : formState === 'error' ? (
+            <div className="text-center space-y-6">
+              <div className="space-y-3">
+                <p className="text-2xl font-light tracking-wide text-red-400">
+                  Failed to send message
+                </p>
+                <p className="text-muted-foreground font-light">
+                  {errorMessage}
+                </p>
+              </div>
+              <Button
+                onClick={handleReset}
+                variant="outline"
+                className="uppercase tracking-item-subheading font-light"
+              >
+                Try Again
+              </Button>
+            </div>
+          ) : (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6 max-w-xl mx-auto"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your name"
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="your@email.com"
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Tell me about your project..."
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={formState === 'loading'}
+                  className="w-full uppercase tracking-item-subheading font-light"
+                >
+                  {formState === 'loading' ? 'Sending...' : 'Send Message'}
+                </Button>
+              </form>
+            </Form>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }
