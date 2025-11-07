@@ -11,7 +11,7 @@ export const Container = ({
     <main
       className={`h-dvh md:h-screen ${
         !disableScroll ? 'overflow-y-scroll' : ''
-      } ${!disableScrollSnap ? 'snap-y snap-mandatory' : ''}`}
+      } ${!disableScrollSnap ? 'snap-y snap-proximity' : ''}`}
     >
       {children}
     </main>

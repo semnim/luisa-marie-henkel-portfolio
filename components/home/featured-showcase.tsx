@@ -30,11 +30,10 @@ const FEATURED_IMAGES = [
 
 export const FeaturedShowcase = () => {
   return (
-    <div className="max-w-screen min-h-0 grid grid-cols-2 lg:flex lg:flex-row flex-1 pt-8 relative">
-      <div className="lg:hidden absolute top-0 inset-x-0 h-10 bg-linear-to-b from-black via-black/75 via-75% to-transparent z-50" />
+    <div className="max-w-screen min-h-0 grid grid-cols-1 md:flex md:flex-row flex-1 pt-8 relative">
       {FEATURED_IMAGES.map((item, index) => (
         <Link
-          className={`group relative overflow-hidden flex flex-1 lg:max-h-full`}
+          className={`group relative overflow-hidden snap-start md:snap-align-none flex flex-1 h-dvh md:h-full max-h-full`}
           key={index}
           href={`/work/${createSlugFromProjectTitle(item.title)}`}
         >
