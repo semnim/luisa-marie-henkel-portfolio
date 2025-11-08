@@ -1,14 +1,12 @@
 'use client';
 
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
-import { Heading } from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -73,11 +71,9 @@ export default function ContactPage() {
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
       <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
         <div className="w-full max-w-2xl">
-          <Heading
-            variant="SECTION"
-            title="GET IN TOUCH"
-            containerClassName="mb-12"
-          />
+          <h2 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
+            GET IN TOUCH
+          </h2>
 
           {formState === 'success' ? (
             <div className="text-center space-y-6">
@@ -126,10 +122,10 @@ export default function ContactPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Your name"
+                          className="border-0 bg-transparent border-t"
+                          placeholder="Name*"
                           {...field}
                           disabled={formState === 'loading'}
                         />
@@ -144,11 +140,11 @@ export default function ContactPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="your@email.com"
+                          className="border-0 bg-transparent border-t"
+                          placeholder="Email*"
                           {...field}
                           disabled={formState === 'loading'}
                         />
@@ -163,10 +159,10 @@ export default function ContactPage() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Message</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Tell me about your project..."
+                          className="bg-transparent"
                           {...field}
                           disabled={formState === 'loading'}
                         />
@@ -181,7 +177,7 @@ export default function ContactPage() {
                   disabled={formState === 'loading'}
                   className="w-full uppercase tracking-item-subheading font-light"
                 >
-                  {formState === 'loading' ? 'Sending...' : 'Send Message'}
+                  {formState === 'loading' ? 'Sending...' : 'Send'}
                 </Button>
               </form>
             </Form>

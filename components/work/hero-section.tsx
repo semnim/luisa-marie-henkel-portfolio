@@ -29,7 +29,8 @@ export function HeroSection({
 
   return (
     <section className="relative h-dvh md:h-[calc(100dvh-60px-150px)] w-full flex flex-col snap-start">
-      <figure className="relative h-dvh max-h-[calc(100dvh-60px)] w-full flex-4 overflow-hidden z-0">
+      <figure className="relative h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] w-full flex-4 overflow-hidden z-0">
+        <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         <Image
           src={heroImage.publicId}
           alt={heroImage.alt}
