@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
-        <header className="fixed top-0 z-40 h-15 bg-background w-full">
+        <header className="fixed top-0 z-40 h-15 w-full bg-background">
           <nav className="hidden md:flex h-full items-center justify-end gap-8 px-4">
             {routes.map((route) => (
               <Link

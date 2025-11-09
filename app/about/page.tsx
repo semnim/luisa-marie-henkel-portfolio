@@ -7,7 +7,7 @@ export default function AboutPage() {
   return (
     <main className="snap-y snap-mandatory h-dvh">
       <section className="mt-15 snap-start flex items-center justify-center px-6">
-        <h2 className="text-lg md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 fixed top-0 left-1/2 -translate-x-1/2 bg-background flex items-center">
+        <h2 className="text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 fixed top-0 left-1/2 -translate-x-1/2 flex items-center">
           ABOUT
         </h2>
         <div className="max-w-xl w-full space-y-12">

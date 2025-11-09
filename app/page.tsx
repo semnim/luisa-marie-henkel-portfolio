@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       </section>
       <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
-        <h2 className="text-lg md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 sticky -top-15 bg-background flex items-center">
+        <h2 className="text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 sticky -top-15 flex items-center">
           FEATURED
         </h2>
         <FeaturedShowcase />
