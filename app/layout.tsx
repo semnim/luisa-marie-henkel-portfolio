@@ -22,8 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
-        <header className="fixed top-0 z-40 h-15 w-full bg-background">
-          <nav className="hidden md:flex h-full items-center justify-end gap-8 px-4">
+        <header
+          className={`fixed flex flex-col bg-background md:flex-row top-0 z-40 h-15 w-full ${
+            mobileMenuOpen
+              ? 'bg-transparent backdrop-blur-lg backdrop-brightness-75 transition-all h-70 border-b border-border'
+              : 'bg-transparent'
+          }`}
+        >
+          <nav className="hidden md:flex h-full items-center justify-end w-full gap-8 px-4 pr-8">
             {routes.map((route) => (
               <Link
                 key={route.id}
@@ -34,27 +40,30 @@ export default function RootLayout({
               </Link>
             ))}
           </nav>
-          <nav className="md:hidden h-full relative flex items-center justify-end gap-8 px-4">
-            <Menu onClick={() => setMobileMenuOpen((prev) => !prev)} />
+          <nav className="md:hidden absolute top-4 right-4 flex items-center justify-end gap-8">
+            <Menu
+              size={20}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+            />
           </nav>
+          <div
+            className={`md:hidden fixed top-15 w-full flex flex-col z-50 px-8 gap-4 overflow-hidden transition-all duration-150 ease-in-out ${
+              !mobileMenuOpen ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            <p className="text-muted-foreground">Luisa-Marie Henkel</p>
+            {routes.map((route) => (
+              <Link
+                key={route.id}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`text-foreground`}
+                href={route.url}
+              >
+                {route.id}
+              </Link>
+            ))}
+          </div>
         </header>
-        <div
-          className={`md:hidden bg-background fixed top-15 w-full flex flex-col z-50 px-8 gap-4 overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'h-50 pb-4' : 'h-0 pb-0'
-          }`}
-        >
-          <p className="text-muted-foreground">Luisa-Marie Henkel</p>
-          {routes.map((route) => (
-            <Link
-              key={route.id}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`text-foreground`}
-              href={route.url}
-            >
-              {route.id}
-            </Link>
-          ))}
-        </div>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

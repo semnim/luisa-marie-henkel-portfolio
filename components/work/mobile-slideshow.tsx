@@ -52,9 +52,9 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
   }
 
   return (
-    <div className="relative md:hidden flex flex-col justify-start max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)]">
+    <div className="relative md:hidden flex flex-col justify-start max-h-dvh h-dvh">
       <Carousel
-        className="flex-1 flex flex-col justify-center max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)]"
+        className="flex-1 flex flex-col justify-center max-h-dvh h-dvh"
         setApi={setApi}
       >
         <CarouselContent className="h-full">

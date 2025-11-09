@@ -46,11 +46,7 @@ export default async function DetailPage({
   };
 
   return (
-    <main
-      className={
-        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] mt-15 overflow-y-scroll snap-y snap-mandatory'
-      }
-    >
+    <main className={'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory'}>
       <HeroSection
         heroImage={{
           publicId: heroImage.publicId,
