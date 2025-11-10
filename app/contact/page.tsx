@@ -124,7 +124,7 @@ export default function ContactPage() {
                     <FormItem>
                       <FormControl>
                         <Input
-                          className="border-0 rounded-none focus-visible:rounded-sm bg-transparent border-t"
+                          className="border-0 border-foreground rounded-none focus-visible:rounded-sm bg-transparent border-t"
                           placeholder="Name*"
                           {...field}
                           disabled={formState === 'loading'}
@@ -143,7 +143,7 @@ export default function ContactPage() {
                       <FormControl>
                         <Input
                           type="email"
-                          className="border-0 rounded-none focus-visible:rounded-sm bg-transparent border-t"
+                          className="border-0 border-foreground rounded-none focus-visible:rounded-sm bg-transparent border-t"
                           placeholder="Email*"
                           {...field}
                           disabled={formState === 'loading'}
@@ -162,7 +162,7 @@ export default function ContactPage() {
                       <FormControl>
                         <Textarea
                           placeholder="Tell me about your project..."
-                          className="bg-transparent border-0 border-t rounded-none focus-visible:rounded-sm"
+                          className="bg-transparent border-0 border-foreground border-t rounded-none focus-visible:rounded-sm"
                           {...field}
                           disabled={formState === 'loading'}
                         />
@@ -176,7 +176,7 @@ export default function ContactPage() {
                   type="submit"
                   variant={'outline'}
                   disabled={formState === 'loading'}
-                  className="w-full uppercase tracking-item-subheading"
+                  className="w-full uppercase tracking-item-subheading border-foreground bg-background"
                 >
                   {formState === 'loading' ? 'Sending...' : 'Send'}
                 </Button>

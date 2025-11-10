@@ -1,4 +1,7 @@
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
+import { db } from '@/lib/db';
+import { siteImages } from '@/lib/schema';
+import { eq } from 'drizzle-orm';
 import Image from 'next/image';
 
 export const metadata = {
@@ -6,17 +9,38 @@ export const metadata = {
   description: 'Art director & Stylist portfolio',
 };
 
-export default function Home() {
+async function getFeaturedImages() {
+  const images = await db
+    .select()
+    .from(siteImages)
+    .where(eq(siteImages.imageType, 'featured'))
+    .orderBy(siteImages.order);
+  return images;
+}
+
+async function getHomeHero() {
+  const [hero] = await db
+    .select()
+    .from(siteImages)
+    .where(eq(siteImages.imageType, 'home_hero'))
+    .limit(1);
+  return hero;
+}
+
+export default async function Home() {
+  const [featuredImages, homeHero] = await Promise.all([
+    getFeaturedImages(),
+    getHomeHero(),
+  ]);
+  // Fallback to static assets if DB is empty
+  const heroSrc = homeHero?.publicId || '/assets/home_hero.webp';
+  const heroAlt = homeHero?.altText || 'homepage hero fallback image';
+
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
-      <section className="relative h-dvh snap-start">
-        <Image
-          src={'/assets/home_hero.webp'}
-          className="object-cover z-0"
-          fill
-          alt="homepage hero fallback image"
-        />
-        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center gradient-easing">
+      <section className="relative h-[calc(100dvh-60px)] mt-[60px] snap-start">
+        <Image src={heroSrc} className="object-cover z-0" fill alt={heroAlt} />
+        <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
             LUISA-MARIE HENKEL
           </h1>
@@ -26,10 +50,10 @@ export default function Home() {
         </div>
       </section>
       <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
-        <h2 className="text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 sticky -top-15 flex items-center">
+        <h2 className="font-light text-xl md:text-5xl h-20 md:h-50 w-full flex items-center justify-center  tracking-hero-heading z-50 bottom-0 absolute bg-linear-to-t from-background md:via-75% md:via-black/75 to-transparent left-1/2 -translate-x-1/2">
           FEATURED
         </h2>
-        <FeaturedShowcase />
+        <FeaturedShowcase images={featuredImages} />
       </section>
     </main>
   );

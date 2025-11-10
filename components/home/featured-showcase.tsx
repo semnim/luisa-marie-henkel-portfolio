@@ -2,12 +2,18 @@
 
 import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
+import { SiteImage } from '@/lib/schema';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 
-const FEATURED_IMAGES = [
+interface FeaturedShowcaseProps {
+  images: SiteImage[];
+}
+
+// Fallback for when DB is empty
+const FEATURED_IMAGES_FALLBACK = [
   {
     publicId: '5_taqgpt',
     title: 'fading ties',
@@ -30,7 +36,16 @@ const FEATURED_IMAGES = [
   },
 ];
 
-export const FeaturedShowcase = () => {
+export const FeaturedShowcase = ({ images }: FeaturedShowcaseProps) => {
+  // Use DB images or fallback
+  const featuredImages =
+    images.length > 0
+      ? images.map((img) => ({
+          publicId: img.publicId,
+          title: img.title || '',
+          type: 'EDITORIAL',
+        }))
+      : FEATURED_IMAGES_FALLBACK;
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +65,7 @@ export const FeaturedShowcase = () => {
   };
 
   const handleNext = () => {
-    const newIndex = Math.min(FEATURED_IMAGES.length - 1, currentImgIndex + 1);
+    const newIndex = Math.min(featuredImages.length - 1, currentImgIndex + 1);
     scrollToIndex(newIndex);
   };
 
@@ -65,9 +80,9 @@ export const FeaturedShowcase = () => {
         ref={containerRef}
         className="flex flex-nowrap overflow-x-auto snap-x snap-mandatory overscroll-x-contain md:overflow-x-visible md:snap-none flex-1 relative"
       >
-        {FEATURED_IMAGES.map((item, index) => (
+        {featuredImages.map((item, index) => (
           <Link
-            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-[calc(100dvh-60px)] snap-start`}
+            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-[calc(100dvh-60px)] mt-15 snap-start md:not-last:border-r border-t md:border-foreground`}
             key={index}
             href={`/work/${createSlugFromProjectTitle(item.title)}`}
             onNavigate={() => {
@@ -88,7 +103,7 @@ export const FeaturedShowcase = () => {
                   variant="ITEM"
                   title={item.title}
                   subtitle={item.type}
-                  containerClassName="pt-4 lg:pt-8 "
+                  containerClassName="pt-8 lg:pt-16 "
                 />
               </figcaption>
             </figure>
@@ -107,7 +122,7 @@ export const FeaturedShowcase = () => {
         </button>
       )}
 
-      {currentImgIndex < FEATURED_IMAGES.length - 1 && (
+      {currentImgIndex < featuredImages.length - 1 && (
         <button
           onClick={handleNext}
           className="md:hidden absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 backdrop-blur-sm transition-all"

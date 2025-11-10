@@ -33,8 +33,9 @@ export default async function DetailPage({
     );
   }
 
-  // Split first image for hero, rest for gallery
-  const [heroImage, ...galleryImages] = projectImages;
+  // Filter hero and gallery images by type
+  const heroImage = projectImages.find((img) => img.imageType === 'hero') || projectImages[0];
+  const galleryImages = projectImages.filter((img) => img.imageType === 'gallery');
 
   // Placeholder data - will come from DB later
   const projectData = {

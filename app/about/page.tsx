@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export const metadata = {
   title: 'About | Luisa-Marie Henkel',
   description: 'Art director & Stylist portfolio',
@@ -12,7 +14,13 @@ export default function AboutPage() {
         </h2>
         <div className="max-w-xl w-full space-y-12 my-auto">
           <div className="space-y-8 text-center max-w-xl mx-auto">
-            <div className="h-[250px] md:h-[350px] lg:h-[500px] aspect-square bg-accent mx-auto" />
+            <Image
+              src="/assets/about_me.jpeg"
+              height={508.25}
+              width={407.5}
+              className="object-contain object-center rounded-xs mx-auto"
+              alt="about image"
+            />
             <div className="bg-accent/30 border border-white/10 rounded-sm p-8 backdrop-blur-sm">
               <p className="text-base text-justify font-light leading-relaxed text-muted-foreground">
                 With a refined eye for composition and an intuitive approach to

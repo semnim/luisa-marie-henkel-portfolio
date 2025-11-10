@@ -47,7 +47,7 @@ export default async function WorkPage() {
           })}
         </div>
       </section>
-      <section className="mt-15 h-dvh max-h-dvh md:h-screen md:max-h-screen flex-col hidden md:block">
+      <section className="mt-15 h-dvh max-h-dvh md:h-[calc(100dvh-60px)] md:max-h-[calc(100dvh-60px)] flex-col hidden md:block">
         <MasonryGrid
           images={projects.map((project) => ({
             id: project.id,

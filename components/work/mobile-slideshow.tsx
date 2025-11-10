@@ -16,6 +16,8 @@ type ProjectImage = {
   id: number;
   publicId: string;
   imageUrl: string;
+  mobilePublicId?: string | null;
+  mobileImageUrl?: string | null;
   width: number | null;
   height: number | null;
 };
@@ -58,22 +60,27 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
         setApi={setApi}
       >
         <CarouselContent className="h-full">
-          {images.map((img, index) => (
-            <CarouselItem
-              key={img.id}
-              className="flex items-center justify-center"
-            >
-              <div className="relative w-full h-dvh">
-                <Image
-                  loading="eager"
-                  src={img.publicId}
-                  alt={`${title} - Image ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </CarouselItem>
-          ))}
+          {images.map((img, index) => {
+            // Use mobile variant if available, otherwise fallback to desktop
+            const imageSrc = img.mobilePublicId || img.publicId;
+
+            return (
+              <CarouselItem
+                key={img.id}
+                className="flex items-center justify-center"
+              >
+                <div className="relative w-full h-dvh">
+                  <Image
+                    loading="eager"
+                    src={imageSrc}
+                    alt={`${title} - Image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
         <CarouselPrevious className="left-4" />
         <CarouselNext className="right-4" />

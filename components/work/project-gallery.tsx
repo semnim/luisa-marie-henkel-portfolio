@@ -7,6 +7,8 @@ type ProjectImage = {
   id: number;
   publicId: string;
   imageUrl: string;
+  mobilePublicId?: string | null;
+  mobileImageUrl?: string | null;
   width: number | null;
   height: number | null;
   linkTo?: string;
@@ -19,7 +21,7 @@ type ProjectGalleryProps = {
 
 export function ProjectGallery({ images, title }: ProjectGalleryProps) {
   return (
-    <section className="snap-start h-[calc(100dvh-60px)] md:h-auto">
+    <section className="snap-start h-[calc(100dvh-60px)] md:h-auto md:mt-12">
       <MobileSlideshow images={images} title={title} />
       <MasonryGrid images={images} title={title} />
     </section>

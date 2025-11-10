@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { projectImages, projects } from '@/lib/schema';
+import { projectImages, projects, siteImages } from '@/lib/schema';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import { v2 as cloudinary, ResourceApiResponse } from 'cloudinary';
 import { eq } from 'drizzle-orm';
@@ -42,6 +42,10 @@ const ROOT_FOLDER = 'portfolio';
 syncFromCloudinary();
 
 async function syncFromCloudinary() {
+  // Sync site images (home hero & featured)
+  await syncSiteImages();
+
+  // Sync project images
   const projectAssets = await fetchProjectAssets();
   for (const [projectName, resources] of Object.entries(projectAssets)) {
     await syncWithDb(projectName, resources);
@@ -50,6 +54,75 @@ async function syncFromCloudinary() {
 // =================================== </ENTRYPOINT> ==============================
 
 // =================================== <DB OPS> ===================================
+async function syncSiteImages() {
+  try {
+    console.log('\n📸 Syncing site images (home hero & featured)...\n');
+
+    // Fetch from 'site' folder in portfolio
+    const result = await cloudinary.api.resources_by_asset_folder('portfolio/site', {
+      max_results: 50,
+      context: true,
+    });
+
+    if (!result.resources || result.resources.length === 0) {
+      console.log('  ℹ️  No site images found in portfolio/site folder');
+      return;
+    }
+
+    // Separate mobile variants
+    const mobileVariants = new Map(
+      result.resources
+        .filter((r: { public_id: string }) => r.public_id.includes('_mobile'))
+        .map((r: { public_id: string }) => [r.public_id.replace('_mobile', ''), r])
+    );
+
+    // Process each non-mobile image
+    const siteResources = result.resources.filter(
+      (r: { public_id: string }) => !r.public_id.includes('_mobile')
+    );
+
+    for (const [index, resource] of siteResources.entries()) {
+      const filename = resource.public_id.split('/').pop() || '';
+
+      // Determine image type from filename
+      let imageType: 'home_hero' | 'featured' = 'featured';
+      if (filename.toLowerCase().includes('hero') || filename.toLowerCase().includes('home')) {
+        imageType = 'home_hero';
+      }
+
+      const mobileVariant = mobileVariants.get(resource.public_id);
+
+      // Generate alt text from filename
+      const altText = filename
+        .replace(/[-_]/g, ' ')
+        .replace(/\.[^.]+$/, '')
+        .trim();
+
+      await db.insert(siteImages).values({
+        imageType,
+        isActive: true,
+        publicId: resource.public_id,
+        imageUrl: resource.secure_url,
+        mobilePublicId: mobileVariant?.public_id || null,
+        mobileImageUrl: mobileVariant?.secure_url || null,
+        title: altText,
+        altText,
+        order: index,
+      });
+
+      console.log(`  ✅ Inserted ${imageType}: ${filename}`);
+    }
+
+    console.log(`\n✅ Synced ${siteResources.length} site images\n`);
+  } catch (error: any) {
+    if (error.error?.http_code === 404) {
+      console.log('  ℹ️  No site images folder found (portfolio/site)');
+    } else {
+      console.error('  ❌ Error syncing site images:', error);
+    }
+  }
+}
+
 async function syncWithDb(projectName: string, resources: CloudinaryAsset[]) {
   const projectSlug = await insertProject(projectName, resources);
   if (projectSlug) {
@@ -109,9 +182,16 @@ async function insertProjectImages(
   projectSlug: string,
   resources: CloudinaryAsset[]
 ) {
-  // Filter out thumbnail
+  // Separate mobile and desktop variants
+  const mobileVariants = new Map(
+    resources
+      .filter((r) => r.public_id.includes('_mobile'))
+      .map((r) => [r.public_id.replace('_mobile', ''), r])
+  );
+
+  // Filter out thumbnails and mobile variants (we'll pair them with desktop)
   const imageResources = resources.filter(
-    (r) => !r.public_id.includes('thumbnail')
+    (r) => !r.public_id.includes('thumbnail') && !r.public_id.includes('_mobile')
   );
 
   if (imageResources.length === 0) {
@@ -121,10 +201,29 @@ async function insertProjectImages(
 
   try {
     for (const [index, resource] of imageResources.entries()) {
+      // Determine image type: first image is hero, rest are gallery
+      const imageType = index === 0 ? 'hero' : 'gallery';
+
+      // Check if there's a mobile variant for this image
+      const mobileVariant = mobileVariants.get(resource.public_id);
+
+      // Generate alt text from filename
+      const filename = resource.public_id.split('/').pop() || '';
+      const altText = filename
+        .replace(/[-_]/g, ' ')
+        .replace(/\.[^.]+$/, '')
+        .trim();
+
       await db.insert(projectImages).values({
         projectSlug,
         imageUrl: resource.secure_url,
         publicId: resource.public_id,
+        mobilePublicId: mobileVariant?.public_id || null,
+        mobileImageUrl: mobileVariant?.secure_url || null,
+        imageType,
+        variant: mobileVariant ? 'desktop' : 'both',
+        altText,
+        caption: null,
         width: resource.width,
         height: resource.height,
         format: resource.format,

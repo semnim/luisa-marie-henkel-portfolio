@@ -29,7 +29,7 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
   }
 
   return (
-    <div className="hidden md:block columns-2 lg:columns-3 gap-4 relative p-4 pt-0">
+    <div className="hidden md:block columns-2 lg:columns-3 gap-0 relative pt-0">
       <div className="absolute bottom-0 inset-x-0 h-[200px] z-20 mask-t-from-1% bg-radial from-100% from-background to-99% to-transparent" />
       {images.map((img, index) => (
         <Link
@@ -41,7 +41,7 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
         >
           <figure
             key={img.id}
-            className="break-inside-avoid mb-4 group cursor-pointer"
+            className="break-inside-avoid border-b border-foreground border-r group cursor-pointer"
           >
             <div className="relative overflow-hidden">
               <Image
