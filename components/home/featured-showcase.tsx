@@ -82,9 +82,9 @@ export const FeaturedShowcase = ({ images }: FeaturedShowcaseProps) => {
       >
         {featuredImages.map((item, index) => (
           <Link
-            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-[calc(100dvh-60px)] mt-15 snap-start md:not-last:border-r border-t md:border-foreground`}
+            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-[calc(100dvh-60px)] mt-15 snap-start`}
             key={index}
-            href={`/work/${createSlugFromProjectTitle(item.title)}`}
+            href={`/portfolio/${createSlugFromProjectTitle(item.title)}`}
             onNavigate={() => {
               handleImageTouch(index);
             }}
