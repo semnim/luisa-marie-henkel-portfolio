@@ -34,8 +34,11 @@ export default async function DetailPage({
   }
 
   // Filter hero and gallery images by type
-  const heroImage = projectImages.find((img) => img.imageType === 'hero') || projectImages[0];
-  const galleryImages = projectImages.filter((img) => img.imageType === 'gallery');
+  const heroImage =
+    projectImages.find((img) => img.imageType === 'hero') || projectImages[0];
+  const galleryImages = projectImages.filter(
+    (img) => img.imageType === 'gallery'
+  );
 
   // Placeholder data - will come from DB later
   const projectData = {
@@ -47,7 +50,11 @@ export default async function DetailPage({
   };
 
   return (
-    <main className={'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory'}>
+    <main
+      className={
+        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] overflow-y-scroll snap-y snap-mandatory mt-15'
+      }
+    >
       <HeroSection
         heroImage={{
           publicId: heroImage.publicId,

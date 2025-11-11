@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local resources (images/videos)
 resources/
+
+# git worktrees
+.worktrees/

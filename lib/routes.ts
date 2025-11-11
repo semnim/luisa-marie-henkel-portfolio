@@ -1,6 +1,6 @@
 export const routes = [
   { id: 'home', url: '/' },
-  { id: 'work', url: '/work' },
+  { id: 'portfolio', url: '/portfolio' },
   { id: 'about', url: '/about' },
   { id: 'contact', url: '/contact' },
 ];

@@ -1,7 +1,6 @@
 'use client';
 
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
-import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -9,10 +8,9 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -21,10 +19,7 @@ const contactFormSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name too long'),
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email({ message: 'Invalid email address' }),
+  email: z.email({ message: 'Invalid email address' }),
   message: z
     .string()
     .min(10, 'Message must be at least 10 characters')
@@ -33,6 +28,31 @@ const contactFormSchema = z.object({
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
+const AnimatedBorderButton = ({
+  children,
+  className,
+  ...props
+}: ComponentProps<'button'>) => {
+  return (
+    <div className="relative group">
+      <button
+        className={cn(
+          'relative w-full uppercase tracking-item-subheading bg-background border border-muted-foreground rounded-sm px-4 py-2 overflow-hidden font-light',
+          className
+        )}
+        {...props}
+      >
+        {/* Animated borders */}
+        <span className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus:w-full group-hover:w-full transition-all duration-500 ease-out" />
+        <span className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus:w-full group-hover:h-full transition-all duration-500 ease-out" />
+        <span className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus:w-full group-hover:w-full transition-all duration-500 ease-out" />
+        <span className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus:w-full group-hover:h-full transition-all duration-500 ease-out" />
+
+        <span className="relative z-10">{children}</span>
+      </button>
+    </div>
+  );
+};
 export default function ContactPage() {
   const [formState, setFormState] = useState<FormState>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -71,9 +91,11 @@ export default function ContactPage() {
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
       <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
         <div className="w-full max-w-2xl">
-          <h2 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
-            GET IN TOUCH
-          </h2>
+          {formState !== 'error' && (
+            <h2 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
+              GET IN TOUCH
+            </h2>
+          )}
 
           {formState === 'success' ? (
             <div className="text-center space-y-6">
@@ -85,31 +107,26 @@ export default function ContactPage() {
                   Thanks for reaching out. I&apos;ll get back to you soon.
                 </p>
               </div>
-              <Button
+              <button
                 onClick={handleReset}
-                variant="outline"
                 className="uppercase tracking-item-subheading font-light"
               >
                 Send Another Message
-              </Button>
+              </button>
             </div>
           ) : formState === 'error' ? (
             <div className="text-center space-y-6">
               <div className="space-y-3">
-                <p className="text-2xl font-light tracking-wide text-red-400">
-                  Failed to send message
-                </p>
-                <p className="text-muted-foreground font-light">
-                  {errorMessage}
+                <p className="text-2xl font-light tracking-wide text-muted-foreground">
+                  Failed to send message.
                 </p>
               </div>
-              <Button
+              <AnimatedBorderButton
                 onClick={handleReset}
-                variant="outline"
                 className="uppercase tracking-item-subheading font-light"
               >
                 Try Again
-              </Button>
+              </AnimatedBorderButton>
             </div>
           ) : (
             <Form {...form}>
@@ -123,12 +140,21 @@ export default function ContactPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          className="border-0 border-foreground rounded-none focus-visible:rounded-sm bg-transparent border-t"
-                          placeholder="Name*"
-                          {...field}
-                          disabled={formState === 'loading'}
-                        />
+                        <div className="relative group">
+                          <input
+                            className="w-full border-0 outline-0 border-muted-foreground rounded-none bg-transparent border-t pt-2"
+                            placeholder="Name*"
+                            {...field}
+                            disabled={formState === 'loading'}
+                          />
+                          <div
+                            className={`absolute top-0 left-0 h-px bg-foreground transition-all duration-500 ease-out ${
+                              field.value
+                                ? 'w-full'
+                                : 'w-0 group-focus-within:w-full group-hover:w-full'
+                            }`}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -141,13 +167,22 @@ export default function ContactPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          type="email"
-                          className="border-0 border-foreground rounded-none focus-visible:rounded-sm bg-transparent border-t"
-                          placeholder="Email*"
-                          {...field}
-                          disabled={formState === 'loading'}
-                        />
+                        <div className="relative group">
+                          <input
+                            type="email"
+                            className="w-full border-0 outline-0 border-muted-foreground rounded-none bg-transparent border-t pt-2"
+                            placeholder="Email*"
+                            {...field}
+                            disabled={formState === 'loading'}
+                          />
+                          <div
+                            className={`absolute top-0 left-0 h-px bg-foreground transition-all duration-500 ease-out ${
+                              field.value
+                                ? 'w-full'
+                                : 'w-0 group-focus-within:w-full group-hover:w-full'
+                            }`}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -160,26 +195,35 @@ export default function ContactPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Textarea
-                          placeholder="Tell me about your project..."
-                          className="bg-transparent border-0 border-foreground border-t rounded-none focus-visible:rounded-sm"
-                          {...field}
-                          disabled={formState === 'loading'}
-                        />
+                        <div className="relative group">
+                          <textarea
+                            placeholder="Tell me about your project..."
+                            className="w-full bg-transparent border-0 outline-0 border-muted-foreground border-t-2 rounded-none pt-3 resize-none min-h-[120px]"
+                            {...field}
+                            disabled={formState === 'loading'}
+                          />
+                          <div
+                            className={`absolute top-0 left-0 h-0.5 bg-foreground transition-all duration-500 ease-out ${
+                              field.value
+                                ? 'w-full'
+                                : 'w-0 group-focus-within:w-full group-hover:w-full'
+                            }`}
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button
+                <AnimatedBorderButton
                   type="submit"
-                  variant={'outline'}
                   disabled={formState === 'loading'}
-                  className="w-full uppercase tracking-item-subheading border-foreground bg-background"
                 >
-                  {formState === 'loading' ? 'Sending...' : 'Send'}
-                </Button>
+                  <span className="relative z-10">
+                    {formState === 'loading' ? 'Sending...' : 'Send'}
+                  </span>
+                </AnimatedBorderButton>
               </form>
             </Form>
           )}

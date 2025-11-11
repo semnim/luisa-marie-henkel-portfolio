@@ -82,8 +82,8 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
             );
           })}
         </CarouselContent>
-        <CarouselPrevious className="left-4" />
-        <CarouselNext className="right-4" />
+        <CarouselPrevious className="left-4 bg-background/80!" />
+        <CarouselNext className="right-4 bg-background/80!" />
       </Carousel>
 
       {/* Dot Indicators */}

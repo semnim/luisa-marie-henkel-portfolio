@@ -113,7 +113,7 @@ Submitted at: ${new Date().toISOString()}
       console.error('Resend error:', error);
       return {
         success: false,
-        error: 'Please try again.',
+        error: 'An unknown error occurred.',
       };
     }
 

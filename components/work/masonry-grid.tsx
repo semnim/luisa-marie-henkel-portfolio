@@ -41,7 +41,7 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
         >
           <figure
             key={img.id}
-            className="break-inside-avoid border-b border-foreground border-r group cursor-pointer"
+            className="break-inside-avoid p-1 group cursor-pointer"
           >
             <div className="relative overflow-hidden">
               <Image

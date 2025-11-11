@@ -1,6 +1,7 @@
 'use client';
 
 import { Image } from '@/components/image';
+import { formatDate } from '@/lib/utils';
 
 type HeroSectionProps = {
   heroImage: {
@@ -20,15 +21,8 @@ export function HeroSection({
   category,
   publishedAt,
 }: HeroSectionProps) {
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-    }).format(date);
-  };
-
   return (
-    <section className="relative h-dvh md:h-[calc(100dvh-60px-150px)] w-full flex flex-col snap-start">
+    <section className="relative h-[calc(100dvh-60px)] md:h-[calc(100dvh-60px-150px)] w-full flex flex-col snap-start">
       <figure className="relative h-[calc(100dvh-60px)] max-h-[calc(100dvh-60px)] w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         <Image
