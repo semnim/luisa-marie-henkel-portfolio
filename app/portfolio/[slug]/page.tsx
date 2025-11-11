@@ -46,15 +46,11 @@ export default async function DetailPage({
     category: 'editorial' as const,
     publishedAt: new Date('2024-01-15'),
     description:
-      'A stunning editorial showcase featuring bold styling choices and innovative visual storytelling. This project pushes the boundaries of contemporary fashion photography.',
+      'A stunning editorial showcase featuring bold styling choices and innovative visual storytelling. This project pushes the boundaries of contemporary fashion photography. A stunning editorial showcase featuring bold styling choices and innovative visual storytelling. This project pushes the boundaries of contemporary fashion photography.',
   };
 
   return (
-    <main
-      className={
-        'max-h-[calc(100dvh-60px)] h-[calc(100dvh-60px)] overflow-y-scroll snap-y snap-mandatory mt-15'
-      }
-    >
+    <main className={'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory'}>
       <HeroSection
         heroImage={{
           publicId: heroImage.publicId,

@@ -25,22 +25,27 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
         <header
-          className={`fixed flex flex-col max-w-dvw bg-background top-0 z-40 h-15 w-full overflow-hidden transition-[height] ease-in-out duration-750 ${
-            mobileMenuOpen ? 'h-dvh' : ''
+          className={`fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 mix-blend-difference ${
+            mobileMenuOpen
+              ? 'h-dvh backdrop-blur-md backdrop-brightness-50'
+              : ''
           }`}
         >
           <nav
             className={`w-full h-15 min-h-15 top-4 px-4 flex flex-col items-center justify-between gap-8`}
           >
             <div className="flex flex-1 w-full items-center">
-              <Link href="/" className="text-foreground font-semibold mr-auto">
+              <Link
+                href="/"
+                className="text-foreground font-semibold mr-auto mix-blend-difference"
+              >
                 luisa-marie henkel
               </Link>
 
               {mobileMenuOpen ? (
                 <Button
                   variant={'ghost'}
-                  className="font-semibold"
+                  className="font-semibold mix-blend-difference"
                   onClick={() => setMobileMenuOpen((prev) => !prev)}
                 >
                   Close
@@ -48,7 +53,7 @@ export default function RootLayout({
               ) : (
                 <Button
                   variant={'ghost'}
-                  className="font-semibold"
+                  className="font-semibold mix-blend-difference"
                   onClick={() => setMobileMenuOpen((prev) => !prev)}
                 >
                   Menu

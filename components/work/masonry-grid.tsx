@@ -3,7 +3,6 @@
 import { Image } from '@/components/image';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import Link from 'next/link';
-import { Heading } from '../heading';
 
 type ProjectImage = {
   id: number;
@@ -52,12 +51,12 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
                 className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
               />
               {img.title && (
-                <figcaption className="absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center h-50 bg-linear-to-b from-black/75 to-transparent mb-auto">
-                  <Heading
-                    variant="ITEM"
-                    title={img.title}
-                    containerClassName="pt-4 lg:pt-8 "
-                  />
+                <figcaption className="absolute inset-x-0 bottom-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center bg-linear-to-t from-black/75 to-transparent mb-auto">
+                  <div className="text-center z-20 pb-8">
+                    <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
+                      {title}
+                    </p>
+                  </div>
                 </figcaption>
               )}
             </div>

@@ -1,6 +1,5 @@
 'use client';
 
-import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
 import { SiteImage } from '@/lib/schema';
 import { createSlugFromProjectTitle } from '@/lib/utils';
@@ -82,7 +81,7 @@ export const FeaturedShowcase = ({ images }: FeaturedShowcaseProps) => {
       >
         {featuredImages.map((item, index) => (
           <Link
-            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-[calc(100dvh-60px)] mt-15 snap-start`}
+            className={`group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-dvh snap-start`}
             key={index}
             href={`/portfolio/${createSlugFromProjectTitle(item.title)}`}
             onNavigate={() => {
@@ -98,13 +97,23 @@ export const FeaturedShowcase = ({ images }: FeaturedShowcaseProps) => {
                   activeIndex === index ? 'blur-sm' : ''
                 }`}
               />
-              <figcaption className="absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-50 bg-linear-to-b from-black/75 to-transparent mb-auto">
-                <Heading
-                  variant="ITEM"
-                  title={item.title}
-                  subtitle={item.type}
-                  containerClassName="pt-8 lg:pt-16 "
-                />
+              <figcaption className="hover:backdrop-blur-xs absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
+                <div
+                  className={
+                    'h-full flex items-center justify-center flex-col text-center z-20'
+                  }
+                >
+                  <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
+                    {item.title}
+                  </p>
+                  <span
+                    className={
+                      'text-xs font-light text-foreground lowercase tracking-item-subheading mt-1'
+                    }
+                  >
+                    {item.type}
+                  </span>
+                </div>
               </figcaption>
             </figure>
           </Link>
