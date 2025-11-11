@@ -31,7 +31,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
     description ? 'description' : 'team'
   );
   return (
-    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh pt-15 md:h-[300px] md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
+    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh pt-15 md:h-fit md:absolute md:bottom-0 md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
       <div className="md:hidden mb-4 flex-1 flex flex-col">
         <div className="flex gap-2">
           {description && (
@@ -73,7 +73,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
           <div className="flex items-start flex-1 justify-start mt-4 flex-col">
             <dl className="flex-1 w-full max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
               {team.map((credit, index) => (
-                <React.Fragment key={credit.name}>
+                <React.Fragment key={credit.name + index}>
                   <CreditItem
                     label={
                       credit.role.replaceAll('_', ' ')[0].toUpperCase() +
@@ -94,14 +94,14 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
         {description && (
           <div className="mb-4 md:pt-0 ">
             <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
-              BACKGROUND
+              DESCRIPTION
             </h2>
-            <p className="leading-relaxed text-justify md:text-center md:mx-auto text-xs md:text-md md:max-w-[1000px] text-muted-foreground">
+            <p className="leading-relaxed text-justify mx-auto text-xs text-md max-w-fit text-muted-foreground">
               {description}
             </p>
           </div>
         )}
-        <div className="md:max-h-fit ">
+        <div className="max-h-fit max-w-fit mx-auto">
           {/* Credits Grid */}
           <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
             TEAM
@@ -110,7 +110,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
             <div className="h-fit flex items-start max-h-fit">
               <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
                 {team.map((credit, index) => (
-                  <React.Fragment key={credit.name}>
+                  <React.Fragment key={credit.name + index}>
                     <CreditItem
                       label={
                         credit.role.replaceAll('_', ' ')[0].toUpperCase() +

@@ -22,7 +22,7 @@ export function HeroSection({
   publishedAt,
 }: HeroSectionProps) {
   return (
-    <section className="relative h-dvh md:h-[calc(100dvh-300px)] w-full flex flex-col snap-start">
+    <section className="relative h-dvh md:h-dvh w-full flex flex-col snap-start">
       <figure className="relative h-dvh w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         <Image
@@ -36,7 +36,7 @@ export function HeroSection({
           <div className="mx-auto h-full flex flex-col justify-end">
             <div
               className={
-                'relative z-10 text-center flex flex-col items-center justify-center pb-4 md:pb-36'
+                'relative z-10 text-center flex flex-col items-center justify-center pb-4 md:h-full'
               }
             >
               <h1

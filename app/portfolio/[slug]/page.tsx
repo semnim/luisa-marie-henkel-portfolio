@@ -46,20 +46,22 @@ export default async function DetailPage({
         'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory md:snap-none'
       }
     >
-      <HeroSection
-        heroImage={{
-          publicId: heroImage.publicId,
-          alt: title,
-        }}
-        title={title}
-        client={projectData.client}
-        category={projectData.category}
-        publishedAt={projectData.publishedAt}
-      />
-      <ProjectMetadata
-        description={projectData.description}
-        team={projectData.team}
-      />
+      <div className="md:h-dvh md:max-h-dvh relative">
+        <HeroSection
+          heroImage={{
+            publicId: heroImage.publicId,
+            alt: title,
+          }}
+          title={title}
+          client={projectData.client}
+          category={projectData.category}
+          publishedAt={projectData.publishedAt}
+        />
+        <ProjectMetadata
+          description={projectData.description}
+          team={projectData.team}
+        />
+      </div>
       <ProjectGallery images={galleryImages} title={title} />
     </main>
   );
