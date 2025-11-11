@@ -47,7 +47,7 @@ export function HeroSection({
                 {title}
               </h1>
               <div className="flex flex-wrap gap-2 md:gap-4 items-center text-white/80 justify-center md:justify-start text-xs mb-4 md:mb-0 mt-2">
-                <span className="uppercase tracking-wide">{category}</span>
+                <span className="tracking-wide">{category}</span>
                 {client && (
                   <>
                     <span>·</span>
@@ -56,7 +56,7 @@ export function HeroSection({
                 )}
                 <span>·</span>
                 <time dateTime={publishedAt.toISOString()}>
-                  {formatDate(publishedAt)}
+                  {formatDate(publishedAt).toLowerCase()}
                 </time>
               </div>
             </div>

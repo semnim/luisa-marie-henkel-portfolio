@@ -48,7 +48,7 @@ export default function RootLayout({
                   className="font-semibold mix-blend-difference"
                   onClick={() => setMobileMenuOpen((prev) => !prev)}
                 >
-                  Close
+                  close
                 </Button>
               ) : (
                 <Button
@@ -56,7 +56,7 @@ export default function RootLayout({
                   className="font-semibold mix-blend-difference"
                   onClick={() => setMobileMenuOpen((prev) => !prev)}
                 >
-                  Menu
+                  menu
                 </Button>
               )}
             </div>

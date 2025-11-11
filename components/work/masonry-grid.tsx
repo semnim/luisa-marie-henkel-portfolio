@@ -33,7 +33,9 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
       {images.map((img, index) => (
         <Link
           href={
-            img.title ? `/work/${createSlugFromProjectTitle(img.title)}` : ''
+            img.title
+              ? `/portfolio/${createSlugFromProjectTitle(img.title)}`
+              : ''
           }
           key={img.id}
           className={` group overflow-hidden snap-center relative h-dvh lg:h-[500px]`}
@@ -54,7 +56,7 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
                 <figcaption className="absolute inset-x-0 bottom-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center bg-linear-to-t from-black/75 to-transparent mb-auto">
                   <div className="text-center z-20 pb-8">
                     <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
-                      {title}
+                      {img.title}
                     </p>
                   </div>
                 </figcaption>

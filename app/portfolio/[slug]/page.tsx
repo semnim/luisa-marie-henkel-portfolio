@@ -42,7 +42,7 @@ export default async function DetailPage({
 
   // Placeholder data - will come from DB later
   const projectData = {
-    client: 'Sample Client',
+    client: 'sample client',
     category: 'editorial' as const,
     publishedAt: new Date('2024-01-15'),
     description:
