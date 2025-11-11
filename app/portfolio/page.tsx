@@ -1,5 +1,6 @@
 import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
+import { IndexPopover } from '@/components/portfolio/index-popover';
 import { MasonryGrid } from '@/components/work/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import Link from 'next/link';
@@ -45,6 +46,7 @@ export default async function WorkPage() {
               </Link>
             );
           })}
+          <IndexPopover projects={projects} />
         </div>
       </section>
       <section className="h-dvh max-h-dvh md:h-[calc(100dvh-60px)] md:max-h-[calc(100dvh-60px)] flex-col hidden md:block">
