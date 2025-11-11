@@ -21,3 +21,4 @@
 - Write tests
 - Refactor code
   - Remove dead media queries
+  - Unify components & add abstractions
