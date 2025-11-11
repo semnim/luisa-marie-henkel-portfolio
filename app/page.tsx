@@ -37,7 +37,7 @@ export default async function Home() {
   const heroAlt = homeHero?.altText || 'homepage hero fallback image';
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
+    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
       <section className="relative h-dvh snap-start">
         <Image src={heroSrc} className="object-cover z-0" fill alt={heroAlt} />
         <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">

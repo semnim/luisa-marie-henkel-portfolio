@@ -16,7 +16,7 @@ export default async function WorkPage() {
       <h2 className="hidden text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 fixed top-0 left-1/2 -translate-x-1/2 md:flex items-center mix-blend-difference">
         PROJECTS
       </h2>
-      <section className="h-dvh md:h-screen md:max-h-screen flex flex-col overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden snap-mandatory snap-y">
+      <section className="h-dvh md:h-screen md:max-h-screen flex flex-col overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden snap-mandatory snap-y overscroll-none">
         <div className="grid grid-cols-1 lg:grid-cols-3 relative">
           {projects.map((item, index) => {
             if (item === null) {

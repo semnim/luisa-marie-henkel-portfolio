@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="snap-y snap-mandatory h-dvh max-h-[calc(100dvh-60px)]">
+    <main className="overscroll-none">
       <section className="mt-15 snap-start flex items-center justify-center px-6 h-full">
         <div className="max-w-xl w-full my-auto">
           <div className="space-y-8 text-center max-w-xl mx-auto mt-4">
