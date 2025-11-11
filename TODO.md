@@ -1,30 +1,30 @@
 # TO DO
 
-- Fix loading states
-- Brainstorm & Add animations
+- [ ] Fix loading states
+- [ ] Brainstorm & Add animations
   - gsap?
   - text fade in / text spinner
   - Image fade in
-- Prevent cloudinary transformations
+- [ ] Prevent cloudinary transformations
   - Use next image instead of cloudinary?
   - Or maybe flag?
-- Set up resend and finish contact form mechanism
-- Add Authentication (Better Auth)
-- Section management features
+- [ ] Set up resend and finish contact form mechanism
+- [x] Add Authentication (Better Auth)
+- [ ] Section management features
   - View and manage cloudinary images
     - Add preprocessing to pipeline (conditional)
     - Automatically create loading state image for each (blurred heavily)
-  - Manage section content
+  - [ ] Manage section content
     - Change image on HOME/HERO, HOME/FEATURED
     - Modify and add projects
       - Metadata
       - Project thumbnail
       - Project hero
     - Modify about text and image
-- Clean-up
+- [ ] Clean-up
   - package.json
   - unused components
-- Write tests
-- Refactor code
+- [ ] Write tests
+- [ ] Refactor code
   - Remove dead media queries
   - Unify components & add abstractions

@@ -8,9 +8,9 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { cn } from '@/lib/utils';
+import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ComponentProps, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -28,45 +28,6 @@ const contactFormSchema = z.object({
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
-const AnimatedBorderButton = ({
-  children,
-  className,
-  ...props
-}: ComponentProps<'button'>) => {
-  return (
-    <div className="relative" tabIndex={-1}>
-      <button
-        className={cn(
-          'relative w-full group uppercase tracking-item-subheading bg-background border border-muted-foreground px-4 py-2 overflow-hidden font-light transition-colors',
-          className
-        )}
-        {...props}
-      >
-        {/* Animated borders */}
-        <span
-          tabIndex={-1}
-          className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
-        />
-        <span
-          tabIndex={-1}
-          className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
-        />
-        <span
-          tabIndex={-1}
-          className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
-        />
-        <span
-          tabIndex={-1}
-          className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
-        />
-
-        <span tabIndex={-1} className="relative z-10">
-          {children}
-        </span>
-      </button>
-    </div>
-  );
-};
 export default function ContactPage() {
   const [formState, setFormState] = useState<FormState>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
