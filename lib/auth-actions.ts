@@ -1,6 +1,7 @@
 'use server';
 
-import { authClient } from './auth-client';
+import { auth } from './auth';
+import { headers } from 'next/headers';
 
 export interface RegisterFormData {
   name: string;
@@ -22,16 +23,19 @@ export async function registerUser(
   data: RegisterFormData
 ): Promise<AuthResult> {
   try {
-    const result = await authClient.signUp.email({
-      email: data.email,
-      password: data.password,
-      name: data.name,
+    const result = await auth.api.signUpEmail({
+      body: {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      },
+      headers: await headers(),
     });
 
-    if (result.error) {
+    if (!result) {
       return {
         success: false,
-        error: result.error.message || 'Registration failed',
+        error: 'Registration failed',
       };
     }
 
@@ -40,22 +44,25 @@ export async function registerUser(
     console.error('Registration error:', error);
     return {
       success: false,
-      error: 'Unable to connect. Please try again.',
+      error: error instanceof Error ? error.message : 'Unable to connect. Please try again.',
     };
   }
 }
 
 export async function loginUser(data: LoginFormData): Promise<AuthResult> {
   try {
-    const result = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
+    const result = await auth.api.signInEmail({
+      body: {
+        email: data.email,
+        password: data.password,
+      },
+      headers: await headers(),
     });
 
-    if (result.error) {
+    if (!result) {
       return {
         success: false,
-        error: result.error.message || 'Login failed',
+        error: 'Login failed',
       };
     }
 
@@ -64,7 +71,7 @@ export async function loginUser(data: LoginFormData): Promise<AuthResult> {
     console.error('Login error:', error);
     return {
       success: false,
-      error: 'Unable to connect. Please try again.',
+      error: error instanceof Error ? error.message : 'Unable to connect. Please try again.',
     };
   }
 }
