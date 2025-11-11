@@ -42,14 +42,14 @@ export function ProjectMetadata({
   ];
 
   return (
-    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh md:h-[150px] md:max-h-[150px] w-full lg:flex-1 flex flex-col md:snap-align-none">
-      <div className="mx-auto px-4 flex flex-col justify-center flex-1 gap-4">
+    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh md:h-[300px] md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
+      <div className="mx-auto px-4 flex flex-col justify-center flex-1 gap-4 md:container">
         {description && (
-          <div className="mb-4 pt-8">
+          <div className="mb-4 pt-8 md:pt-0">
             <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
               BACKGROUND
             </h2>
-            <p className="leading-relaxed text-justify text-xs md:text-md text-muted-foreground">
+            <p className="leading-relaxed text-justify md:text-center md:mx-auto text-xs md:text-md md:max-w-[1000px] text-muted-foreground">
               {description}
             </p>
           </div>

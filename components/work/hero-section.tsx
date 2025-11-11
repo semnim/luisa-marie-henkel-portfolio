@@ -22,7 +22,7 @@ export function HeroSection({
   publishedAt,
 }: HeroSectionProps) {
   return (
-    <section className="relative h-dvh md:h-[calc(100dvh-150px)] w-full flex flex-col snap-start">
+    <section className="relative h-dvh md:h-[calc(100dvh-300px)] w-full flex flex-col snap-start">
       <figure className="relative h-dvh w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         <Image
