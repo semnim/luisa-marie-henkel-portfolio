@@ -34,21 +34,35 @@ const AnimatedBorderButton = ({
   ...props
 }: ComponentProps<'button'>) => {
   return (
-    <div className="relative group">
+    <div className="relative" tabIndex={-1}>
       <button
         className={cn(
-          'relative w-full uppercase tracking-item-subheading bg-background border border-muted-foreground rounded-sm px-4 py-2 overflow-hidden font-light',
+          'relative w-full group uppercase tracking-item-subheading bg-background border border-muted-foreground px-4 py-2 overflow-hidden font-light transition-colors',
           className
         )}
         {...props}
       >
         {/* Animated borders */}
-        <span className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus:w-full group-hover:w-full transition-all duration-500 ease-out" />
-        <span className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus:w-full group-hover:h-full transition-all duration-500 ease-out" />
-        <span className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus:w-full group-hover:w-full transition-all duration-500 ease-out" />
-        <span className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus:w-full group-hover:h-full transition-all duration-500 ease-out" />
+        <span
+          tabIndex={-1}
+          className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
+        />
+        <span
+          tabIndex={-1}
+          className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
+        />
+        <span
+          tabIndex={-1}
+          className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
+        />
+        <span
+          tabIndex={-1}
+          className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
+        />
 
-        <span className="relative z-10">{children}</span>
+        <span tabIndex={-1} className="relative z-10">
+          {children}
+        </span>
       </button>
     </div>
   );
@@ -198,16 +212,26 @@ export default function ContactPage() {
                         <div className="relative group">
                           <textarea
                             placeholder="Tell me about your project..."
-                            className="w-full bg-transparent border-0 outline-0 border-muted-foreground border-t-2 rounded-none pt-3 resize-none min-h-[120px]"
+                            className="w-full p-4 text-foreground outline-0 border-muted-foreground border resize-none min-h-[120px] h-full"
                             {...field}
                             disabled={formState === 'loading'}
                           />
-                          <div
-                            className={`absolute top-0 left-0 h-0.5 bg-foreground transition-all duration-500 ease-out ${
-                              field.value
-                                ? 'w-full'
-                                : 'w-0 group-focus-within:w-full group-hover:w-full'
-                            }`}
+                          {/* Animated borders */}
+                          <span
+                            tabIndex={-1}
+                            className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
+                          />
+                          <span
+                            tabIndex={-1}
+                            className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
+                          />
+                          <span
+                            tabIndex={-1}
+                            className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
+                          />
+                          <span
+                            tabIndex={-1}
+                            className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
                           />
                         </div>
                       </FormControl>

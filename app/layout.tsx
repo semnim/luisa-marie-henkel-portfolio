@@ -70,7 +70,7 @@ export default function RootLayout({
                 onClick={() => setMobileMenuOpen(false)}
                 className={`text-5xl ${
                   pathname === route.url
-                    ? 'font-muted-foreground'
+                    ? 'text-muted-foreground italic'
                     : 'text-foreground'
                 }`}
                 href={route.url}
