@@ -59,12 +59,15 @@ async function syncSiteImages() {
     console.log('\n📸 Syncing site images (home hero & featured)...\n');
 
     // Fetch from 'site' folder in portfolio
-    const result = await cloudinary.api.resources_by_asset_folder('portfolio/site', {
-      max_results: 50,
-      context: true,
-    });
+    const result = await cloudinary.api.resources_by_asset_folder(
+      'portfolio/site',
+      {
+        max_results: 50,
+        context: true,
+      }
+    );
 
-    if (!result.resources || result.resources.length === 0) {
+    if (!result.resources) {
       console.log('  ℹ️  No site images found in portfolio/site folder');
       return;
     }
@@ -73,7 +76,10 @@ async function syncSiteImages() {
     const mobileVariants = new Map(
       result.resources
         .filter((r: { public_id: string }) => r.public_id.includes('_mobile'))
-        .map((r: { public_id: string }) => [r.public_id.replace('_mobile', ''), r])
+        .map((r: { public_id: string }) => [
+          r.public_id.replace('_mobile', ''),
+          r,
+        ])
     );
 
     // Process each non-mobile image
@@ -86,7 +92,10 @@ async function syncSiteImages() {
 
       // Determine image type from filename
       let imageType: 'home_hero' | 'featured' = 'featured';
-      if (filename.toLowerCase().includes('hero') || filename.toLowerCase().includes('home')) {
+      if (
+        filename.toLowerCase().includes('hero') ||
+        filename.toLowerCase().includes('home')
+      ) {
         imageType = 'home_hero';
       }
 
@@ -191,7 +200,8 @@ async function insertProjectImages(
 
   // Filter out thumbnails and mobile variants (we'll pair them with desktop)
   const imageResources = resources.filter(
-    (r) => !r.public_id.includes('thumbnail') && !r.public_id.includes('_mobile')
+    (r) =>
+      !r.public_id.includes('thumbnail') && !r.public_id.includes('_mobile')
   );
 
   if (imageResources.length === 0) {
