@@ -1,0 +1,23 @@
+# TO DO
+
+- Prevent cloudinary transformations
+  - Use next image instead of cloudinary?
+  - Or maybe flag?
+- Set up resend and finish contact form mechanism
+- Add Authentication (Better Auth)
+- Section management features
+  - View and manage cloudinary images
+    - Add preprocessing to pipeline (conditional)
+  - Manage section content
+    - Change image on HOME/HERO, HOME/FEATURED
+    - Modify and add projects
+      - Metadata
+      - Project thumbnail
+      - Project hero
+    - Modify about text and image
+- Clean-up
+  - package.json
+  - unused components
+- Write tests
+- Refactor code
+  - Remove dead media queries
