@@ -1,8 +1,10 @@
+import { Project } from '@/lib/schema';
 import React from 'react';
 
 type ProjectMetadataProps = {
   description: string | null;
   category: 'editorial' | 'commercial';
+  team: Project['team'];
 };
 
 type CreditItemProps = {
@@ -26,20 +28,9 @@ function CreditItem({ label, value }: CreditItemProps) {
 export function ProjectMetadata({
   description,
   category,
+  team,
 }: ProjectMetadataProps) {
   // Placeholder credits - will be replaced with DB data later
-  const credits = [
-    { label: 'Photography', value: 'Ravishankar Arunasalam' },
-    { label: 'Styling', value: 'Luisa-Marie Henkel' },
-    { label: 'Models', value: ['Model 1', 'Model 2'] },
-    { label: 'Hair', value: 'Stylist X' },
-    { label: 'Make-up', value: 'Stylist Y' },
-    { label: 'Location', value: 'Berlin' },
-    {
-      label: 'Category',
-      value: category.charAt(0).toUpperCase() + category.slice(1),
-    },
-  ];
 
   return (
     <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh md:h-[300px] md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
@@ -59,18 +50,26 @@ export function ProjectMetadata({
           <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
             TEAM
           </h2>
-          <div className="h-fit flex items-start max-h-fit">
-            <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
-              {credits.map((credit, index) => (
-                <React.Fragment key={credit.label}>
-                  <CreditItem label={credit.label} value={credit.value} />
-                  {index !== credits.length - 1 && (
-                    <hr className={`md:hidden w-full mr-auto`} />
-                  )}
-                </React.Fragment>
-              ))}
-            </dl>
-          </div>
+          {team && (
+            <div className="h-fit flex items-start max-h-fit">
+              <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
+                {team.map((credit, index) => (
+                  <React.Fragment key={credit.name}>
+                    <CreditItem
+                      label={
+                        credit.role.replaceAll('_', ' ')[0].toUpperCase() +
+                        credit.role.replaceAll('_', ' ').slice(1)
+                      }
+                      value={credit.name}
+                    />
+                    {index !== team.length - 1 && (
+                      <hr className={`md:hidden w-full mr-auto`} />
+                    )}
+                  </React.Fragment>
+                ))}
+              </dl>
+            </div>
+          )}
         </div>
       </div>
     </section>

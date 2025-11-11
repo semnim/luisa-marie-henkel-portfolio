@@ -11,7 +11,7 @@ type HeroSectionProps = {
   title: string;
   client: string | null;
   category: 'editorial' | 'commercial';
-  publishedAt: Date;
+  publishedAt: Date | null;
 };
 
 export function HeroSection({
@@ -54,10 +54,14 @@ export function HeroSection({
                     <span>{client}</span>
                   </>
                 )}
-                <span>·</span>
-                <time dateTime={publishedAt.toISOString()}>
-                  {formatDate(publishedAt).toLowerCase()}
-                </time>
+                {publishedAt && (
+                  <>
+                    <span>·</span>
+                    <time dateTime={publishedAt.toISOString()}>
+                      {formatDate(publishedAt).toLowerCase()}
+                    </time>
+                  </>
+                )}
               </div>
             </div>
           </div>

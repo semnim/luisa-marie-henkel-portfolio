@@ -3,7 +3,7 @@ import { HeroSection } from '@/components/work/hero-section';
 import { ProjectGallery } from '@/components/work/project-gallery';
 import { ProjectMetadata } from '@/components/work/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
-import { fetchProjectImages } from './actions';
+import { fetchProjectData, fetchProjectImages } from './actions';
 
 export const metadata = {
   title: 'Work | Luisa-Marie Henkel',
@@ -18,9 +18,9 @@ export default async function DetailPage({
   const { slug } = await params;
   const projectImages = await fetchProjectImages(slug);
   const title = getProjectTitleFromSlug(slug);
-
+  const projectData = await fetchProjectData(slug);
   // Handle empty state
-  if (projectImages.length === 0) {
+  if (projectImages.length === 0 || projectData === undefined) {
     return (
       <Container>
         <div className="h-screen flex items-center justify-center">
@@ -40,15 +40,6 @@ export default async function DetailPage({
     (img) => img.imageType === 'gallery'
   );
 
-  // Placeholder data - will come from DB later
-  const projectData = {
-    client: 'sample client',
-    category: 'editorial' as const,
-    publishedAt: new Date('2024-01-15'),
-    description:
-      'A stunning editorial showcase featuring bold styling choices and innovative visual storytelling. This project pushes the boundaries of contemporary fashion photography. A stunning editorial showcase featuring bold styling choices and innovative visual storytelling. This project pushes the boundaries of contemporary fashion photography.',
-  };
-
   return (
     <main className={'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory'}>
       <HeroSection
@@ -64,6 +55,7 @@ export default async function DetailPage({
       <ProjectMetadata
         description={projectData.description}
         category={projectData.category}
+        team={projectData.team}
       />
       <ProjectGallery images={galleryImages} title={title} />
     </main>

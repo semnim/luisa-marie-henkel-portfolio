@@ -15,6 +15,20 @@
       "when": 1762682563300,
       "tag": "0001_grey_ravenous",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1762864206730,
+      "tag": "0002_tricky_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762864511226,
+      "tag": "0003_flippant_romulus",
+      "breakpoints": true
     }
   ]
 }

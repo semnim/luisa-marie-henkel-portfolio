@@ -1,6 +1,7 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   serial,
@@ -9,17 +10,31 @@ import {
 } from 'drizzle-orm/pg-core';
 
 export const categoryEnum = pgEnum('category', ['editorial', 'commercial']);
-export const imageTypeEnum = pgEnum('image_type', ['hero', 'gallery', 'thumbnail']);
-export const imageVariantEnum = pgEnum('image_variant', ['desktop', 'mobile', 'both']);
-export const siteImageTypeEnum = pgEnum('site_image_type', ['home_hero', 'featured']);
+export const imageTypeEnum = pgEnum('image_type', [
+  'hero',
+  'gallery',
+  'thumbnail',
+]);
+export const imageVariantEnum = pgEnum('image_variant', [
+  'desktop',
+  'mobile',
+  'both',
+]);
+export const siteImageTypeEnum = pgEnum('site_image_type', [
+  'home_hero',
+  'featured',
+]);
 
 export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
   description: text('description'),
-  publishedAt: timestamp('published_at').notNull(),
+  publishedAt: timestamp('published_at'),
   category: categoryEnum('category').notNull(),
+  team: jsonb('team')
+    .$type<Array<{ role: string; name: string }>>()
+    .default([]),
 
   // Cloudinary references
   thumbnailUrl: text('thumbnail_url').notNull(),
@@ -87,7 +102,7 @@ export type NewProjectImage = typeof projectImages.$inferInsert;
 export type SiteImage = typeof siteImages.$inferSelect;
 export type NewSiteImage = typeof siteImages.$inferInsert;
 
-export type Category = typeof categoryEnum.enumValues[number];
-export type ImageType = typeof imageTypeEnum.enumValues[number];
-export type ImageVariant = typeof imageVariantEnum.enumValues[number];
-export type SiteImageType = typeof siteImageTypeEnum.enumValues[number];
+export type Category = (typeof categoryEnum.enumValues)[number];
+export type ImageType = (typeof imageTypeEnum.enumValues)[number];
+export type ImageVariant = (typeof imageVariantEnum.enumValues)[number];
+export type SiteImageType = (typeof siteImageTypeEnum.enumValues)[number];
