@@ -41,7 +41,11 @@ export default async function DetailPage({
   );
 
   return (
-    <main className={'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory'}>
+    <main
+      className={
+        'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory md:snap-none'
+      }
+    >
       <HeroSection
         heroImage={{
           publicId: heroImage.publicId,
@@ -54,7 +58,6 @@ export default async function DetailPage({
       />
       <ProjectMetadata
         description={projectData.description}
-        category={projectData.category}
         team={projectData.team}
       />
       <ProjectGallery images={galleryImages} title={title} />

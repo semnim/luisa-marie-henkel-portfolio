@@ -1,9 +1,9 @@
+'use client';
 import { Project } from '@/lib/schema';
-import React from 'react';
+import React, { useState } from 'react';
 
 type ProjectMetadataProps = {
   description: string | null;
-  category: 'editorial' | 'commercial';
   team: Project['team'];
 };
 
@@ -25,18 +25,74 @@ function CreditItem({ label, value }: CreditItemProps) {
   );
 }
 
-export function ProjectMetadata({
-  description,
-  category,
-  team,
-}: ProjectMetadataProps) {
+export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
   // Placeholder credits - will be replaced with DB data later
-
+  const [selectedTab, setSelectedTab] = useState<'description' | 'team'>(
+    description ? 'description' : 'team'
+  );
   return (
-    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh md:h-[300px] md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
-      <div className="mx-auto px-4 flex flex-col justify-center flex-1 gap-4 md:container">
+    <section className="snap-start px-8 md:pb-8 flex-1 h-dvh max-h-dvh pt-15 md:h-[300px] md:max-h-[300px] overflow-hidden w-full lg:flex-1 flex flex-col md:snap-align-none">
+      <div className="md:hidden mb-4 flex-1 flex flex-col">
+        <div className="flex gap-2">
+          {description && (
+            <h2
+              onClick={() => setSelectedTab('description')}
+              className={`mb-3 text-lg md:text-2xl tracking-wide ${
+                selectedTab === 'description'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
+              }`}
+            >
+              DESCRIPTION
+            </h2>
+          )}
+          {team && description && (
+            <h2 className="mb-3 text-lg md:text-2xl tracking-wide text-white/75">
+              /
+            </h2>
+          )}
+          {team && (
+            <h2
+              onClick={() => setSelectedTab('team')}
+              className={`mb-3 text-lg md:text-2xl tracking-wide ${
+                selectedTab === 'team'
+                  ? 'text-foreground'
+                  : 'text-muted-foreground'
+              }`}
+            >
+              TEAM
+            </h2>
+          )}
+        </div>
+        {selectedTab === 'description' && (
+          <p className="leading-relaxed text-justify md:text-center md:mx-auto text-xs md:text-md md:max-w-[1000px] text-muted-foreground">
+            {description && description.length > 0 ? description : '-'}
+          </p>
+        )}
+        {selectedTab === 'team' && team && (
+          <div className="flex items-start flex-1 justify-start mt-4 flex-col">
+            <dl className="flex-1 w-full max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
+              {team.map((credit, index) => (
+                <React.Fragment key={credit.name}>
+                  <CreditItem
+                    label={
+                      credit.role.replaceAll('_', ' ')[0].toUpperCase() +
+                      credit.role.replaceAll('_', ' ').slice(1)
+                    }
+                    value={credit.name}
+                  />
+                  {index !== team.length - 1 && (
+                    <hr className={`md:hidden w-full mr-auto`} />
+                  )}
+                </React.Fragment>
+              ))}
+            </dl>
+          </div>
+        )}
+      </div>
+      <div className="hidden md:flex mx-auto px-4 flex-col justify-center flex-1 gap-4 md:container">
         {description && (
-          <div className="mb-4 pt-8 md:pt-0">
+          <div className="mb-4 md:pt-0 ">
             <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
               BACKGROUND
             </h2>
@@ -45,7 +101,7 @@ export function ProjectMetadata({
             </p>
           </div>
         )}
-        <div className="md:max-h-fit">
+        <div className="md:max-h-fit ">
           {/* Credits Grid */}
           <h2 className="md:hidden mb-3 text-lg md:text-2xl tracking-wide">
             TEAM
