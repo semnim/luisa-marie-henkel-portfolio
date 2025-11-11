@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased flex flex-col`}>
         <header
-          className={`fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 mix-blend-difference ${
+          className={`fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 ${
             mobileMenuOpen
               ? 'h-dvh backdrop-blur-md backdrop-brightness-50'
               : ''
