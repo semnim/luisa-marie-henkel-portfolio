@@ -1,5 +1,10 @@
 # TO DO
 
+- Fix loading states
+- Brainstorm & Add animations
+  - gsap?
+  - text fade in / text spinner
+  - Image fade in
 - Prevent cloudinary transformations
   - Use next image instead of cloudinary?
   - Or maybe flag?
@@ -8,6 +13,7 @@
 - Section management features
   - View and manage cloudinary images
     - Add preprocessing to pipeline (conditional)
+    - Automatically create loading state image for each (blurred heavily)
   - Manage section content
     - Change image on HOME/HERO, HOME/FEATURED
     - Modify and add projects
