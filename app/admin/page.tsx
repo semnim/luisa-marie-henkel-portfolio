@@ -8,7 +8,7 @@ export default async function AdminPage() {
   });
 
   if (session?.user === undefined) {
-    redirect('/');
+    redirect('/login');
   }
 
   // Redirect authenticated users to the home dashboard
