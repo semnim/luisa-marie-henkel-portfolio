@@ -8,7 +8,7 @@ export default function AdminLayout({
   return (
     <div className="min-h-dvh bg-background text-foreground">
       <Sidebar />
-      <main className="md:ml-60 min-h-dvh">{children}</main>
+      <main className="md:ml-75 min-h-dvh">{children}</main>
     </div>
   );
 }
