@@ -1,8 +1,8 @@
 import { db } from '@/lib/db';
-import { images, projects } from '@/lib/schema';
+import { images, ImageType, projects } from '@/lib/schema';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import { v2 as cloudinary, ResourceApiResponse } from 'cloudinary';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 // Configure Cloudinary
@@ -40,6 +40,8 @@ type Projects = z.infer<typeof ProjectSchema>;
 type Folder = Projects['folders'][number];
 type Resources = ResourceApiResponse['resources'];
 const ROOT_FOLDER = 'portfolio';
+const PROJECTS_FOLDER = `${ROOT_FOLDER}/PROJECTS`;
+const HERO_FOLDER = `${ROOT_FOLDER}/HERO`;
 
 // =================================== <ENTRYPOINT> ================================
 syncFromCloudinary();
@@ -59,25 +61,22 @@ async function syncFromCloudinary() {
 // =================================== <DB OPS> ===================================
 async function syncSiteImages() {
   try {
-    console.log('\n📸 Syncing site images (home hero & featured)...\n');
+    console.log('\n📸 Syncing site images (home hero)...\n');
 
-    // Fetch from 'site' folder in portfolio
-    const result = await cloudinary.api.resources_by_asset_folder(
-      'portfolio/site',
-      {
-        max_results: 50,
-        context: true,
-      }
-    );
+    // Fetch from HERO folder
+    const result = await cloudinary.api.resources_by_asset_folder(HERO_FOLDER, {
+      max_results: 100,
+      context: true,
+    });
 
     if (!result.resources) {
-      console.log('  ℹ️  No site images found in portfolio/site folder');
+      console.log('  ℹ️  No site images found in portfolio/HERO folder');
       return;
     }
 
     // Separate mobile and desktop variants
-    const mobileResources = result.resources.filter(
-      (r: CloudinaryResource) => r.public_id.includes('_mobile')
+    const mobileResources = result.resources.filter((r: CloudinaryResource) =>
+      r.public_id.includes('_mobile')
     );
     const desktopResources = result.resources.filter(
       (r: CloudinaryResource) => !r.public_id.includes('_mobile')
@@ -97,14 +96,8 @@ async function syncSiteImages() {
     for (const [index, resource] of desktopResources.entries()) {
       const filename = resource.public_id.split('/').pop() || '';
 
-      // Determine image type from filename
-      let imageType: 'home_hero' | 'featured' = 'featured';
-      if (
-        filename.toLowerCase().includes('hero') ||
-        filename.toLowerCase().includes('home')
-      ) {
-        imageType = 'home_hero';
-      }
+      // All images in HERO folder are home_hero type
+      const imageType: ImageType = 'home_hero';
 
       const hasMobileVariant = mobileMap.has(resource.public_id);
 
@@ -114,7 +107,10 @@ async function syncSiteImages() {
         .replace(/\.[^.]+$/, '')
         .trim();
 
-      // Insert desktop image
+      // Delete existing image with same publicId
+      await db.delete(images).where(eq(images.publicId, resource.public_id));
+
+      // Insert/update desktop image
       await db.insert(images).values({
         projectSlug: null, // Site images have no project
         publicId: resource.public_id,
@@ -130,12 +126,17 @@ async function syncSiteImages() {
       });
 
       insertCount++;
-      console.log(`  ✅ Inserted ${imageType} (desktop): ${filename}`);
+      console.log(`  ✅ Synced ${imageType} (desktop): ${filename}`);
 
       // Insert mobile variant if exists
       if (hasMobileVariant) {
         const mobileResource = mobileMap.get(resource.public_id);
         if (mobileResource) {
+          // Delete existing mobile variant
+          await db
+            .delete(images)
+            .where(eq(images.publicId, mobileResource.public_id));
+
           await db.insert(images).values({
             projectSlug: null,
             publicId: mobileResource.public_id,
@@ -151,7 +152,7 @@ async function syncSiteImages() {
           });
 
           insertCount++;
-          console.log(`  ✅ Inserted ${imageType} (mobile): ${filename}_mobile`);
+          console.log(`  ✅ Synced ${imageType} (mobile): ${filename}_mobile`);
         }
       }
     }
@@ -167,7 +168,7 @@ async function syncSiteImages() {
       'http_code' in error.error &&
       error.error.http_code === 404
     ) {
-      console.log('  ℹ️  No site images folder found (portfolio/site)');
+      console.log('  ℹ️  No site images folder found (portfolio/HERO)');
     } else {
       console.error('  ❌ Error syncing site images:', error);
     }
@@ -175,21 +176,13 @@ async function syncSiteImages() {
 }
 
 async function syncWithDb(projectName: string, resources: CloudinaryAsset[]) {
-  const projectSlug = await insertProject(projectName, resources);
+  const projectSlug = await insertProject(projectName);
   if (projectSlug) {
     await insertProjectImages(projectSlug, resources);
   }
 }
 
-async function insertProject(
-  projectName: string,
-  resources: CloudinaryAsset[]
-) {
-  // Find thumbnail in resources
-  const thumbnailResource = resources.find((resource) =>
-    resource.public_id.includes('thumbnail')
-  );
-
+async function insertProject(projectName: string) {
   try {
     // Check if project already exists
     const existing = await db
@@ -218,24 +211,6 @@ async function insertProject(
 
     console.log(`  ✅ Inserted project: ${projectName}`);
 
-    // If thumbnail exists, insert it as a separate image record
-    if (thumbnailResource) {
-      await db.insert(images).values({
-        projectSlug: projectName,
-        publicId: thumbnailResource.public_id,
-        imageUrl: thumbnailResource.secure_url,
-        imageType: 'thumbnail',
-        variant: 'both',
-        altText: getProjectTitleFromSlug(projectName),
-        caption: null,
-        position: 0,
-        width: thumbnailResource.width,
-        height: thumbnailResource.height,
-        format: thumbnailResource.format,
-      });
-      console.log(`  ✅ Inserted thumbnail for ${projectName}`);
-    }
-
     return result[0].slug;
   } catch (error) {
     console.error(`  ❌ Error inserting project ${projectName}:`, error);
@@ -247,6 +222,32 @@ async function insertProjectImages(
   projectSlug: string,
   resources: CloudinaryAsset[]
 ) {
+  // Delete all existing images for this project
+  await db
+    .delete(images)
+    .where(
+      and(
+        eq(images.projectSlug, projectSlug),
+        eq(images.imageType, 'thumbnail' as ImageType)
+      )
+    );
+  await db
+    .delete(images)
+    .where(
+      and(
+        eq(images.projectSlug, projectSlug),
+        eq(images.imageType, 'project_hero' as ImageType)
+      )
+    );
+  await db
+    .delete(images)
+    .where(
+      and(
+        eq(images.projectSlug, projectSlug),
+        eq(images.imageType, 'gallery' as ImageType)
+      )
+    );
+
   // Separate mobile and desktop variants
   const mobileVariants = new Map(
     resources
@@ -254,28 +255,34 @@ async function insertProjectImages(
       .map((r) => [r.public_id.replace('_mobile', ''), r])
   );
 
-  // Filter out thumbnails and mobile variants (we'll pair them with desktop)
+  // Filter out only mobile variants (we'll pair them with desktop)
   const imageResources = resources.filter(
-    (r) =>
-      !r.public_id.includes('thumbnail') && !r.public_id.includes('_mobile')
+    (r) => !r.public_id.includes('_mobile')
   );
 
   if (imageResources.length === 0) {
-    console.log(`  ℹ️  No images to insert`);
+    console.log(`  ℹ️  No images to sync`);
     return;
   }
 
   try {
     for (const [index, resource] of imageResources.entries()) {
-      // Determine image type: first image is project_hero, rest are gallery
-      const imageType = index === 0 ? 'project_hero' : 'gallery';
+      // Determine image type from filename prefix
+      const filename = resource.public_id.split('/').pop() || '';
+      const filenameLower = filename.toLowerCase();
+
+      let imageType: ImageType = 'gallery'; // default
+      if (filenameLower.startsWith('thumbnail_')) {
+        imageType = 'thumbnail';
+      } else if (filenameLower.startsWith('hero_')) {
+        imageType = 'project_hero';
+      }
 
       // Check if there's a mobile variant for this image
       const mobileVariant = mobileVariants.get(resource.public_id);
       const hasMobileVariant = !!mobileVariant;
 
       // Generate alt text from filename
-      const filename = resource.public_id.split('/').pop() || '';
       const altText = filename
         .replace(/[-_]/g, ' ')
         .replace(/\.[^.]+$/, '')
@@ -313,9 +320,9 @@ async function insertProjectImages(
         });
       }
     }
-    console.log(`  ✅ Inserted ${imageResources.length} image sets`);
+    console.log(`  ✅ Synced ${imageResources.length} image sets`);
   } catch (error) {
-    console.error(`  ❌ Error inserting images:`, error);
+    console.error(`  ❌ Error syncing images:`, error);
   }
 }
 // =================================== </DB OPS> ==================================
@@ -349,13 +356,14 @@ async function fetchProjects(): Promise<Projects> {
   try {
     console.log('Checking Cloudinary folders...\n');
 
-    const rawProjects = await cloudinary.api.sub_folders(ROOT_FOLDER);
+    // Scan portfolio/PROJECTS for project subfolders
+    const rawProjects = await cloudinary.api.sub_folders(PROJECTS_FOLDER);
 
     // Parse and validate with zod - this gives us type inference
     const projects = ProjectSchema.parse(rawProjects);
 
     console.log(
-      'Portfolio subfolders:',
+      'Project subfolders:',
       projects.folders.map((project) => project.name)
     );
     return projects;
@@ -368,7 +376,7 @@ async function fetchProjects(): Promise<Projects> {
 async function fetchProjectResources(folder: Folder) {
   const projectName = folder.name;
 
-  const folderPath = `${ROOT_FOLDER}/${projectName}`;
+  const folderPath = `${PROJECTS_FOLDER}/${projectName}`;
 
   console.log(`Fetching: ${folderPath}`);
 

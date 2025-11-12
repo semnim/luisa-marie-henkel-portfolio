@@ -3,7 +3,6 @@
 import { db } from '@/lib/db';
 import { images, projects } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
-import { toast } from 'sonner';
 
 export const fetchProjectImages = async (projectSlug: string) => {
   try {
@@ -12,9 +11,8 @@ export const fetchProjectImages = async (projectSlug: string) => {
       .from(images)
       .where(eq(images.projectSlug, projectSlug));
   } catch (error) {
-    console.error('Error fetching images for project:', error);
-    toast.error('An error occurred.');
-    return [];
+    console.error('Error fetching images:', error);
+    throw error;
   }
 };
 
@@ -25,7 +23,6 @@ export const fetchProjectData = async (projectSlug: string) => {
     });
   } catch (error) {
     console.error('Error fetching project data:', error);
-    toast.error('An error occurred.');
-    return undefined;
+    throw error;
   }
 };

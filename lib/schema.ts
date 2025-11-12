@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
   boolean,
   index,
@@ -75,6 +75,18 @@ export const images = pgTable(
       .where(sql`image_type != 'gallery'`),
   ]
 );
+
+// Relations
+export const projectsRelations = relations(projects, ({ many }) => ({
+  images: many(images),
+}));
+
+export const imagesRelations = relations(images, ({ one }) => ({
+  project: one(projects, {
+    fields: [images.projectSlug],
+    references: [projects.slug],
+  }),
+}));
 
 // TypeScript type exports
 export type Project = typeof projects.$inferSelect;

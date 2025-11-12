@@ -23,6 +23,9 @@ export default async function WorkPage() {
             if (item === null) {
               return <div className="h-0" key={'empty' + index} />;
             }
+            const thumbnail = item.images.find(
+              (image) => image.imageType === 'thumbnail'
+            );
             return (
               <Link
                 href={`/portfolio/${createSlugFromProjectTitle(item.title)}`}
@@ -34,7 +37,7 @@ export default async function WorkPage() {
                   className="flex flex-1 w-full h-full sticky top-0"
                 >
                   <Image
-                    src={'/assets/home_hero.webp'}
+                    src={thumbnail?.imageUrl ?? ''}
                     alt={item.title}
                     fill
                     className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
@@ -51,14 +54,19 @@ export default async function WorkPage() {
       </section>
       <section className="h-dvh max-h-dvh md:h-[calc(100dvh-60px)] md:max-h-[calc(100dvh-60px)] flex-col hidden md:block">
         <MasonryGrid
-          images={projects.map((project) => ({
-            id: project.id,
-            publicId: '/assets/home_hero.webp',
-            imageUrl: '/assets/home_hero.webp',
-            width: null,
-            height: null,
-            title: project.title,
-          }))}
+          images={projects.map((project) => {
+            const thumbnail = project.images.find(
+              (i) => i.imageType === 'thumbnail'
+            );
+            return {
+              id: project.id,
+              publicId: thumbnail?.publicId ?? '',
+              imageUrl: thumbnail?.imageUrl ?? '',
+              width: null,
+              height: null,
+              title: project.title,
+            };
+          })}
           title={'Projects'}
         />
       </section>
