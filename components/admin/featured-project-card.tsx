@@ -1,7 +1,7 @@
 'use client';
 
+import { Pencil, Plus, X } from 'lucide-react';
 import Image from 'next/image';
-import { Plus, Pencil, X } from 'lucide-react';
 
 interface FeaturedProject {
   id: string;
@@ -46,7 +46,7 @@ export function FeaturedProjectCard({
             />
           )}
           {/* Project Title Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 bg-background/90 p-3">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/90 p-3">
             <p className="text-xs font-light tracking-item-subheading uppercase text-foreground truncate">
               {project.title}
             </p>
