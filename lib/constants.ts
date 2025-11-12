@@ -1,1 +1,5 @@
-export const CATEGORIES = ['editorial', 'commercial'] as const;
+import { categoryEnum, imageTypeEnum, imageVariantEnum } from './schema';
+
+export const CATEGORIES = categoryEnum.enumValues;
+export const IMAGE_TYPES = imageTypeEnum.enumValues;
+export const IMAGE_VARIENTS = imageVariantEnum.enumValues;
