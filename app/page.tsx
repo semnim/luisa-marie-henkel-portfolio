@@ -1,4 +1,5 @@
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
+import { fetchCurrentHero } from '@/app/actions/hero';
 import Image from 'next/image';
 
 export const metadata = {
@@ -7,13 +8,45 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const heroSrc = '/assets/home_hero.webp';
-  const heroAlt = 'homepage hero fallback image';
+  // Fetch hero images from database
+  const heroResult = await fetchCurrentHero();
+  const heroImages = heroResult.success && heroResult.data ? heroResult.data : {};
+
+  // Fallback logic
+  const heroDesktop =
+    heroImages.both?.imageUrl ||
+    heroImages.desktop?.imageUrl ||
+    '/assets/home_hero.webp';
+
+  const heroMobile =
+    heroImages.both?.imageUrl ||
+    heroImages.mobile?.imageUrl ||
+    heroDesktop;
+
+  const heroAlt =
+    heroImages.both?.altText ||
+    heroImages.desktop?.altText ||
+    'homepage hero';
 
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
       <section className="relative h-dvh snap-start">
-        <Image src={heroSrc} className="object-cover z-0" fill alt={heroAlt} />
+        {/* Desktop Hero */}
+        <Image
+          src={heroDesktop}
+          className="hidden md:block object-cover z-0"
+          fill
+          alt={heroAlt}
+          priority
+        />
+        {/* Mobile Hero */}
+        <Image
+          src={heroMobile}
+          className="md:hidden object-cover z-0"
+          fill
+          alt={heroAlt}
+          priority
+        />
         <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
             LUISA-MARIE HENKEL

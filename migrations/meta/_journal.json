@@ -8,6 +8,41 @@
       "when": 1762944245578,
       "tag": "0000_nebulous_runaways",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1762946385591,
+      "tag": "0001_milky_khan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1762947626217,
+      "tag": "0002_tough_the_renegades",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762947685252,
+      "tag": "0003_complete_logan",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762947895913,
+      "tag": "0004_zippy_black_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1762948210400,
+      "tag": "0005_modern_newton_destine",
+      "breakpoints": true
     }
   ]
 }

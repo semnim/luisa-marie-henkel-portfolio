@@ -34,7 +34,7 @@ export default async function WorkPage() {
                   className="flex flex-1 w-full h-full sticky top-0"
                 >
                   <Image
-                    src={item.thumbnailPublicId}
+                    src={'/assets/home_hero.webp'}
                     alt={item.title}
                     fill
                     className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
@@ -53,8 +53,8 @@ export default async function WorkPage() {
         <MasonryGrid
           images={projects.map((project) => ({
             id: project.id,
-            publicId: project.thumbnailPublicId,
-            imageUrl: project.thumbnailUrl,
+            publicId: '/assets/home_hero.webp',
+            imageUrl: '/assets/home_hero.webp',
             width: null,
             height: null,
             title: project.title,

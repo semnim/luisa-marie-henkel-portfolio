@@ -5,10 +5,7 @@ import { Project } from '@/lib/schema';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface AutoRotatingCarouselProps {
-  projects: Pick<
-    Project,
-    'slug' | 'title' | 'thumbnailPublicId' | 'thumbnailUrl'
-  >[];
+  projects: Pick<Project, 'slug' | 'title'>[];
 }
 
 const AUTO_ROTATION_INTERVAL_MS = 5000;
@@ -105,7 +102,7 @@ export function AutoRotatingCarousel({ projects }: AutoRotatingCarouselProps) {
             {/* Image */}
             <div className="relative flex items-center justify-center h-full w-full">
               <Image
-                src={project.thumbnailPublicId}
+                src={'/assets/home_hero.webp'}
                 alt={project.title}
                 fill
                 className="object-contain object-center"

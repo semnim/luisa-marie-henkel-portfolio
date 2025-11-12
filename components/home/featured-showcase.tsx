@@ -1,14 +1,19 @@
 'use client';
 
 import { Image } from '@/components/image';
-import { SiteImage } from '@/lib/schema';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 
+interface FeaturedImage {
+  publicId: string;
+  title: string;
+  type: string;
+}
+
 interface FeaturedShowcaseProps {
-  images: SiteImage[];
+  images: FeaturedImage[];
 }
 
 // Fallback for when DB is empty

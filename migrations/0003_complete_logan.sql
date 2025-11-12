@@ -1,0 +1,1 @@
+ALTER TABLE "images" ADD CONSTRAINT "images_image_type_variant_unique" UNIQUE("image_type","variant");

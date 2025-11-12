@@ -1,0 +1,2 @@
+ALTER TABLE "images" DROP CONSTRAINT "uniqueImageTypeVariant";--> statement-breakpoint
+CREATE INDEX "unique_image_type_variant_idx" ON "images" USING btree ("project_slug","image_type","variant") WHERE image_type != 'gallery';

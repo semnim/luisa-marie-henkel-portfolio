@@ -35,7 +35,8 @@ export default async function DetailPage({
 
   // Filter hero and gallery images by type
   const heroImage =
-    projectImages.find((img) => img.imageType === 'hero') || projectImages[0];
+    projectImages.find((img) => img.imageType === 'project_hero') ||
+    projectImages[0];
   const galleryImages = projectImages.filter(
     (img) => img.imageType === 'gallery'
   );

@@ -26,9 +26,9 @@ export function FeaturedProjectCard({
   };
 
   return (
-    <button
+    <div
       onClick={onSelect}
-      className={`relative w-full aspect-[4/3] bg-background border ${
+      className={`relative w-full aspect-4/3 bg-background border ${
         project
           ? 'border-muted-foreground/40'
           : 'border-dashed border-muted-foreground/40'
@@ -73,12 +73,12 @@ export function FeaturedProjectCard({
       {project && (
         <button
           onClick={handleRemoveClick}
-          className="absolute top-3 right-3 p-2 bg-background/90 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-500 hover:text-background z-10"
+          className="absolute top-3 right-3 p-2 bg-transparent rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:text-red-400 z-10"
           aria-label="Remove project"
         >
           <X className="w-4 h-4" strokeWidth={1.5} />
         </button>
       )}
-    </button>
+    </div>
   );
 }

@@ -1,5 +1,7 @@
+import { sql } from 'drizzle-orm';
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgEnum,
@@ -38,30 +40,41 @@ export const projects = pgTable('projects', {
   isFeatured: boolean('is_featured').default(false),
 });
 
-export const images = pgTable('images', {
-  id: serial('id').primaryKey(),
-  projectSlug: text('project_slug').references(() => projects.slug), // nullable for home_hero
+export const images = pgTable(
+  'images',
+  {
+    id: serial('id').primaryKey(),
+    projectSlug: text('project_slug').references(() => projects.slug), // nullable for home_hero
 
-  // Cloudinary references
-  publicId: text('public_id').notNull(),
-  imageUrl: text('image_url').notNull(),
+    // Cloudinary references
+    publicId: text('public_id').notNull(),
+    imageUrl: text('image_url').notNull(),
 
-  // Image metadata
-  imageType: imageTypeEnum('image_type').notNull(),
-  variant: imageVariantEnum('variant').notNull(),
-  altText: text('alt_text'),
-  caption: text('caption'),
+    // Image metadata
+    imageType: imageTypeEnum('image_type').notNull(),
+    variant: imageVariantEnum('variant').notNull(),
+    altText: text('alt_text'),
+    caption: text('caption'),
 
-  // For featured slots (1-4) and gallery ordering
-  position: integer('position').default(0),
+    // For featured slots (1-4) and gallery ordering
+    position: integer('position').default(0),
 
-  // Optional metadata
-  width: integer('width'),
-  height: integer('height'),
-  format: text('format'),
+    // Optional metadata
+    width: integer('width'),
+    height: integer('height'),
+    format: text('format'),
 
-  createdAt: timestamp('created_at').defaultNow(),
-});
+    createdAt: timestamp('created_at').defaultNow(),
+  },
+  (table) => [
+    // DB-level: Prevent duplicate (image_type, variant) combinations for non-gallery images
+    // Application-level (hero.ts): Enforces "both" XOR "desktop+mobile" logic
+    // Gallery images excluded via WHERE clause (multiple images per variant allowed)
+    index('unique_image_type_variant_idx')
+      .on(table.projectSlug, table.imageType, table.variant)
+      .where(sql`image_type != 'gallery'`),
+  ]
+);
 
 // TypeScript type exports
 export type Project = typeof projects.$inferSelect;

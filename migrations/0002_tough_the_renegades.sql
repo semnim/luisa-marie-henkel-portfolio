@@ -1,0 +1,1 @@
+ALTER TABLE "images" DROP CONSTRAINT "unique_variant_per_type";

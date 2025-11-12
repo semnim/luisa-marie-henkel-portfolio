@@ -1,8 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { Pencil, Plus, X } from 'lucide-react';
 import Image from 'next/image';
-import { Plus, Pencil, X } from 'lucide-react';
+import { useRef } from 'react';
+import { toast } from 'sonner';
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 interface MediaUploadBoxProps {
   label: string;
@@ -15,6 +18,7 @@ interface MediaUploadBoxProps {
   };
   onFileSelect?: (file: File) => void;
   onRemove?: () => void;
+  isRemovable?: boolean;
 }
 
 export function MediaUploadBox({
@@ -24,6 +28,7 @@ export function MediaUploadBox({
   currentMedia,
   onFileSelect,
   onRemove,
+  isRemovable = true,
 }: MediaUploadBoxProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,8 +40,19 @@ export function MediaUploadBox({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && onFileSelect) {
-      onFileSelect(file);
+    if (file) {
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Error: File can be max. 2MB');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        return;
+      }
+
+      if (onFileSelect) {
+        onFileSelect(file);
+      }
     }
     // Reset input so same file can be selected again
     if (fileInputRef.current) {
@@ -69,7 +85,7 @@ export function MediaUploadBox({
       />
 
       {/* Preview Box with Hover Overlay */}
-      <button
+      <div
         onClick={triggerFileInput}
         className={`relative w-full bg-background border ${
           currentMedia
@@ -111,17 +127,17 @@ export function MediaUploadBox({
           )}
         </div>
 
-        {/* Remove Button (only when media exists) */}
-        {currentMedia && (
+        {/* Remove Button (only when media exists and is removable) */}
+        {currentMedia && isRemovable && (
           <button
             onClick={handleRemoveClick}
-            className="absolute top-3 right-3 p-2 bg-background/90 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-500 hover:text-background z-10"
+            className="absolute top-3 right-3 p-2 bg-transparent rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:text-red-400 z-10"
             aria-label="Remove media"
           >
             <X className="w-4 h-4" strokeWidth={1.5} />
           </button>
         )}
-      </button>
+      </div>
 
       {/* Filename */}
       {currentMedia && (
