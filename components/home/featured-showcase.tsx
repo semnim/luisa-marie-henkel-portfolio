@@ -93,16 +93,15 @@ export const FeaturedShowcase = ({ images }: FeaturedShowcaseProps) => {
               handleImageTouch(index);
             }}
           >
-            <figure className="flex flex-1">
+            <figure className="flex flex-1 relative">
               <Image
                 src={item.publicId}
                 alt={item.title}
                 fill
-                className={`object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75 ${
-                  activeIndex === index ? 'blur-sm' : ''
-                }`}
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className={`object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75`}
               />
-              <figcaption className="hover:backdrop-blur-xs absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
+              <figcaption className="absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
                 <div
                   className={
                     'h-full flex items-center justify-center flex-col text-center z-20'

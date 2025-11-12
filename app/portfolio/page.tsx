@@ -34,12 +34,13 @@ export default async function WorkPage() {
               >
                 <figure
                   key={item.id}
-                  className="flex flex-1 w-full h-full sticky top-0"
+                  className="flex flex-1 w-full h-full relative"
                 >
                   <Image
                     src={thumbnail?.imageUrl ?? ''}
                     alt={item.title}
                     fill
+                    sizes="(max-width: 767px) 100vw, 0px"
                     className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
                   />
                   <figcaption className="backdrop-brightness-75 absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-center items-center h-full">

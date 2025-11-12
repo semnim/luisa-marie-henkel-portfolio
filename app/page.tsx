@@ -1,5 +1,5 @@
-import { FeaturedShowcase } from '@/components/home/featured-showcase';
 import { fetchCurrentHero } from '@/app/actions/hero';
+import { FeaturedShowcase } from '@/components/home/featured-showcase';
 import Image from 'next/image';
 
 export const metadata = {
@@ -10,7 +10,8 @@ export const metadata = {
 export default async function Home() {
   // Fetch hero images from database
   const heroResult = await fetchCurrentHero();
-  const heroImages = heroResult.success && heroResult.data ? heroResult.data : {};
+  const heroImages =
+    heroResult.success && heroResult.data ? heroResult.data : {};
 
   // Fallback logic
   const heroDesktop =
@@ -19,14 +20,10 @@ export default async function Home() {
     '/assets/home_hero.webp';
 
   const heroMobile =
-    heroImages.both?.imageUrl ||
-    heroImages.mobile?.imageUrl ||
-    heroDesktop;
+    heroImages.both?.imageUrl || heroImages.mobile?.imageUrl || heroDesktop;
 
   const heroAlt =
-    heroImages.both?.altText ||
-    heroImages.desktop?.altText ||
-    'homepage hero';
+    heroImages.both?.altText || heroImages.desktop?.altText || 'homepage hero';
 
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
@@ -36,6 +33,7 @@ export default async function Home() {
           src={heroDesktop}
           className="hidden md:block object-cover z-0"
           fill
+          sizes="(min-width: 768px) 100vw, 0px"
           alt={heroAlt}
           priority
         />
@@ -44,6 +42,7 @@ export default async function Home() {
           src={heroMobile}
           className="md:hidden object-cover z-0"
           fill
+          sizes="(max-width: 767px) 100vw, 0px"
           alt={heroAlt}
           priority
         />

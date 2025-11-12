@@ -75,6 +75,7 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
                     src={imageSrc}
                     alt={`${title} - Image ${index + 1}`}
                     fill
+                    sizes="(max-width: 767px) 100vw, 0px"
                     className="object-cover"
                   />
                 </div>
