@@ -8,8 +8,9 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { CATEGORIES } from './constants';
 
-export const categoryEnum = pgEnum('category', ['editorial', 'commercial']);
+export const categoryEnum = pgEnum('category', CATEGORIES);
 export const imageTypeEnum = pgEnum('image_type', [
   'hero',
   'gallery',

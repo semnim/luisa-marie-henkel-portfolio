@@ -14,7 +14,7 @@ export const SignOutButton = () => {
 
   return (
     <AnimatedBorderButton
-      className="max-w-md"
+      className="text-xs max-w-md"
       onClick={() => authClient.signOut().then(() => redirect('/'))}
     >
       Sign {isPending ? '...' : session?.user.name} out

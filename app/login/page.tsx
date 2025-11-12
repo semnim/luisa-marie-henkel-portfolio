@@ -1,6 +1,7 @@
 'use client';
 
-import { loginUser, type LoginFormData } from '@/lib/auth-actions';
+import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
+import { AnimatedInput } from '@/components/auth/animated-input';
 import {
   Form,
   FormControl,
@@ -8,17 +9,16 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { AnimatedInput } from '@/components/auth/animated-input';
+import { loginUser, type LoginFormData } from '@/lib/auth-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import Link from 'next/link';
 
 const loginFormSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z.email({ message: 'Invalid email address' }),
   password: z.string().min(1, 'Password is required'),
 });
 
@@ -138,7 +138,10 @@ export default function LoginPage() {
 
                 <p className="text-center text-sm text-muted-foreground">
                   Need an account?{' '}
-                  <Link href="/register" className="underline hover:text-foreground">
+                  <Link
+                    href="/register"
+                    className="underline hover:text-foreground"
+                  >
                     Register
                   </Link>
                 </p>
