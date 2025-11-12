@@ -1,7 +1,4 @@
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
-import { db } from '@/lib/db';
-import { siteImages } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
 import Image from 'next/image';
 
 export const metadata = {
@@ -9,32 +6,9 @@ export const metadata = {
   description: 'Art director & Stylist portfolio',
 };
 
-async function getFeaturedImages() {
-  const images = await db
-    .select()
-    .from(siteImages)
-    .where(eq(siteImages.imageType, 'featured'))
-    .orderBy(siteImages.order);
-  return images;
-}
-
-async function getHomeHero() {
-  const [hero] = await db
-    .select()
-    .from(siteImages)
-    .where(eq(siteImages.imageType, 'home_hero'))
-    .limit(1);
-  return hero;
-}
-
 export default async function Home() {
-  const [featuredImages, homeHero] = await Promise.all([
-    getFeaturedImages(),
-    getHomeHero(),
-  ]);
-  // Fallback to static assets if DB is empty
-  const heroSrc = homeHero?.publicId || '/assets/home_hero.webp';
-  const heroAlt = homeHero?.altText || 'homepage hero fallback image';
+  const heroSrc = '/assets/home_hero.webp';
+  const heroAlt = 'homepage hero fallback image';
 
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
@@ -53,7 +27,7 @@ export default async function Home() {
         <h2 className="font-light text-lg md:text-3xl h-20 md:h-50 w-full flex items-center justify-center  tracking-hero-heading z-10 bottom-0 absolute bg-linear-to-t from-background md:via-75% md:via-black/75 to-transparent left-1/2 -translate-x-1/2">
           FEATURED
         </h2>
-        <FeaturedShowcase images={featuredImages} />
+        <FeaturedShowcase images={[]} />
       </section>
     </main>
   );
