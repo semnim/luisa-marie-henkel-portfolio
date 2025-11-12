@@ -1,6 +1,7 @@
 'use client';
 
 import { CATEGORIES } from '@/lib/constants';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
 import { AnimatedInput } from '../auth/animated-input';
@@ -102,7 +103,7 @@ export function ProjectDialog({
           <div className="space-y-6">
             {/* Title */}
             <AnimatedInput
-              placeholder="Title *"
+              placeholder="Title*"
               value={formData.title}
               onChange={(e) => handleTitleChange(e.target.value)}
               required
@@ -110,18 +111,20 @@ export function ProjectDialog({
 
             {/* Slug */}
             <AnimatedInput
-              placeholder="Slug *"
+              placeholder="Slug (generated)"
               value={formData.slug}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, slug: e.target.value }))
-              }
+              className="text-muted-foreground"
+              // onChange={(e) =>
+              //   setFormData((prev) => ({ ...prev, slug: e.target.value }))
+              // }
+              disabled
               required
             />
 
             {/* Category */}
             <div className="space-y-2">
               <label className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground">
-                Category *
+                Category*
               </label>
               <select
                 value={formData.category}
@@ -159,7 +162,7 @@ export function ProjectDialog({
 
             {/* Client */}
             <AnimatedInput
-              placeholder="Client"
+              placeholder="Magazine"
               value={formData.client}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, client: e.target.value }))
@@ -214,12 +217,17 @@ export function ProjectDialog({
                   </div>
                   <button
                     onClick={() => removeTeamMember(index)}
-                    className="mt-8 text-red-500 hover:text-red-400 transition-colors duration-300"
+                    className="text-red-500 hover:text-red-400 transition-colors flex items-start duration-300"
                   >
-                    ✕
+                    <X />
                   </button>
                 </div>
               ))}
+              {formData.team.length === 0 && (
+                <p className="text-xs text-muted-foreground/50">
+                  No team members added yet.
+                </p>
+              )}
             </div>
           </div>
 
