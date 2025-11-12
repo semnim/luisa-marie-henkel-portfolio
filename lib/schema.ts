@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   jsonb,
   pgEnum,
@@ -34,6 +35,7 @@ export const projects = pgTable('projects', {
     .default([]),
   client: text('client'),
   createdAt: timestamp('created_at').defaultNow(),
+  isFeatured: boolean('is_featured').default(false),
 });
 
 export const images = pgTable('images', {
