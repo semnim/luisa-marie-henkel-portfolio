@@ -1,5 +1,6 @@
 'use client';
 
+import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
 import { GalleryManagementDialog } from '@/components/admin/gallery-management-dialog';
 import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
 import { ProjectDialog } from '@/components/admin/project-dialog';
@@ -50,6 +51,8 @@ export default function AdminPortfolioPage() {
   const [mediaDialogOpen, setMediaDialogOpen] = useState(false);
   const [galleryDialogOpen, setGalleryDialogOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<any>(null);
 
   const handleCreateProject = () => {
     setProjectDialogMode('create');
@@ -73,12 +76,28 @@ export default function AdminPortfolioPage() {
     setGalleryDialogOpen(true);
   };
 
+  const handleDeleteProject = (project: any) => {
+    setProjectToDelete(project);
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    console.log('Delete project:', projectToDelete?.id);
+    setDeleteConfirmOpen(false);
+    setProjectToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmOpen(false);
+    setProjectToDelete(null);
+  };
+
   return (
     <div className="px-6 py-12 max-w-7xl mx-auto">
       <div className="space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-light tracking-item-subheading uppercase">
+        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          <h1 className="text-xl mt-2 lg:mt-0 font-light tracking-item-subheading uppercase">
             PROJECTS
           </h1>
           <AnimatedBorderButton onClick={handleCreateProject}>
@@ -96,7 +115,7 @@ export default function AdminPortfolioPage() {
                 onEditMetadata={() => handleEditMetadata(project)}
                 onManageMedia={() => handleManageMedia(project)}
                 onManageGallery={() => handleManageGallery(project)}
-                onDelete={() => console.log('Delete', project.id)}
+                onDelete={() => handleDeleteProject(project)}
               />
             ))}
           </div>
@@ -150,6 +169,17 @@ export default function AdminPortfolioPage() {
         onClose={() => setGalleryDialogOpen(false)}
         onUpload={() => console.log('Upload gallery images')}
         onRemove={(id) => console.log('Remove image', id)}
+      />
+
+      <ConfirmationDialog
+        isOpen={deleteConfirmOpen}
+        title="DELETE PROJECT"
+        message={`Are you sure you want to delete "${projectToDelete?.title}"? This action cannot be undone.`}
+        confirmLabel="DELETE"
+        cancelLabel="CANCEL"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </div>
   );

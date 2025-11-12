@@ -184,9 +184,18 @@ export function GalleryManagementDialog({
           )}
 
           {/* Actions */}
-          <div className="pt-6">
-            <AnimatedBorderButton onClick={onClose} className="w-full">
-              DONE
+          <div className="flex gap-3 pt-6">
+            <AnimatedBorderButton onClick={onClose} className="flex-1">
+              CANCEL
+            </AnimatedBorderButton>
+            <AnimatedBorderButton
+              onClick={() => {
+                onUpload?.();
+                onClose();
+              }}
+              className="flex-1"
+            >
+              SAVE
             </AnimatedBorderButton>
           </div>
         </div>
