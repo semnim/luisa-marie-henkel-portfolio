@@ -1,4 +1,3 @@
-import { Container } from '@/components/container';
 import { HeroSection } from '@/components/work/hero-section';
 import { ProjectGallery } from '@/components/work/project-gallery';
 import { ProjectMetadata } from '@/components/work/project-metadata';
@@ -22,14 +21,14 @@ export default async function DetailPage({
   // Handle empty state
   if (projectImages.length === 0 || projectData === undefined) {
     return (
-      <Container>
+      <main className="h-dvh md:h-screen overflow-y-scroll">
         <div className="h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-light mb-4">{title}</h1>
             <p className="text-muted-foreground">Images coming soon</p>
           </div>
         </div>
-      </Container>
+      </main>
     );
   }
 

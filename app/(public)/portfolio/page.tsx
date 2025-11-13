@@ -1,4 +1,3 @@
-import { Heading } from '@/components/heading';
 import { Image } from '@/components/image';
 import { IndexPopover } from '@/components/portfolio/index-popover';
 import { MasonryGrid } from '@/components/work/masonry-grid';
@@ -44,7 +43,11 @@ export default async function WorkPage() {
                     className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
                   />
                   <figcaption className="backdrop-brightness-75 absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-center items-center h-full">
-                    <Heading variant="ITEM" title={item.title} />
+                    <div className="text-center z-20">
+                      <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
+                        {item.title}
+                      </p>
+                    </div>
                   </figcaption>
                 </figure>
               </Link>

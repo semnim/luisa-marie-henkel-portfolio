@@ -4,22 +4,32 @@
 
 - Admin / Portfolio / manage media
 - Admin / Portfolio / Manage gallery
+- Consider adding pre-processing on image upload
 
-## LATER
+## CLEAN-UP
 
-- [ ] Fix loading states
-- [ ] Brainstorm & Add animations
-- [ ] Set up resend and finish contact form mechanism
-- [ ] Set up Animations
+- Clean up unused components
+- Clean up package json
+- Extract common UI components
+- Evaluate which UI components should be radix / shadcn
+- Extract composed components
+- Micro improvements on components
+- Re-evaluate project structure
+- Replace use-effects by tanstack query
+
+## LAST
+
+- Add loading states
+  - admin/home
+  - admin/portfolio
+- Add animations
   - text fade in / text spinner
   - Image fade in
-- Add preprocessing to pipeline (conditional)
+- Set up resend + contact form sending
+- Implement admin/about markdown edit + save in db + fetch from db
+- Implement admin/about image upload
+- Implement comprehensive tests
+
+## OPTIONAL
+
 - Automatically create loading state image for each (blurred heavily)
-- Modify about text and image
-- [ ] Clean-up
-  - package.json
-  - unused components
-- [ ] Write tests
-- [ ] Refactor code
-  - Remove dead media queries
-  - Unify components & add abstractions

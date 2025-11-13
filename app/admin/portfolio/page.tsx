@@ -1,18 +1,22 @@
 'use client';
 
-import { fetchAllProjectsWithImages, deleteProject } from '@/app/actions/projects';
+import {
+  deleteProject,
+  fetchAllProjectsWithImages,
+} from '@/app/actions/projects';
 import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
 import { GalleryManagementDialog } from '@/components/admin/gallery-management-dialog';
 import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
 import { ProjectDialog } from '@/components/admin/project-dialog';
 import { ProjectListItem } from '@/components/admin/project-list-item';
 import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { Project } from '@/lib/schema';
+import { Project, Image } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export type PortfolioProjectItem = Project & {
+  images: Image[];
   hasDesktopHero: boolean;
   hasMobileHero: boolean;
   hasDesktopThumb: boolean;
@@ -51,10 +55,10 @@ export default function AdminPortfolioPage() {
           image.imageType === 'thumbnail' && image.variant === 'desktop'
       ),
       hasMobileThumb: project.images.some(
-        (image) =>
-          image.imageType === 'thumbnail' && image.variant === 'mobile'
+        (image) => image.imageType === 'thumbnail' && image.variant === 'mobile'
       ),
-      galleryCount: project.images.length,
+      galleryCount: project.images.filter((img) => img.imageType === 'gallery')
+        .length,
     }));
     setProjects(mappedProjects);
     console.log(mappedProjects);
@@ -153,7 +157,8 @@ export default function AdminPortfolioPage() {
         projectId={selectedProject?.id}
         initialData={{
           ...toPartial(selectedProject),
-          publishedAt: selectedProject?.publishedAt?.toISOString().split('T')[0] ?? '',
+          publishedAt:
+            selectedProject?.publishedAt?.toISOString().split('T')[0] ?? '',
         }}
         onClose={() => setProjectDialogOpen(false)}
         onSave={async () => {
@@ -173,22 +178,14 @@ export default function AdminPortfolioPage() {
 
       <GalleryManagementDialog
         isOpen={galleryDialogOpen}
+        projectId={selectedProject?.id}
         projectTitle={selectedProject?.title || ''}
-        images={[
-          {
-            id: '1',
-            filename: 'project-hero.jpg',
-            url: 'https://placehold.co/800x600',
-          },
-          {
-            id: '2',
-            filename: 'detail-shot-1.jpg',
-            url: 'https://placehold.co/800x600',
-          },
-        ]}
+        images={selectedProject?.images || []}
         onClose={() => setGalleryDialogOpen(false)}
-        onUpload={() => console.log('Upload gallery images')}
-        onRemove={(id) => console.log('Remove image', id)}
+        onSave={async () => {
+          await loadProjects();
+          setGalleryDialogOpen(false);
+        }}
       />
 
       <ConfirmationDialog
