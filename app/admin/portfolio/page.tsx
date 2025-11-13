@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchAllProjectsWithImages } from '@/app/actions/projects';
+import { fetchAllProjectsWithImages, deleteProject } from '@/app/actions/projects';
 import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
 import { GalleryManagementDialog } from '@/components/admin/gallery-management-dialog';
 import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
@@ -10,6 +10,7 @@ import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
 import { Project } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export type PortfolioProjectItem = Project & {
   hasDesktopHero: boolean;
@@ -33,32 +34,33 @@ export default function AdminPortfolioPage() {
   const [projectToDelete, setProjectToDelete] =
     useState<PortfolioProjectItem | null>(null);
 
+  const loadProjects = async () => {
+    const projectsResponse = await fetchAllProjectsWithImages();
+    const mappedProjects = projectsResponse.map((project) => ({
+      ...project,
+      hasDesktopHero: project.images.some(
+        (image) =>
+          image.imageType === 'project_hero' && image.variant === 'desktop'
+      ),
+      hasMobileHero: project.images.some(
+        (image) =>
+          image.imageType === 'project_hero' && image.variant === 'mobile'
+      ),
+      hasDesktopThumb: project.images.some(
+        (image) =>
+          image.imageType === 'thumbnail' && image.variant === 'desktop'
+      ),
+      hasMobileThumb: project.images.some(
+        (image) =>
+          image.imageType === 'thumbnail' && image.variant === 'mobile'
+      ),
+      galleryCount: project.images.length,
+    }));
+    setProjects(mappedProjects);
+    console.log(mappedProjects);
+  };
+
   useEffect(() => {
-    async function loadProjects() {
-      const projectsResponse = await fetchAllProjectsWithImages();
-      const mappedProjects = projectsResponse.map((project) => ({
-        ...project,
-        hasDesktopHero: project.images.some(
-          (image) =>
-            image.imageType === 'project_hero' && image.variant === 'desktop'
-        ),
-        hasMobileHero: project.images.some(
-          (image) =>
-            image.imageType === 'project_hero' && image.variant === 'mobile'
-        ),
-        hasDesktopThumb: project.images.some(
-          (image) =>
-            image.imageType === 'thumbnail' && image.variant === 'desktop'
-        ),
-        hasMobileThumb: project.images.some(
-          (image) =>
-            image.imageType === 'thumbnail' && image.variant === 'mobile'
-        ),
-        galleryCount: project.images.length,
-      }));
-      setProjects(mappedProjects);
-      console.log(mappedProjects);
-    }
     loadProjects();
   }, []);
 
@@ -89,7 +91,18 @@ export default function AdminPortfolioPage() {
     setDeleteConfirmOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
+    if (!projectToDelete) return;
+
+    const result = await deleteProject(projectToDelete.id);
+
+    if (result.success) {
+      toast.success('Project deleted successfully');
+      await loadProjects();
+    } else {
+      toast.error(result.error || 'Failed to delete project');
+    }
+
     setDeleteConfirmOpen(false);
     setProjectToDelete(null);
   };
@@ -137,14 +150,14 @@ export default function AdminPortfolioPage() {
       <ProjectDialog
         isOpen={projectDialogOpen}
         mode={projectDialogMode}
+        projectId={selectedProject?.id}
         initialData={{
           ...toPartial(selectedProject),
-          publishedAt: selectedProject?.publishedAt?.toISOString() ?? '',
+          publishedAt: selectedProject?.publishedAt?.toISOString().split('T')[0] ?? '',
         }}
         onClose={() => setProjectDialogOpen(false)}
-        onSave={(data) => {
-          console.log('Save project:', data);
-          setProjectDialogOpen(false);
+        onSave={async () => {
+          await loadProjects();
         }}
       />
 

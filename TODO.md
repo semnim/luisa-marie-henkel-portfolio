@@ -1,26 +1,21 @@
 # TO DO
 
+## NOW
+
+- Admin / Portfolio / manage media
+- Admin / Portfolio / Manage gallery
+
+## LATER
+
 - [ ] Fix loading states
 - [ ] Brainstorm & Add animations
-  - gsap?
+- [ ] Set up resend and finish contact form mechanism
+- [ ] Set up Animations
   - text fade in / text spinner
   - Image fade in
-- [ ] Prevent cloudinary transformations
-  - Use next image instead of cloudinary?
-  - Or maybe flag?
-- [ ] Set up resend and finish contact form mechanism
-- [x] Add Authentication (Better Auth)
-- [ ] Section management features
-  - View and manage cloudinary images
-    - Add preprocessing to pipeline (conditional)
-    - Automatically create loading state image for each (blurred heavily)
-  - [ ] Manage section content
-    - Change image on HOME/HERO, HOME/FEATURED
-    - Modify and add projects
-      - Metadata
-      - Project thumbnail
-      - Project hero
-    - Modify about text and image
+- Add preprocessing to pipeline (conditional)
+- Automatically create loading state image for each (blurred heavily)
+- Modify about text and image
 - [ ] Clean-up
   - package.json
   - unused components

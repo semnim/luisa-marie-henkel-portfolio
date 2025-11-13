@@ -1,33 +1,23 @@
 'use client';
 
+import { createProject, updateProject } from '@/app/actions/projects';
+import type { ProjectFormData } from '@/app/actions/projects';
 import { CATEGORIES } from '@/lib/constants';
 import { createSlugFromProjectTitle } from '@/lib/utils';
+import { validateTitle, validateTeamMember, validatePublishedDate } from '@/lib/validation';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
 import { AnimatedInput } from '../auth/animated-input';
-
-interface TeamMember {
-  role: string;
-  name: string;
-}
-
-interface ProjectFormData {
-  title: string;
-  slug: string;
-  category: string;
-  description: string;
-  client: string;
-  publishedAt: string;
-  team: TeamMember[];
-}
 
 interface ProjectDialogProps {
   isOpen: boolean;
   mode: 'create' | 'edit';
+  projectId?: number;
   initialData: Partial<ProjectFormData> | null;
   onClose: () => void;
-  onSave?: (data: ProjectFormData) => void;
+  onSave?: () => Promise<void>;
 }
 
 const getProjectFormDataWithDefaults = (
@@ -46,6 +36,7 @@ const getProjectFormDataWithDefaults = (
 export function ProjectDialog({
   isOpen,
   mode,
+  projectId,
   initialData,
   onClose,
   onSave,
@@ -53,6 +44,8 @@ export function ProjectDialog({
   const [formData, setFormData] = useState<ProjectFormData>(
     getProjectFormDataWithDefaults(initialData)
   );
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setFormData(getProjectFormDataWithDefaults(initialData));
@@ -64,6 +57,7 @@ export function ProjectDialog({
       title: value,
       slug: createSlugFromProjectTitle(value),
     }));
+    clearFieldError('title');
   };
 
   const addTeamMember = () => {
@@ -93,6 +87,105 @@ export function ProjectDialog({
     }));
   };
 
+  const clearFieldError = (field: string) => {
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    // Validate title
+    const titleError = validateTitle(formData.title);
+    if (titleError) {
+      newErrors.title = titleError;
+    }
+
+    // Validate team members
+    formData.team.forEach((member, index) => {
+      const memberErrors = validateTeamMember(member.role, member.name);
+      if (memberErrors.role) {
+        newErrors[`team.${index}.role`] = memberErrors.role;
+      }
+      if (memberErrors.name) {
+        newErrors[`team.${index}.name`] = memberErrors.name;
+      }
+    });
+
+    // Validate published date
+    const dateError = validatePublishedDate(formData.publishedAt);
+    if (dateError) {
+      newErrors.publishedAt = dateError;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSave = async () => {
+    // Clear previous errors
+    setErrors({});
+
+    // Client-side validation
+    const isValid = validateForm();
+    if (!isValid) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Call appropriate server action
+      const result =
+        mode === 'create'
+          ? await createProject(formData)
+          : await updateProject(projectId!, formData);
+
+      if (result.success) {
+        // Show success toast
+        toast.success('Project saved!');
+
+        // Call parent onSave callback to refresh data
+        if (onSave) {
+          await onSave();
+        }
+
+        // Close dialog immediately to avoid showing stale data
+        onClose();
+
+        // Reset state for next open
+        setErrors({});
+        setIsSubmitting(false);
+      } else {
+        // Map server errors to field errors
+        const errorMap: Record<string, string> = {};
+        result.errors?.forEach((err) => {
+          errorMap[err.field] = err.message;
+        });
+        setErrors(errorMap);
+        setIsSubmitting(false);
+
+        // Show error toast for general errors
+        if (errorMap._general) {
+          toast.error(errorMap._general);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving project:', error);
+      toast.error('An unexpected error occurred');
+      setIsSubmitting(false);
+    }
+  };
+
+  const ErrorMessage = ({ field }: { field: string }) => {
+    return errors[field] ? (
+      <p className="text-xs text-red-500 mt-1">{errors[field]}</p>
+    ) : null;
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -107,12 +200,15 @@ export function ProjectDialog({
           {/* Form */}
           <div className="space-y-6">
             {/* Title */}
-            <AnimatedInput
-              placeholder="Title*"
-              value={formData.title}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              required
-            />
+            <div>
+              <AnimatedInput
+                placeholder="Title*"
+                value={formData.title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                required
+              />
+              <ErrorMessage field="title" />
+            </div>
 
             {/* Slug */}
             <AnimatedInput
@@ -154,38 +250,48 @@ export function ProjectDialog({
               <textarea
                 value={formData.description}
                 placeholder="A background text describing this project..."
-                onChange={(e) =>
+                onChange={(e) => {
                   setFormData((prev) => ({
                     ...prev,
                     description: e.target.value,
-                  }))
-                }
+                  }));
+                  clearFieldError('description');
+                }}
                 rows={8}
                 className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light resize-none focus:outline-none focus:border-foreground transition-colors duration-500"
               />
+              <ErrorMessage field="description" />
             </div>
 
             {/* Client */}
-            <AnimatedInput
-              placeholder="Magazine"
-              value={formData.client}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, client: e.target.value }))
-              }
-            />
+            <div>
+              <AnimatedInput
+                placeholder="Magazine"
+                value={formData.client}
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, client: e.target.value }));
+                  clearFieldError('client');
+                }}
+              />
+              <ErrorMessage field="client" />
+            </div>
 
             {/* Published Date */}
-            <AnimatedInput
-              placeholder="Published Date"
-              type="date"
-              value={formData.publishedAt}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  publishedAt: e.target.value,
-                }))
-              }
-            />
+            <div>
+              <AnimatedInput
+                placeholder="Published Date"
+                type="date"
+                value={formData.publishedAt}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    publishedAt: e.target.value,
+                  }));
+                  clearFieldError('publishedAt');
+                }}
+              />
+              <ErrorMessage field="publishedAt" />
+            </div>
 
             {/* Team Members */}
             <div className="space-y-4">
@@ -206,19 +312,23 @@ export function ProjectDialog({
                     <AnimatedInput
                       placeholder="Role"
                       value={member.role}
-                      onChange={(e) =>
-                        updateTeamMember(index, 'role', e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateTeamMember(index, 'role', e.target.value);
+                        clearFieldError(`team.${index}.role`);
+                      }}
                     />
+                    <ErrorMessage field={`team.${index}.role`} />
                   </div>
                   <div className="flex-1">
                     <AnimatedInput
                       placeholder="Name"
                       value={member.name}
-                      onChange={(e) =>
-                        updateTeamMember(index, 'name', e.target.value)
-                      }
+                      onChange={(e) => {
+                        updateTeamMember(index, 'name', e.target.value);
+                        clearFieldError(`team.${index}.name`);
+                      }}
                     />
+                    <ErrorMessage field={`team.${index}.name`} />
                   </div>
                   <button
                     onClick={() => removeTeamMember(index)}
@@ -242,10 +352,11 @@ export function ProjectDialog({
               CANCEL
             </AnimatedBorderButton>
             <AnimatedBorderButton
-              onClick={() => onSave?.(formData)}
+              onClick={handleSave}
               className="flex-1"
+              disabled={isSubmitting}
             >
-              SAVE
+              {isSubmitting ? 'SAVING...' : 'SAVE'}
             </AnimatedBorderButton>
           </div>
         </div>
