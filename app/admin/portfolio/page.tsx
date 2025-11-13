@@ -129,9 +129,6 @@ export default function AdminPortfolioPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-24 space-y-6">
             <p className="text-muted-foreground font-light">No projects yet</p>
-            <AnimatedBorderButton onClick={handleCreateProject}>
-              CREATE PROJECT
-            </AnimatedBorderButton>
           </div>
         )}
       </div>

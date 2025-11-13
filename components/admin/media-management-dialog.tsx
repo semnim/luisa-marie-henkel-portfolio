@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { MediaUploadBox } from './media-upload-box';
+import { useEffect, useState } from 'react';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { MediaUploadBox } from './media-upload-box';
 
 interface MediaData {
   url: string;
@@ -127,7 +127,6 @@ export function MediaManagementDialog({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <div className="w-full max-w-md mx-auto md:mx-0">
                 <MediaUploadBox
-                  label="Desktop"
                   aspectRatio="16/9"
                   accept="both"
                   currentMedia={
@@ -145,7 +144,6 @@ export function MediaManagementDialog({
               </div>
               <div className="w-full max-w-[280px] md:max-w-[320px] mx-auto md:mx-0">
                 <MediaUploadBox
-                  label="Mobile"
                   aspectRatio="9/16"
                   accept="both"
                   currentMedia={
@@ -172,7 +170,6 @@ export function MediaManagementDialog({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <div className="w-full max-w-md mx-auto md:mx-0">
                 <MediaUploadBox
-                  label="Desktop"
                   aspectRatio="16/9"
                   accept="image"
                   currentMedia={
@@ -190,7 +187,6 @@ export function MediaManagementDialog({
               </div>
               <div className="w-full max-w-[280px] md:max-w-[320px] mx-auto md:mx-0">
                 <MediaUploadBox
-                  label="Mobile"
                   aspectRatio="9/16"
                   accept="image"
                   currentMedia={

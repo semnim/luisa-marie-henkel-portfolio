@@ -55,7 +55,6 @@ export function ProjectDialog({
   );
 
   useEffect(() => {
-    console.log('setting form data', initialData);
     setFormData(getProjectFormDataWithDefaults(initialData));
   }, [initialData]);
 
@@ -161,7 +160,7 @@ export function ProjectDialog({
                     description: e.target.value,
                   }))
                 }
-                rows={4}
+                rows={8}
                 className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light resize-none focus:outline-none focus:border-foreground transition-colors duration-500"
               />
             </div>

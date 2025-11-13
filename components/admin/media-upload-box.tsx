@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 interface MediaUploadBoxProps {
-  label: string;
   aspectRatio?: '16/9' | '9/16' | '1/1';
   accept?: 'image' | 'video' | 'both';
   currentMedia?: {
@@ -22,7 +21,6 @@ interface MediaUploadBoxProps {
 }
 
 export function MediaUploadBox({
-  label,
   aspectRatio = '16/9',
   accept = 'both',
   currentMedia,
@@ -71,10 +69,6 @@ export function MediaUploadBox({
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-light tracking-item-subheading uppercase text-foreground">
-        {label}
-      </h3>
-
       {/* Hidden File Input */}
       <input
         ref={fileInputRef}

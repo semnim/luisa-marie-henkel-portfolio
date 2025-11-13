@@ -530,7 +530,6 @@ export default function AdminHomePage() {
           }
         >
           <MediaUploadBox
-            label={heroState.previewMode === 'desktop' ? 'Desktop' : 'Mobile'}
             aspectRatio={heroState.previewMode === 'desktop' ? '16/9' : '9/16'}
             accept="image"
             currentMedia={heroPreview.currentMedia}

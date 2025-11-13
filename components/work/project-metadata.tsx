@@ -74,13 +74,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
             <dl className="flex-1 w-full max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
               {team.map((credit, index) => (
                 <React.Fragment key={credit.name + index}>
-                  <CreditItem
-                    label={
-                      credit.role.replaceAll('_', ' ')[0].toUpperCase() +
-                      credit.role.replaceAll('_', ' ').slice(1)
-                    }
-                    value={credit.name}
-                  />
+                  <CreditItem label={credit.role} value={credit.name} />
                   {index !== team.length - 1 && (
                     <hr className={`md:hidden w-full mr-auto`} />
                   )}
@@ -111,13 +105,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
               <dl className="flex-1 max-h-fit flex flex-col md:flex-row  md:justify-between md:items-start gap-1 md:gap-4 h-full mx-auto">
                 {team.map((credit, index) => (
                   <React.Fragment key={credit.name + index}>
-                    <CreditItem
-                      label={
-                        credit.role.replaceAll('_', ' ')[0].toUpperCase() +
-                        credit.role.replaceAll('_', ' ').slice(1)
-                      }
-                      value={credit.name}
-                    />
+                    <CreditItem label={credit.role} value={credit.name} />
                     {index !== team.length - 1 && (
                       <hr className={`md:hidden w-full mr-auto`} />
                     )}

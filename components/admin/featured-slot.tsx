@@ -50,7 +50,6 @@ export function FeaturedSlot({
   return (
     <div className="flex-1 space-y-2">
       <MediaUploadBox
-        label={previewMode === 'desktop' ? 'Desktop' : 'Mobile'}
         aspectRatio="9/16"
         accept="image"
         currentMedia={currentMedia}

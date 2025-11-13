@@ -40,44 +40,7 @@ export const FeaturedShowcase = ({ projects }: FeaturedShowcaseProps) => {
     (p) => p.images.both || (p.images.desktop && p.images.mobile)
   );
 
-  // Use fallback if no valid projects
-  const FEATURED_IMAGES_FALLBACK: FeaturedProject[] = [
-    {
-      projectSlug: 'fading-ties',
-      projectTitle: 'fading ties',
-      position: 0,
-      images: {
-        both: { imageUrl: '5_taqgpt' },
-      },
-    },
-    {
-      projectSlug: 'party',
-      projectTitle: 'party',
-      position: 1,
-      images: {
-        both: { imageUrl: 'thumbnail_lzubo7' },
-      },
-    },
-    {
-      projectSlug: 'mythical-creature',
-      projectTitle: 'mythical creature',
-      position: 2,
-      images: {
-        both: { imageUrl: 'thumbnail_q3r8bc' },
-      },
-    },
-    {
-      projectSlug: 'tangled-manners',
-      projectTitle: 'tangled manners',
-      position: 3,
-      images: {
-        both: { imageUrl: 'thumbnail_candidate_1_msexrm' },
-      },
-    },
-  ];
-
-  const displayProjects: FeaturedProject[] =
-    validProjects.length > 0 ? validProjects : FEATURED_IMAGES_FALLBACK;
+  const displayProjects = validProjects;
 
   const scrollToIndex = (index: number) => {
     if (containerRef.current) {
