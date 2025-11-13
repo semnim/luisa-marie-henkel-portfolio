@@ -53,10 +53,16 @@ const NavContent = ({
         className={`block cursor-pointer group px-6 text-red-400 hover:text-red-600 py-3 text-sm tracking-item-subheading font-light transition-colors duration-300 text-left`}
       >
         SIGN OUT
-        <p className="flex gap-2 items-center transition-colors duration-300 text-red-400 group-hover:text-red-600 text-xs mt-2 tracking-tight font-light">
-          <User size={10} />{' '}
-          {isPending ? <Skeleton className="w-10 h-2" /> : session?.user.name}
-        </p>
+        <div className="flex gap-2 items-center transition-colors duration-300 text-red-400 group-hover:text-red-600 text-xs mt-2 tracking-tight font-light">
+          {isPending ? (
+            <Skeleton className="w-15 h-3" />
+          ) : (
+            <>
+              <User size={10} />
+              <span>{session?.user.name}</span>
+            </>
+          )}
+        </div>
       </button>
     </>
   );
