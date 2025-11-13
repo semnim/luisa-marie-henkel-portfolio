@@ -1,8 +1,9 @@
 'use client';
 
 import { CATEGORIES } from '@/lib/constants';
+import { createSlugFromProjectTitle } from '@/lib/utils';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
 import { AnimatedInput } from '../auth/animated-input';
 
@@ -24,11 +25,24 @@ interface ProjectFormData {
 interface ProjectDialogProps {
   isOpen: boolean;
   mode: 'create' | 'edit';
-  initialData?: Partial<ProjectFormData>;
+  initialData: Partial<ProjectFormData> | null;
   onClose: () => void;
   onSave?: (data: ProjectFormData) => void;
 }
 
+const getProjectFormDataWithDefaults = (
+  initialData: Partial<ProjectFormData> | null
+) => {
+  return {
+    title: initialData?.title || '',
+    slug: initialData?.slug || '',
+    category: initialData?.category || 'editorial',
+    description: initialData?.description || '',
+    client: initialData?.client || '',
+    publishedAt: initialData?.publishedAt || '',
+    team: initialData?.team || [],
+  };
+};
 export function ProjectDialog({
   isOpen,
   mode,
@@ -36,28 +50,20 @@ export function ProjectDialog({
   onClose,
   onSave,
 }: ProjectDialogProps) {
-  const [formData, setFormData] = useState<ProjectFormData>({
-    title: initialData?.title || '',
-    slug: initialData?.slug || '',
-    category: initialData?.category || 'web',
-    description: initialData?.description || '',
-    client: initialData?.client || '',
-    publishedAt: initialData?.publishedAt || '',
-    team: initialData?.team || [],
-  });
+  const [formData, setFormData] = useState<ProjectFormData>(
+    getProjectFormDataWithDefaults(initialData)
+  );
 
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  };
+  useEffect(() => {
+    console.log('setting form data', initialData);
+    setFormData(getProjectFormDataWithDefaults(initialData));
+  }, [initialData]);
 
   const handleTitleChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
       title: value,
-      slug: generateSlug(value),
+      slug: createSlugFromProjectTitle(value),
     }));
   };
 

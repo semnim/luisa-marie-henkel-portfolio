@@ -1,7 +1,7 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
-import { Menu, User, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -28,6 +28,15 @@ const NavContent = ({
 
   return (
     <>
+      <div className="px-6 flex gap-2 items-center transition-colors duration-300 text-xs text-muted-foreground mb-4 mt-2 tracking-tight font-light">
+        {isPending ? (
+          <Skeleton className="w-45 mt-1 h-3" />
+        ) : (
+          <p className="text-muted-foreground font-regular border-b">
+            Welcome back, <span>{session?.user.name}</span>
+          </p>
+        )}
+      </div>
       <nav className="space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -50,19 +59,9 @@ const NavContent = ({
       <button
         key={'sign out'}
         onClick={() => authClient.signOut().then(() => redirect('/'))}
-        className={`block cursor-pointer group px-6 text-red-400 hover:text-red-600 py-3 text-sm tracking-item-subheading font-light transition-colors duration-300 text-left`}
+        className={`block cursor-pointer px-6 text-red-400 hover:text-red-600 py-3 text-sm tracking-item-subheading font-light transition-colors duration-300 text-left`}
       >
         SIGN OUT
-        <div className="flex gap-2 items-center transition-colors duration-300 text-red-400 group-hover:text-red-600 text-xs mt-2 tracking-tight font-light">
-          {isPending ? (
-            <Skeleton className="w-15 h-3" />
-          ) : (
-            <>
-              <User size={10} />
-              <span>{session?.user.name}</span>
-            </>
-          )}
-        </div>
       </button>
     </>
   );
@@ -101,7 +100,7 @@ export function Sidebar() {
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="pt-20 h-full flex flex-col">
+        <div className="pt-2 h-full flex flex-col">
           <NavContent
             pathname={pathname}
             handleClose={() => setMobileOpen(false)}
@@ -111,7 +110,7 @@ export function Sidebar() {
 
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:flex-col md:fixed md:top-0 md:left-0 md:h-screen md:w-75 md:bg-background md:border-r md:border-muted-foreground/20">
-        <div className="pt-12 h-full flex flex-col">
+        <div className="pt-2 h-full flex flex-col">
           <NavContent
             pathname={pathname}
             handleClose={() => setMobileOpen(false)}

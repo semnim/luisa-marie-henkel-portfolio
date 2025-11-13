@@ -1,58 +1,66 @@
 'use client';
 
+import { fetchAllProjectsWithImages } from '@/app/actions/projects';
 import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
 import { GalleryManagementDialog } from '@/components/admin/gallery-management-dialog';
 import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
 import { ProjectDialog } from '@/components/admin/project-dialog';
 import { ProjectListItem } from '@/components/admin/project-list-item';
 import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { useState } from 'react';
+import { Project } from '@/lib/schema';
+import { toPartial } from '@/lib/utils';
+import { useEffect, useState } from 'react';
 
-// Mock data for demonstration
-const mockProjects = [
-  {
-    id: '1',
-    title: 'Brand Identity Redesign',
-    category: 'branding',
-    hasDesktopHero: true,
-    hasMobileHero: true,
-    hasDesktopThumb: true,
-    hasMobileThumb: false,
-    galleryCount: 12,
-  },
-  {
-    id: '2',
-    title: 'E-commerce Platform',
-    category: 'web',
-    hasDesktopHero: true,
-    hasMobileHero: false,
-    hasDesktopThumb: true,
-    hasMobileThumb: true,
-    galleryCount: 8,
-  },
-  {
-    id: '3',
-    title: 'Editorial Magazine Layout',
-    category: 'editorial',
-    hasDesktopHero: false,
-    hasMobileHero: false,
-    hasDesktopThumb: true,
-    hasMobileThumb: true,
-    galleryCount: 15,
-  },
-];
+export type PortfolioProjectItem = Project & {
+  hasDesktopHero: boolean;
+  hasMobileHero: boolean;
+  hasDesktopThumb: boolean;
+  hasMobileThumb: boolean;
+  galleryCount: number;
+};
 
 export default function AdminPortfolioPage() {
-  const [projects] = useState(mockProjects);
+  const [projects, setProjects] = useState<PortfolioProjectItem[]>([]);
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projectDialogMode, setProjectDialogMode] = useState<'create' | 'edit'>(
     'create'
   );
   const [mediaDialogOpen, setMediaDialogOpen] = useState(false);
   const [galleryDialogOpen, setGalleryDialogOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedProject, setSelectedProject] =
+    useState<PortfolioProjectItem | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<any>(null);
+  const [projectToDelete, setProjectToDelete] =
+    useState<PortfolioProjectItem | null>(null);
+
+  useEffect(() => {
+    async function loadProjects() {
+      const projectsResponse = await fetchAllProjectsWithImages();
+      const mappedProjects = projectsResponse.map((project) => ({
+        ...project,
+        hasDesktopHero: project.images.some(
+          (image) =>
+            image.imageType === 'project_hero' && image.variant === 'desktop'
+        ),
+        hasMobileHero: project.images.some(
+          (image) =>
+            image.imageType === 'project_hero' && image.variant === 'mobile'
+        ),
+        hasDesktopThumb: project.images.some(
+          (image) =>
+            image.imageType === 'thumbnail' && image.variant === 'desktop'
+        ),
+        hasMobileThumb: project.images.some(
+          (image) =>
+            image.imageType === 'thumbnail' && image.variant === 'mobile'
+        ),
+        galleryCount: project.images.length,
+      }));
+      setProjects(mappedProjects);
+      console.log(mappedProjects);
+    }
+    loadProjects();
+  }, []);
 
   const handleCreateProject = () => {
     setProjectDialogMode('create');
@@ -60,29 +68,28 @@ export default function AdminPortfolioPage() {
     setProjectDialogOpen(true);
   };
 
-  const handleEditMetadata = (project: any) => {
+  const handleEditMetadata = (project: PortfolioProjectItem) => {
     setProjectDialogMode('edit');
     setSelectedProject(project);
     setProjectDialogOpen(true);
   };
 
-  const handleManageMedia = (project: any) => {
+  const handleManageMedia = (project: PortfolioProjectItem) => {
     setSelectedProject(project);
     setMediaDialogOpen(true);
   };
 
-  const handleManageGallery = (project: any) => {
+  const handleManageGallery = (project: PortfolioProjectItem) => {
     setSelectedProject(project);
     setGalleryDialogOpen(true);
   };
 
-  const handleDeleteProject = (project: any) => {
+  const handleDeleteProject = (project: PortfolioProjectItem) => {
     setProjectToDelete(project);
     setDeleteConfirmOpen(true);
   };
 
   const confirmDelete = () => {
-    console.log('Delete project:', projectToDelete?.id);
     setDeleteConfirmOpen(false);
     setProjectToDelete(null);
   };
@@ -93,7 +100,7 @@ export default function AdminPortfolioPage() {
   };
 
   return (
-    <div className="px-6 py-12 max-w-7xl mx-auto">
+    <div className="px-6 py-4 max-w-7xl mx-auto">
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
@@ -133,7 +140,10 @@ export default function AdminPortfolioPage() {
       <ProjectDialog
         isOpen={projectDialogOpen}
         mode={projectDialogMode}
-        initialData={selectedProject}
+        initialData={{
+          ...toPartial(selectedProject),
+          publishedAt: selectedProject?.publishedAt?.toISOString() ?? '',
+        }}
         onClose={() => setProjectDialogOpen(false)}
         onSave={(data) => {
           console.log('Save project:', data);

@@ -95,6 +95,8 @@ export type NewProject = typeof projects.$inferInsert;
 export type Image = typeof images.$inferSelect;
 export type NewImage = typeof images.$inferInsert;
 
+export type ProjectWithimages = Project & { images: Image[] };
+
 export type Category = (typeof categoryEnum.enumValues)[number];
 export type ImageType = (typeof imageTypeEnum.enumValues)[number];
 export type ImageVariant = (typeof imageVariantEnum.enumValues)[number];

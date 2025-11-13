@@ -1,5 +1,6 @@
 'use client';
 
+import { PortfolioProjectItem } from '@/app/admin/portfolio/page';
 import {
   Check,
   ChevronDown,
@@ -24,7 +25,7 @@ interface Project {
 }
 
 interface ProjectListItemProps {
-  project: Project;
+  project: PortfolioProjectItem;
   onEditMetadata?: () => void;
   onManageMedia?: () => void;
   onManageGallery?: () => void;
@@ -123,30 +124,30 @@ export function ProjectListItem({
 
       {/* Expanded Actions */}
       {isExpanded && (
-        <div className="px-6 pb-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
+        <div className="px-6 pb-4 flex flex-col lg:flex-row gap-2 lg:gap-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
           <AnimatedBorderButton
             onClick={onEditMetadata}
             className="w-full text-sm"
           >
-            EDIT METADATA
+            edit
           </AnimatedBorderButton>
           <AnimatedBorderButton
             onClick={onManageMedia}
             className="w-full text-sm"
           >
-            MANAGE MEDIA
+            media
           </AnimatedBorderButton>
           <AnimatedBorderButton
             onClick={onManageGallery}
             className="w-full text-sm"
           >
-            MANAGE GALLERY
+            gallery
           </AnimatedBorderButton>
           <AnimatedBorderButton
             onClick={onDelete}
             className="w-full text-sm text-red-500 hover:text-red-400"
           >
-            DELETE PROJECT
+            DELETE
           </AnimatedBorderButton>
         </div>
       )}

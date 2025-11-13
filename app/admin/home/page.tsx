@@ -11,6 +11,7 @@ import {
   fetchCurrentHero,
   uploadHero,
 } from '@/app/actions/hero';
+import { fetchAllProjects } from '@/app/actions/projects';
 import { FeaturedSlideshow } from '@/components/admin/featured-slideshow';
 import { FeaturedSlot } from '@/components/admin/featured-slot';
 import { MediaToolbar } from '@/components/admin/media-toolbar';
@@ -21,32 +22,17 @@ import { useMediaUploadState } from '@/hooks/use-media-upload-state';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-// Mock projects data for now
-const mockProjects = [
-  {
-    id: '1',
-    title: 'Sunrise Collection Editorial',
-    slug: 'sunrise-collection-editorial',
-  },
-  { id: '2', title: 'Urban Nights Campaign', slug: 'urban-nights-campaign' },
-  {
-    id: '3',
-    title: 'Minimalist Lifestyle Series',
-    slug: 'minimalist-lifestyle-series',
-  },
-  { id: '4', title: 'Fashion Week Backstage', slug: 'fashion-week-backstage' },
-  {
-    id: '5',
-    title: 'Architectural Perspectives',
-    slug: 'architectural-perspectives',
-  },
-];
-
 interface FeaturedProject {
   id: string;
   title: string;
   slug: string;
   thumbnailUrl?: string;
+}
+
+interface AvailableProject {
+  id: number;
+  title: string;
+  slug: string;
 }
 
 export default function AdminHomePage() {
@@ -67,6 +53,9 @@ export default function AdminHomePage() {
   // UI states
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [availableProjects, setAvailableProjects] = useState<
+    AvailableProject[]
+  >([]);
 
   const [featuredProjects, setFeaturedProjects] = useState<
     [
@@ -156,6 +145,21 @@ export default function AdminHomePage() {
   // Load featured images on mount
   useEffect(() => {
     loadFeaturedImages();
+  }, []);
+
+  // Load available projects on mount
+  useEffect(() => {
+    async function loadProjects() {
+      const projects = await fetchAllProjects();
+      setAvailableProjects(
+        projects.map((p) => ({
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+        }))
+      );
+    }
+    loadProjects();
   }, []);
 
   const handleSave = async () => {
@@ -501,7 +505,7 @@ export default function AdminHomePage() {
   }
 
   return (
-    <div className="px-6 py-12 space-y-16 max-w-7xl mx-auto">
+    <div className="px-6 py-4 space-y-16 max-w-7xl mx-auto">
       {/* Hero Section */}
       <section className="space-y-6">
         <h2 className="text-xl font-light tracking-item-subheading uppercase">
@@ -546,7 +550,7 @@ export default function AdminHomePage() {
       </section>
 
       {/* Featured Section */}
-      <section className="space-y-6">
+      <section className="space-y-6 mb-4">
         <h2 className="text-xl font-light tracking-item-subheading uppercase">
           FEATURED PROJECTS
         </h2>
@@ -556,6 +560,8 @@ export default function AdminHomePage() {
           isSaving={isSaving}
           onSave={handleSaveAllFeatured}
           onReset={handleResetFeatured}
+          previewMode={sectionPreview}
+          onPreviewModeChange={setSectionPreview}
         />
 
         <FeaturedSlideshow>
@@ -601,7 +607,11 @@ export default function AdminHomePage() {
       {/* Project Selector Dialog */}
       <ProjectSelectorDialog
         isOpen={selectorOpen}
-        projects={mockProjects}
+        projects={availableProjects.map((p) => ({
+          id: p.slug,
+          title: p.title,
+          slug: p.slug,
+        }))}
         onClose={() => {
           setSelectorOpen(false);
           setSelectedSlotIndex(null);
