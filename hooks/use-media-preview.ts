@@ -13,7 +13,8 @@ interface MediaPreviewResult {
 
 export function useMediaPreview(
   state: MediaUploadState,
-  fallbackUrl?: string
+  fallbackUrl?: string,
+  overridePreviewMode?: 'desktop' | 'mobile'
 ): MediaPreviewResult {
   const {
     desktop,
@@ -25,8 +26,11 @@ export function useMediaPreview(
     deleteMobile,
     deleteBoth,
     convertBothTo,
-    previewMode,
+    previewMode: statePreviewMode,
   } = state;
+
+  // Use override if provided, otherwise use state
+  const previewMode = overridePreviewMode ?? statePreviewMode;
 
   // Determine current media based on preview mode
   const currentMedia: MediaPreviewInfo | undefined =
@@ -94,19 +98,9 @@ export function useMediaPreview(
         }
       : undefined;
 
-  // Determine if removable
-  const isRemovable =
-    previewMode === 'desktop'
-      ? !!(
-          desktop ||
-          (existingDesktop && !deleteDesktop) ||
-          (existingBoth && !deleteBoth && convertBothTo !== 'mobile')
-        )
-      : !!(
-          mobile ||
-          (existingMobile && !deleteMobile) ||
-          (existingBoth && !deleteBoth && convertBothTo !== 'desktop')
-        );
+  // Determine if removable - true if any media is displayed
+  // Even if showing opposite variant as fallback, allow remove (will remove current mode's variant)
+  const isRemovable = !!currentMedia;
 
   return { currentMedia, isRemovable };
 }

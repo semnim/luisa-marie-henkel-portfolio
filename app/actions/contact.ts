@@ -1,5 +1,6 @@
 'use server';
 
+import { EmailTemplate } from '@/components/contact/email-template';
 import { headers } from 'next/headers';
 import { Resend } from 'resend';
 import { z } from 'zod';
@@ -22,7 +23,6 @@ const contactFormSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
-
 // Simple in-memory rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 3;
@@ -84,30 +84,14 @@ export async function submitContactForm(
     }
 
     // Send email via Resend
-    const { error } = await resend.emails.send({
+    const email = {
       from: 'Contact Form <onboarding@resend.dev>',
       to: process.env.CONTACT_EMAIL,
       subject: `New Contact Form Submission from ${validatedData.name}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${validatedData.name}</p>
-        <p><strong>Email:</strong> ${validatedData.email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${validatedData.message.replace(/\n/g, '<br>')}</p>
-        <hr>
-        <p><small>Submitted at: ${new Date().toISOString()}</small></p>
-      `,
-      text: `
-New Contact Form Submission
+      react: EmailTemplate(validatedData),
+    };
 
-Name: ${validatedData.name}
-Email: ${validatedData.email}
-Message:
-${validatedData.message}
-
-Submitted at: ${new Date().toISOString()}
-      `,
-    });
+    const { error } = await resend.emails.send(email);
 
     if (error) {
       console.error('Resend error:', error);

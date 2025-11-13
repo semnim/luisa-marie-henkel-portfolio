@@ -76,7 +76,7 @@ export function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed bottom-6 left-6 z-50 md:hidden text-foreground"
+        className="fixed bottom-3 left-3 z-50 md:hidden text-foreground bg-background rounded-full p-2"
         aria-label="Toggle menu"
       >
         {mobileOpen ? (
@@ -85,7 +85,6 @@ export function Sidebar() {
           <Menu className="w-6 h-6" strokeWidth={1} />
         )}
       </button>
-
       {/* Mobile Drawer Overlay */}
       {mobileOpen && (
         <div

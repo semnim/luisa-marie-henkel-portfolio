@@ -36,19 +36,24 @@ interface AvailableProject {
 }
 
 export default function AdminHomePage() {
+  // Shared preview mode across all sections
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>(
+    'desktop'
+  );
+
   // Hero upload state using custom hook
   const [heroState, heroActions] = useMediaUploadState();
-  const heroPreview = useMediaPreview(heroState, '/assets/home_hero.webp');
+  const heroPreview = useMediaPreview(heroState, '/assets/home_hero.webp', previewMode);
 
   // Featured upload states for each slot (4 slots)
   const [featured0State, featured0Actions] = useMediaUploadState();
   const [featured1State, featured1Actions] = useMediaUploadState();
   const [featured2State, featured2Actions] = useMediaUploadState();
   const [featured3State, featured3Actions] = useMediaUploadState();
-  const featured0Preview = useMediaPreview(featured0State, undefined);
-  const featured1Preview = useMediaPreview(featured1State, undefined);
-  const featured2Preview = useMediaPreview(featured2State, undefined);
-  const featured3Preview = useMediaPreview(featured3State, undefined);
+  const featured0Preview = useMediaPreview(featured0State, undefined, previewMode);
+  const featured1Preview = useMediaPreview(featured1State, undefined, previewMode);
+  const featured2Preview = useMediaPreview(featured2State, undefined, previewMode);
+  const featured3Preview = useMediaPreview(featured3State, undefined, previewMode);
 
   // UI states
   const [isSaving, setIsSaving] = useState(false);
@@ -76,11 +81,6 @@ export default function AdminHomePage() {
   const [selectorOpen, setSelectorOpen] = useState(false);
   const [selectedSlotIndex, setSelectedSlotIndex] = useState<number | null>(
     null
-  );
-
-  // Section-level preview toggle
-  const [sectionPreview, setSectionPreview] = useState<'desktop' | 'mobile'>(
-    'desktop'
   );
 
   // Load featured images from DB
@@ -179,40 +179,53 @@ export default function AdminHomePage() {
       } = heroState;
 
       // Execute pending conversion first (convert "both" to single variant)
+      let updatedExistingDesktop = existingDesktop;
+      let updatedExistingMobile = existingMobile;
+      let updatedExistingBoth = existingBoth;
+
       if (convertBothTo && existingBoth) {
         const result = await convertHero(convertBothTo);
         if (!result.success) {
           throw new Error(result.error || 'Conversion failed');
         }
-        // Update state based on which variant we converted to
-        heroActions.setExistingImages({
-          desktop: convertBothTo === 'desktop' ? result.data! : existingDesktop,
-          mobile: convertBothTo === 'mobile' ? result.data! : existingMobile,
-          both: null,
-        });
+        // Update local state based on which variant we converted to
+        if (convertBothTo === 'desktop') {
+          updatedExistingDesktop = result.data!;
+        } else {
+          updatedExistingMobile = result.data!;
+        }
+        updatedExistingBoth = null;
       }
 
       // Execute pending deletions
-      if (deleteDesktop && existingDesktop) {
+      if (deleteDesktop && updatedExistingDesktop) {
         await deleteHero('desktop');
+        updatedExistingDesktop = null;
       }
-      if (deleteMobile && existingMobile) {
+      if (deleteMobile && updatedExistingMobile) {
         await deleteHero('mobile');
+        updatedExistingMobile = null;
       }
-      if (deleteBoth && existingBoth) {
+      if (deleteBoth && updatedExistingBoth) {
         await deleteHero('both');
+        updatedExistingBoth = null;
       }
 
-      // Auto-detect mode: if only one file, use "both"; if both, use separate
-      const hasDesktop = desktop !== null;
-      const hasMobile = mobile !== null;
+      // Auto-detect mode considering existing images after conversion
+      const hasDesktopUpload = desktop !== null;
+      const hasMobileUpload = mobile !== null;
+      const hasExistingDesktopAfter = updatedExistingDesktop !== null;
+      const hasExistingMobileAfter = updatedExistingMobile !== null;
+
+      // Use "both" mode only if uploading single file AND no existing separate variant
       const useBothMode =
-        (hasDesktop && !hasMobile) || (!hasDesktop && hasMobile);
+        (hasDesktopUpload && !hasMobileUpload && !hasExistingMobileAfter) ||
+        (hasMobileUpload && !hasDesktopUpload && !hasExistingDesktopAfter);
 
       const newImages = {
-        desktop: existingDesktop,
-        mobile: existingMobile,
-        both: existingBoth,
+        desktop: updatedExistingDesktop,
+        mobile: updatedExistingMobile,
+        both: updatedExistingBoth,
       };
 
       if (useBothMode) {
@@ -230,36 +243,40 @@ export default function AdminHomePage() {
         }
 
         // Delete desktop and mobile if they exist
-        if (existingDesktop) {
+        if (updatedExistingDesktop) {
           await deleteHero('desktop');
           newImages.desktop = null;
         }
-        if (existingMobile) {
+        if (updatedExistingMobile) {
           await deleteHero('mobile');
           newImages.mobile = null;
         }
-      } else if (hasDesktop && hasMobile) {
-        // Upload separate desktop and mobile variants
-        const formDataDesktop = new FormData();
-        formDataDesktop.append('file', desktop!.file);
-        formDataDesktop.append('variant', 'desktop');
-        const resultDesktop = await uploadHero(formDataDesktop);
-        if (!resultDesktop.success) {
-          throw new Error(resultDesktop.error || 'Desktop upload failed');
+      } else if (hasDesktopUpload || hasMobileUpload) {
+        // Upload separate variants
+        if (hasDesktopUpload) {
+          const formDataDesktop = new FormData();
+          formDataDesktop.append('file', desktop!.file);
+          formDataDesktop.append('variant', 'desktop');
+          const resultDesktop = await uploadHero(formDataDesktop);
+          if (!resultDesktop.success) {
+            throw new Error(resultDesktop.error || 'Desktop upload failed');
+          }
+          newImages.desktop = resultDesktop.data!;
         }
-        newImages.desktop = resultDesktop.data!;
 
-        const formDataMobile = new FormData();
-        formDataMobile.append('file', mobile!.file);
-        formDataMobile.append('variant', 'mobile');
-        const resultMobile = await uploadHero(formDataMobile);
-        if (!resultMobile.success) {
-          throw new Error(resultMobile.error || 'Mobile upload failed');
+        if (hasMobileUpload) {
+          const formDataMobile = new FormData();
+          formDataMobile.append('file', mobile!.file);
+          formDataMobile.append('variant', 'mobile');
+          const resultMobile = await uploadHero(formDataMobile);
+          if (!resultMobile.success) {
+            throw new Error(resultMobile.error || 'Mobile upload failed');
+          }
+          newImages.mobile = resultMobile.data!;
         }
-        newImages.mobile = resultMobile.data!;
 
         // Delete "both" if it exists
-        if (existingBoth) {
+        if (updatedExistingBoth) {
           await deleteHero('both');
           newImages.both = null;
         }
@@ -505,103 +522,118 @@ export default function AdminHomePage() {
   }
 
   return (
-    <div className="px-6 py-4 space-y-16 max-w-7xl mx-auto">
-      {/* Hero Section */}
-      <section className="space-y-6">
-        <h2 className="text-xl font-light tracking-item-subheading uppercase">
-          HERO
+    <div className="px-6 py-4 space-y-8 max-w-7xl mx-auto">
+      <div className="flex justify-between">
+        <h2 className="text-2xl font-light tracking-item-subheading uppercase">
+          HOME
         </h2>
-
+        {/* Shared Preview Toolbar */}
         <MediaToolbar
-          previewMode={heroState.previewMode}
-          onPreviewModeChange={heroActions.setPreviewMode}
-          hasChanges={hasHeroChanges}
-          isSaving={isSaving}
-          onSave={handleSave}
-          onReset={heroActions.reset}
+          previewMode={previewMode}
+          onPreviewModeChange={setPreviewMode}
         />
+      </div>
+      <div className="mx-auto w-fit"></div>
+      <div className="space-y-16">
+        {/* Hero Section */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-light tracking-item-subheading uppercase">
+            HERO
+          </h2>
 
-        {/* Upload Box */}
-        <div
-          className={
-            heroState.previewMode === 'desktop'
-              ? 'w-full max-w-md'
-              : 'w-full max-w-[280px] md:max-w-[320px]'
-          }
-        >
-          <MediaUploadBox
-            aspectRatio={heroState.previewMode === 'desktop' ? '16/9' : '9/16'}
-            accept="image"
-            currentMedia={heroPreview.currentMedia}
-            onFileSelect={
-              heroState.previewMode === 'desktop'
-                ? heroActions.setDesktop
-                : heroActions.setMobile
+          {/* Upload Box */}
+          <div
+            className={
+              previewMode === 'desktop'
+                ? 'w-full max-w-md'
+                : 'w-full max-w-[280px] md:max-w-[320px]'
             }
-            onRemove={
-              heroState.previewMode === 'desktop'
-                ? heroActions.removeDesktop
-                : heroActions.removeMobile
-            }
-            isRemovable={heroPreview.isRemovable}
-          />
-        </div>
-      </section>
+          >
+            <MediaUploadBox
+              aspectRatio={previewMode === 'desktop' ? '16/9' : '9/16'}
+              accept="image"
+              currentMedia={heroPreview.currentMedia}
+              onFileSelect={
+                previewMode === 'desktop'
+                  ? heroActions.setDesktop
+                  : heroActions.setMobile
+              }
+              onRemove={
+                previewMode === 'desktop'
+                  ? heroActions.removeDesktop
+                  : heroActions.removeMobile
+              }
+              isRemovable={heroPreview.isRemovable}
+            />
+          </div>
 
-      {/* Featured Section */}
-      <section className="space-y-6 mb-4">
-        <h2 className="text-xl font-light tracking-item-subheading uppercase">
-          FEATURED PROJECTS
-        </h2>
+          {/* Hero Actions */}
+          {hasHeroChanges && (
+            <MediaToolbar
+              hasChanges={hasHeroChanges}
+              isSaving={isSaving}
+              onSave={handleSave}
+              onReset={heroActions.reset}
+            />
+          )}
+        </section>
 
-        <MediaToolbar
-          hasChanges={hasFeaturedChanges}
-          isSaving={isSaving}
-          onSave={handleSaveAllFeatured}
-          onReset={handleResetFeatured}
-          previewMode={sectionPreview}
-          onPreviewModeChange={setSectionPreview}
-        />
+        {/* Featured Section */}
+        <section className="space-y-6 mb-4">
+          <h2 className="text-xl font-light tracking-item-subheading uppercase">
+            FEATURED PROJECTS
+          </h2>
 
-        <FeaturedSlideshow>
-          <FeaturedSlot
-            project={featuredProjects[0]}
-            previewMode={sectionPreview}
-            currentMedia={featured0Preview.currentMedia}
-            isRemovable={featured0Preview.isRemovable}
-            actions={featured0Actions}
-            onSelect={() => handleFeaturedSelect(0)}
-            onProjectRemove={() => handleFeaturedProjectRemove(0)}
-          />
-          <FeaturedSlot
-            project={featuredProjects[1]}
-            previewMode={sectionPreview}
-            currentMedia={featured1Preview.currentMedia}
-            isRemovable={featured1Preview.isRemovable}
-            actions={featured1Actions}
-            onSelect={() => handleFeaturedSelect(1)}
-            onProjectRemove={() => handleFeaturedProjectRemove(1)}
-          />
-          <FeaturedSlot
-            project={featuredProjects[2]}
-            previewMode={sectionPreview}
-            currentMedia={featured2Preview.currentMedia}
-            isRemovable={featured2Preview.isRemovable}
-            actions={featured2Actions}
-            onSelect={() => handleFeaturedSelect(2)}
-            onProjectRemove={() => handleFeaturedProjectRemove(2)}
-          />
-          <FeaturedSlot
-            project={featuredProjects[3]}
-            previewMode={sectionPreview}
-            currentMedia={featured3Preview.currentMedia}
-            isRemovable={featured3Preview.isRemovable}
-            actions={featured3Actions}
-            onSelect={() => handleFeaturedSelect(3)}
-            onProjectRemove={() => handleFeaturedProjectRemove(3)}
-          />
-        </FeaturedSlideshow>
-      </section>
+          <FeaturedSlideshow>
+            <FeaturedSlot
+              project={featuredProjects[0]}
+              previewMode={previewMode}
+              currentMedia={featured0Preview.currentMedia}
+              isRemovable={featured0Preview.isRemovable}
+              actions={featured0Actions}
+              onSelect={() => handleFeaturedSelect(0)}
+              onProjectRemove={() => handleFeaturedProjectRemove(0)}
+            />
+            <FeaturedSlot
+              project={featuredProjects[1]}
+              previewMode={previewMode}
+              currentMedia={featured1Preview.currentMedia}
+              isRemovable={featured1Preview.isRemovable}
+              actions={featured1Actions}
+              onSelect={() => handleFeaturedSelect(1)}
+              onProjectRemove={() => handleFeaturedProjectRemove(1)}
+            />
+            <FeaturedSlot
+              project={featuredProjects[2]}
+              previewMode={previewMode}
+              currentMedia={featured2Preview.currentMedia}
+              isRemovable={featured2Preview.isRemovable}
+              actions={featured2Actions}
+              onSelect={() => handleFeaturedSelect(2)}
+              onProjectRemove={() => handleFeaturedProjectRemove(2)}
+            />
+            <FeaturedSlot
+              project={featuredProjects[3]}
+              previewMode={previewMode}
+              currentMedia={featured3Preview.currentMedia}
+              isRemovable={featured3Preview.isRemovable}
+              actions={featured3Actions}
+              onSelect={() => handleFeaturedSelect(3)}
+              onProjectRemove={() => handleFeaturedProjectRemove(3)}
+            />
+          </FeaturedSlideshow>
+
+          {/* Featured Actions */}
+          {hasFeaturedChanges && (
+            <MediaToolbar
+              hasChanges={hasFeaturedChanges}
+              isSaving={isSaving}
+              onSave={handleSaveAllFeatured}
+              onReset={handleResetFeatured}
+            />
+          )}
+        </section>
+      </div>
 
       {/* Project Selector Dialog */}
       <ProjectSelectorDialog

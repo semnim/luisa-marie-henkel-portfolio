@@ -261,10 +261,9 @@ export function GalleryManagementDialog({
   };
 
   if (!isOpen) return null;
-  console.log('render');
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95 overflow-y-auto">
-      <div className="w-full max-w-3xl py-12">
+      <div className="w-full max-w-3xl py-4">
         <div className="space-y-8">
           {/* Header */}
           <div>

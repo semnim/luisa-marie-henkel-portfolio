@@ -1,6 +1,7 @@
 'use client';
 import { Project } from '@/lib/schema';
 import React, { useState } from 'react';
+import { Separator } from '../ui/separator';
 
 type ProjectMetadataProps = {
   description: string | null;
@@ -76,7 +77,7 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
                 <React.Fragment key={credit.name + index}>
                   <CreditItem label={credit.role} value={credit.name} />
                   {index !== team.length - 1 && (
-                    <hr className={`md:hidden w-full mr-auto`} />
+                    <Separator className="md:hidden" />
                   )}
                 </React.Fragment>
               ))}

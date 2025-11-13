@@ -42,11 +42,11 @@ export function ProjectListItem({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="border-b border-muted-foreground/20 last:border-b-0">
+    <div className="border-b hover:bg-muted-foreground/5 border-muted-foreground/20 last:border-b-0">
       {/* Collapsed View */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-6 py-4 hover:bg-muted-foreground/5 transition-colors duration-300"
+        className="w-full px-6 py-4 transition-colors duration-300"
       >
         <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4">
           {/* Title & Category */}

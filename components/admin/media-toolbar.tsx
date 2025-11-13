@@ -5,27 +5,28 @@ import { Monitor, RotateCcw, Save, Smartphone } from 'lucide-react';
 interface MediaToolbarProps {
   previewMode?: 'desktop' | 'mobile';
   onPreviewModeChange?: (mode: 'desktop' | 'mobile') => void;
-  hasChanges: boolean;
-  isSaving: boolean;
-  onSave: () => void;
-  onReset: () => void;
+  hasChanges?: boolean;
+  isSaving?: boolean;
+  onSave?: () => void;
+  onReset?: () => void;
 }
 
 export function MediaToolbar({
   previewMode,
   onPreviewModeChange,
-  hasChanges,
-  isSaving,
+  hasChanges = false,
+  isSaving = false,
   onSave,
   onReset,
 }: MediaToolbarProps) {
   const hidePreview = !previewMode || !onPreviewModeChange;
+  const showActions = hasChanges && onSave && onReset;
 
   return (
     <div className="flex items-center justify-between">
       {!hidePreview && (
         <div className="flex gap-2 items-center">
-          <span className="text-xs font-light text-muted-foreground uppercase mr-2">
+          <span className="hidden lg:block text-xs font-light text-muted-foreground uppercase mr-2">
             Preview
           </span>
           <button
@@ -51,7 +52,7 @@ export function MediaToolbar({
         </div>
       )}
 
-      {hasChanges && (
+      {showActions && (
         <div className={`flex gap-2 ${hidePreview && 'ml-auto'}`}>
           <button
             onClick={onReset}

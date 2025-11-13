@@ -66,10 +66,16 @@ export function useMediaUploadState(): [MediaUploadState, MediaUploadActions] {
     const url = URL.createObjectURL(file);
     const type = file.type.startsWith('video/') ? 'video' : 'image';
     setDesktopState({ file, url, type });
-    // Clear delete and conversion flags
+    // Clear delete flags for desktop
     setDeleteDesktop(false);
-    setDeleteBoth(false);
-    setConvertBothTo(null);
+
+    // If existingBoth, mark to convert to mobile (keep for mobile, replace desktop)
+    if (existingBoth && !mobile) {
+      setConvertBothTo('mobile');
+    } else {
+      setDeleteBoth(false);
+      setConvertBothTo(null);
+    }
   };
 
   const setMobile = (file: File) => {
@@ -77,10 +83,16 @@ export function useMediaUploadState(): [MediaUploadState, MediaUploadActions] {
     const url = URL.createObjectURL(file);
     const type = file.type.startsWith('video/') ? 'video' : 'image';
     setMobileState({ file, url, type });
-    // Clear delete and conversion flags
+    // Clear delete flags for mobile
     setDeleteMobile(false);
-    setDeleteBoth(false);
-    setConvertBothTo(null);
+
+    // If existingBoth, mark to convert to desktop (keep for desktop, replace mobile)
+    if (existingBoth && !desktop) {
+      setConvertBothTo('desktop');
+    } else {
+      setDeleteBoth(false);
+      setConvertBothTo(null);
+    }
   };
 
   const removeDesktop = () => {
