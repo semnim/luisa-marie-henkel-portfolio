@@ -36,7 +36,7 @@ export function FeaturedSlot({
       <div className="flex-1 space-y-2">
         <div
           onClick={onSelect}
-          className="w-full bg-muted/20 mt-8 border border-dashed border-muted-foreground/40 flex items-center justify-center cursor-pointer hover:bg-muted/30 transition-colors"
+          className="w-full bg-muted/20 border border-dashed border-muted-foreground/40 flex items-center justify-center cursor-pointer hover:bg-muted/30 transition-colors"
           style={{ aspectRatio: '9/16' }}
         >
           <p className="text-sm text-muted-foreground tracking-item-heading">
