@@ -194,6 +194,61 @@ export async function uploadHero(
 }
 
 /**
+ * Convert "both" variant to either "desktop" or "mobile"
+ * Keeps the same Cloudinary image but changes the variant in DB
+ */
+export async function convertHero(
+  toVariant: 'desktop' | 'mobile'
+): Promise<ActionResult<Image>> {
+  try {
+    if (!toVariant || !['desktop', 'mobile'].includes(toVariant)) {
+      return { success: false, error: 'Invalid target variant' };
+    }
+
+    // Find the "both" image
+    const bothImage = await db
+      .select()
+      .from(images)
+      .where(and(eq(images.imageType, 'home_hero'), eq(images.variant, 'both')))
+      .limit(1);
+
+    if (bothImage.length === 0) {
+      return { success: false, error: 'No "both" image found to convert' };
+    }
+
+    const sourceImage = bothImage[0];
+
+    // Create new variant with same image data
+    const [newImage] = await db
+      .insert(images)
+      .values({
+        projectSlug: null,
+        publicId: sourceImage.publicId,
+        imageUrl: sourceImage.imageUrl,
+        imageType: 'home_hero',
+        variant: toVariant,
+        width: sourceImage.width,
+        height: sourceImage.height,
+        format: sourceImage.format,
+        altText: sourceImage.altText,
+      })
+      .returning();
+
+    // Delete the "both" entry from database (but NOT from Cloudinary since we're reusing it)
+    await db.delete(images).where(eq(images.id, sourceImage.id));
+
+    return { success: true, data: newImage };
+  } catch (error) {
+    console.error('Failed to convert hero variant:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to convert hero variant',
+    };
+  }
+}
+
+/**
  * Delete hero image from Cloudinary and database
  */
 export async function deleteHero(

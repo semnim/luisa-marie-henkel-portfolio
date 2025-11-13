@@ -1,10 +1,11 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
+import { Menu, User, X } from 'lucide-react';
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Skeleton } from '../ui/skeleton';
 
 const navItems = [
   { href: '/admin/home', label: 'HOME' },
@@ -49,9 +50,13 @@ const NavContent = ({
       <button
         key={'sign out'}
         onClick={() => authClient.signOut().then(() => redirect('/'))}
-        className={`block cursor-pointer hover:text-foreground px-6 text-muted-foreground py-3 text-sm tracking-item-subheading font-light transition-colors duration-300 text-left`}
+        className={`block cursor-pointer group px-6 text-red-400 hover:text-red-600 py-3 text-sm tracking-item-subheading font-light transition-colors duration-300 text-left`}
       >
-        SIGN {isPending ? '...' : session?.user.name.toUpperCase()} OUT
+        SIGN OUT
+        <p className="flex gap-2 items-center transition-colors duration-300 text-red-400 group-hover:text-red-600 text-xs mt-2 tracking-tight font-light">
+          <User size={10} />{' '}
+          {isPending ? <Skeleton className="w-10 h-2" /> : session?.user.name}
+        </p>
       </button>
     </>
   );

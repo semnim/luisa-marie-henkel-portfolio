@@ -1,54 +1,68 @@
 'use client';
 
-import { deleteHero, fetchCurrentHero, uploadHero } from '@/app/actions/hero';
-import { FeaturedProjectCard } from '@/components/admin/featured-project-card';
+import {
+  deleteFeaturedImages,
+  fetchFeaturedProjects,
+  saveAllFeatured,
+} from '@/app/actions/featured';
+import {
+  convertHero,
+  deleteHero,
+  fetchCurrentHero,
+  uploadHero,
+} from '@/app/actions/hero';
+import { FeaturedSlideshow } from '@/components/admin/featured-slideshow';
+import { FeaturedSlot } from '@/components/admin/featured-slot';
+import { MediaToolbar } from '@/components/admin/media-toolbar';
 import { MediaUploadBox } from '@/components/admin/media-upload-box';
 import { ProjectSelectorDialog } from '@/components/admin/project-selector-dialog';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import type { Image } from '@/lib/schema';
+import { useMediaPreview } from '@/hooks/use-media-preview';
+import { useMediaUploadState } from '@/hooks/use-media-upload-state';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-interface MediaPreview {
-  file: File;
-  url: string;
-  type: 'image' | 'video';
-}
-
 // Mock projects data for now
 const mockProjects = [
-  { id: '1', title: 'Sunrise Collection Editorial' },
-  { id: '2', title: 'Urban Nights Campaign' },
-  { id: '3', title: 'Minimalist Lifestyle Series' },
-  { id: '4', title: 'Fashion Week Backstage' },
-  { id: '5', title: 'Architectural Perspectives' },
+  {
+    id: '1',
+    title: 'Sunrise Collection Editorial',
+    slug: 'sunrise-collection-editorial',
+  },
+  { id: '2', title: 'Urban Nights Campaign', slug: 'urban-nights-campaign' },
+  {
+    id: '3',
+    title: 'Minimalist Lifestyle Series',
+    slug: 'minimalist-lifestyle-series',
+  },
+  { id: '4', title: 'Fashion Week Backstage', slug: 'fashion-week-backstage' },
+  {
+    id: '5',
+    title: 'Architectural Perspectives',
+    slug: 'architectural-perspectives',
+  },
 ];
 
 interface FeaturedProject {
   id: string;
   title: string;
+  slug: string;
   thumbnailUrl?: string;
 }
 
 export default function AdminHomePage() {
-  const [heroMediaType, setHeroMediaType] = useState<'image' | 'video'>(
-    'image'
-  );
+  // Hero upload state using custom hook
+  const [heroState, heroActions] = useMediaUploadState();
+  const heroPreview = useMediaPreview(heroState, '/assets/home_hero.webp');
 
-  // Hero upload states
-  const [useForBoth, setUseForBoth] = useState(false);
-  const [mobileDesktopView, setMobileDesktopView] = useState<
-    'desktop' | 'mobile'
-  >('desktop');
-  const [heroDesktop, setHeroDesktop] = useState<MediaPreview | null>(null);
-  const [heroMobile, setHeroMobile] = useState<MediaPreview | null>(null);
-  const [heroMedia, setHeroMedia] = useState<MediaPreview | null>(null); // For "both" mode
-
-  // Track existing DB images
-  const [existingDesktop, setExistingDesktop] = useState<Image | null>(null);
-  const [existingMobile, setExistingMobile] = useState<Image | null>(null);
-  const [existingBoth, setExistingBoth] = useState<Image | null>(null);
+  // Featured upload states for each slot (4 slots)
+  const [featured0State, featured0Actions] = useMediaUploadState();
+  const [featured1State, featured1Actions] = useMediaUploadState();
+  const [featured2State, featured2Actions] = useMediaUploadState();
+  const [featured3State, featured3Actions] = useMediaUploadState();
+  const featured0Preview = useMediaPreview(featured0State, undefined);
+  const featured1Preview = useMediaPreview(featured1State, undefined);
+  const featured2Preview = useMediaPreview(featured2State, undefined);
+  const featured3Preview = useMediaPreview(featured3State, undefined);
 
   // UI states
   const [isSaving, setIsSaving] = useState(false);
@@ -62,213 +76,199 @@ export default function AdminHomePage() {
       FeaturedProject | undefined
     ]
   >([undefined, undefined, undefined, undefined]);
+  const [initialFeaturedProjects, setInitialFeaturedProjects] = useState<
+    [
+      FeaturedProject | undefined,
+      FeaturedProject | undefined,
+      FeaturedProject | undefined,
+      FeaturedProject | undefined
+    ]
+  >([undefined, undefined, undefined, undefined]);
   const [selectorOpen, setSelectorOpen] = useState(false);
   const [selectedSlotIndex, setSelectedSlotIndex] = useState<number | null>(
     null
   );
+
+  // Section-level preview toggle
+  const [sectionPreview, setSectionPreview] = useState<'desktop' | 'mobile'>(
+    'desktop'
+  );
+
+  // Load featured images from DB
+  const loadFeaturedImages = async () => {
+    const result = await fetchFeaturedProjects();
+    if (result.success && result.data) {
+      // Map projects by position and set existing images on upload states
+      const featuredActions = [
+        featured0Actions,
+        featured1Actions,
+        featured2Actions,
+        featured3Actions,
+      ];
+      const projects = [...featuredProjects];
+
+      for (const projectData of result.data) {
+        const position = projectData.position;
+        if (position >= 0 && position < 4) {
+          // Set project info
+          projects[position] = {
+            id: projectData.projectSlug,
+            slug: projectData.projectSlug,
+            title: projectData.projectTitle,
+          };
+
+          // Set existing images on upload state
+          featuredActions[position].setExistingImages({
+            desktop: projectData.images.desktop || null,
+            mobile: projectData.images.mobile || null,
+            both: projectData.images.both || null,
+          });
+        }
+      }
+
+      const projectsTyped = projects as [
+        FeaturedProject | undefined,
+        FeaturedProject | undefined,
+        FeaturedProject | undefined,
+        FeaturedProject | undefined
+      ];
+      setFeaturedProjects(projectsTyped);
+      setInitialFeaturedProjects(projectsTyped);
+    }
+  };
 
   // Fetch existing hero images on mount
   useEffect(() => {
     async function loadHeroImages() {
       const result = await fetchCurrentHero();
       if (result.success && result.data) {
-        if (result.data.both) {
-          setUseForBoth(true);
-          setExistingBoth(result.data.both);
-        } else {
-          setUseForBoth(false);
-          if (result.data.desktop) setExistingDesktop(result.data.desktop);
-          if (result.data.mobile) setExistingMobile(result.data.mobile);
-        }
+        heroActions.setExistingImages({
+          desktop: result.data.desktop || null,
+          mobile: result.data.mobile || null,
+          both: result.data.both || null,
+        });
       }
       setIsLoading(false);
     }
     loadHeroImages();
-  }, []);
+  }, [heroActions]);
 
-  // Cleanup object URLs on unmount
+  // Load featured images on mount
   useEffect(() => {
-    return () => {
-      if (heroDesktop) URL.revokeObjectURL(heroDesktop.url);
-      if (heroMobile) URL.revokeObjectURL(heroMobile.url);
-      if (heroMedia) URL.revokeObjectURL(heroMedia.url);
-    };
-  }, [heroDesktop, heroMobile, heroMedia]);
-
-  const handleHeroDesktopSelect = (file: File) => {
-    if (heroDesktop) URL.revokeObjectURL(heroDesktop.url);
-    const url = URL.createObjectURL(file);
-    const type = file.type.startsWith('video/') ? 'video' : 'image';
-    setHeroDesktop({ file, url, type });
-  };
-
-  const handleHeroMobileSelect = (file: File) => {
-    if (heroMobile) URL.revokeObjectURL(heroMobile.url);
-    const url = URL.createObjectURL(file);
-    const type = file.type.startsWith('video/') ? 'video' : 'image';
-    setHeroMobile({ file, url, type });
-  };
-
-  const handleHeroMediaSelect = (file: File) => {
-    if (heroMedia) URL.revokeObjectURL(heroMedia.url);
-    const url = URL.createObjectURL(file);
-    const type = file.type.startsWith('video/') ? 'video' : 'image';
-    setHeroMedia({ file, url, type });
-  };
-
-  const handleHeroDesktopRemove = () => {
-    if (heroDesktop) URL.revokeObjectURL(heroDesktop.url);
-    setHeroDesktop(null);
-  };
-
-  const handleHeroMobileRemove = () => {
-    if (heroMobile) URL.revokeObjectURL(heroMobile.url);
-    setHeroMobile(null);
-  };
-
-  const handleHeroMediaRemove = () => {
-    if (heroMedia) URL.revokeObjectURL(heroMedia.url);
-    setHeroMedia(null);
-  };
-
-  const handleToggleUseForBoth = () => {
-    if (!useForBoth) {
-      // Switching to "both" mode: keep desktop as unified
-      if (heroDesktop) {
-        setHeroMedia(heroDesktop);
-        setHeroDesktop(null);
-      }
-      if (heroMobile) {
-        URL.revokeObjectURL(heroMobile.url);
-        setHeroMobile(null);
-      }
-    } else {
-      // Switching to separate mode: keep unified as desktop
-      if (heroMedia) {
-        setHeroDesktop(heroMedia);
-        setHeroMedia(null);
-      }
-    }
-    setUseForBoth(!useForBoth);
-  };
+    loadFeaturedImages();
+  }, []);
 
   const handleSave = async () => {
     setIsSaving(true);
 
     try {
-      if (useForBoth) {
-        // Upload "both" variant
-        if (heroMedia) {
+      const {
+        desktop,
+        mobile,
+        existingDesktop,
+        existingMobile,
+        existingBoth,
+        deleteDesktop,
+        deleteMobile,
+        deleteBoth,
+        convertBothTo,
+      } = heroState;
+
+      // Execute pending conversion first (convert "both" to single variant)
+      if (convertBothTo && existingBoth) {
+        const result = await convertHero(convertBothTo);
+        if (!result.success) {
+          throw new Error(result.error || 'Conversion failed');
+        }
+        // Update state based on which variant we converted to
+        heroActions.setExistingImages({
+          desktop: convertBothTo === 'desktop' ? result.data! : existingDesktop,
+          mobile: convertBothTo === 'mobile' ? result.data! : existingMobile,
+          both: null,
+        });
+      }
+
+      // Execute pending deletions
+      if (deleteDesktop && existingDesktop) {
+        await deleteHero('desktop');
+      }
+      if (deleteMobile && existingMobile) {
+        await deleteHero('mobile');
+      }
+      if (deleteBoth && existingBoth) {
+        await deleteHero('both');
+      }
+
+      // Auto-detect mode: if only one file, use "both"; if both, use separate
+      const hasDesktop = desktop !== null;
+      const hasMobile = mobile !== null;
+      const useBothMode =
+        (hasDesktop && !hasMobile) || (!hasDesktop && hasMobile);
+
+      const newImages = {
+        desktop: existingDesktop,
+        mobile: existingMobile,
+        both: existingBoth,
+      };
+
+      if (useBothMode) {
+        // Upload "both" variant (use whichever is selected)
+        const file = desktop || mobile;
+        if (file) {
           const formData = new FormData();
-          formData.append('file', heroMedia.file);
+          formData.append('file', file.file);
           formData.append('variant', 'both');
           const result = await uploadHero(formData);
           if (!result.success) {
             throw new Error(result.error || 'Upload failed');
           }
-          setExistingBoth(result.data!);
+          newImages.both = result.data!;
         }
 
         // Delete desktop and mobile if they exist
         if (existingDesktop) {
           await deleteHero('desktop');
-          setExistingDesktop(null);
+          newImages.desktop = null;
         }
         if (existingMobile) {
           await deleteHero('mobile');
-          setExistingMobile(null);
+          newImages.mobile = null;
         }
-      } else {
-        // Upload desktop variant
-        if (heroDesktop) {
-          const formData = new FormData();
-          formData.append('file', heroDesktop.file);
-          formData.append('variant', 'desktop');
-          const result = await uploadHero(formData);
-          if (!result.success) {
-            throw new Error(result.error || 'Desktop upload failed');
-          }
-          setExistingDesktop(result.data!);
+      } else if (hasDesktop && hasMobile) {
+        // Upload separate desktop and mobile variants
+        const formDataDesktop = new FormData();
+        formDataDesktop.append('file', desktop!.file);
+        formDataDesktop.append('variant', 'desktop');
+        const resultDesktop = await uploadHero(formDataDesktop);
+        if (!resultDesktop.success) {
+          throw new Error(resultDesktop.error || 'Desktop upload failed');
         }
+        newImages.desktop = resultDesktop.data!;
 
-        // Upload mobile variant
-        if (heroMobile) {
-          const formData = new FormData();
-          formData.append('file', heroMobile.file);
-          formData.append('variant', 'mobile');
-          const result = await uploadHero(formData);
-          if (!result.success) {
-            throw new Error(result.error || 'Mobile upload failed');
-          }
-          setExistingMobile(result.data!);
+        const formDataMobile = new FormData();
+        formDataMobile.append('file', mobile!.file);
+        formDataMobile.append('variant', 'mobile');
+        const resultMobile = await uploadHero(formDataMobile);
+        if (!resultMobile.success) {
+          throw new Error(resultMobile.error || 'Mobile upload failed');
         }
+        newImages.mobile = resultMobile.data!;
 
         // Delete "both" if it exists
         if (existingBoth) {
           await deleteHero('both');
-          setExistingBoth(null);
+          newImages.both = null;
         }
       }
 
-      // Clear preview states
-      if (heroDesktop) {
-        URL.revokeObjectURL(heroDesktop.url);
-        setHeroDesktop(null);
-      }
-      if (heroMobile) {
-        URL.revokeObjectURL(heroMobile.url);
-        setHeroMobile(null);
-      }
-      if (heroMedia) {
-        URL.revokeObjectURL(heroMedia.url);
-        setHeroMedia(null);
-      }
+      // Update state with new images and reset
+      heroActions.setExistingImages(newImages);
+      heroActions.reset();
 
       toast.success('Saved successfully!');
     } catch (error) {
       console.error('Save failed:', error);
       toast.error(error instanceof Error ? error.message : 'Save failed');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDeleteAll = async () => {
-    if (!confirm('Delete all hero images?')) return;
-
-    setIsSaving(true);
-    try {
-      if (existingBoth) {
-        await deleteHero('both');
-        setExistingBoth(null);
-      }
-      if (existingDesktop) {
-        await deleteHero('desktop');
-        setExistingDesktop(null);
-      }
-      if (existingMobile) {
-        await deleteHero('mobile');
-        setExistingMobile(null);
-      }
-
-      // Clear preview states
-      if (heroDesktop) {
-        URL.revokeObjectURL(heroDesktop.url);
-        setHeroDesktop(null);
-      }
-      if (heroMobile) {
-        URL.revokeObjectURL(heroMobile.url);
-        setHeroMobile(null);
-      }
-      if (heroMedia) {
-        URL.revokeObjectURL(heroMedia.url);
-        setHeroMedia(null);
-      }
-
-      toast.success('Deleted successfully!');
-    } catch (error) {
-      console.error('Delete failed:', error);
-      toast.error('Delete failed');
     } finally {
       setIsSaving(false);
     }
@@ -287,14 +287,26 @@ export default function AdminHomePage() {
         FeaturedProject | undefined,
         FeaturedProject | undefined
       ];
-      updated[selectedSlotIndex] = project;
+      updated[selectedSlotIndex] = { ...project, slug: project.id };
       setFeaturedProjects(updated);
     }
     setSelectorOpen(false);
     setSelectedSlotIndex(null);
   };
 
-  const handleFeaturedRemove = (index: number) => {
+  const handleFeaturedProjectRemove = async (index: number) => {
+    const project = featuredProjects[index];
+
+    // Delete images from Cloudinary and DB if they exist
+    if (project) {
+      const result = await deleteFeaturedImages(project.slug);
+      if (!result.success) {
+        toast.error('Failed to delete images');
+        return;
+      }
+    }
+
+    // Clear from projects array and reset upload state
     const updated = [...featuredProjects] as [
       FeaturedProject | undefined,
       FeaturedProject | undefined,
@@ -303,10 +315,182 @@ export default function AdminHomePage() {
     ];
     updated[index] = undefined;
     setFeaturedProjects(updated);
+
+    // Reset upload state for this slot
+    const actions = [
+      featured0Actions,
+      featured1Actions,
+      featured2Actions,
+      featured3Actions,
+    ];
+    actions[index].setExistingImages({
+      desktop: null,
+      mobile: null,
+      both: null,
+    });
+    actions[index].reset();
   };
 
-  const hasChanges =
-    heroDesktop !== null || heroMobile !== null || heroMedia !== null;
+  const handleSaveAllFeatured = async () => {
+    setIsSaving(true);
+
+    try {
+      const states = [
+        featured0State,
+        featured1State,
+        featured2State,
+        featured3State,
+      ];
+      const actions = [
+        featured0Actions,
+        featured1Actions,
+        featured2Actions,
+        featured3Actions,
+      ];
+
+      // Build data array for projects with changes
+      const dataToSave: Array<{
+        projectSlug: string;
+        position: number;
+        desktop?: File;
+        mobile?: File;
+        both?: File;
+      }> = [];
+
+      // Process each slot
+      for (let i = 0; i < 4; i++) {
+        const project = featuredProjects[i];
+        if (!project) continue;
+
+        const state = states[i];
+        const {
+          desktop,
+          mobile,
+          existingBoth,
+          deleteDesktop,
+          deleteMobile,
+          deleteBoth,
+        } = state;
+
+        // Check if this slot has any changes
+        const hasChanges =
+          desktop !== null ||
+          mobile !== null ||
+          deleteDesktop ||
+          deleteMobile ||
+          deleteBoth;
+
+        if (!hasChanges) continue;
+
+        // Handle deletions (delete all images for project)
+        if (deleteBoth && existingBoth) {
+          await deleteFeaturedImages(project.slug);
+          actions[i].setExistingImages({
+            desktop: null,
+            mobile: null,
+            both: null,
+          });
+          continue;
+        }
+
+        // Handle new uploads (auto-detect mode like hero)
+        const hasDesktop = desktop !== null;
+        const hasMobile = mobile !== null;
+
+        if (hasDesktop || hasMobile) {
+          const item: {
+            projectSlug: string;
+            position: number;
+            desktop?: File;
+            mobile?: File;
+            both?: File;
+          } = {
+            projectSlug: project.slug,
+            position: i,
+          };
+
+          // Auto-detect: if only one file, use "both"; if both files, use separate
+          if (hasDesktop && !hasMobile) {
+            item.both = desktop.file;
+          } else if (!hasDesktop && hasMobile) {
+            item.both = mobile.file;
+          } else if (hasDesktop && hasMobile) {
+            item.desktop = desktop.file;
+            item.mobile = mobile.file;
+          }
+
+          dataToSave.push(item);
+        }
+      }
+
+      // Call saveAllFeatured if there are changes
+      if (dataToSave.length > 0) {
+        const result = await saveAllFeatured(dataToSave);
+        if (!result.success) {
+          throw new Error(result.error || 'Save failed');
+        }
+      }
+
+      // Reset all states and reload
+      actions.forEach((action) => action.reset());
+      await loadFeaturedImages();
+
+      toast.success('Featured projects saved successfully!');
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error(error instanceof Error ? error.message : 'Save failed');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleResetFeatured = () => {
+    featured0Actions.reset();
+    featured1Actions.reset();
+    featured2Actions.reset();
+    featured3Actions.reset();
+    setFeaturedProjects(initialFeaturedProjects);
+  };
+
+  const hasHeroChanges =
+    heroState.desktop !== null ||
+    heroState.mobile !== null ||
+    heroState.deleteDesktop ||
+    heroState.deleteMobile ||
+    heroState.deleteBoth ||
+    heroState.convertBothTo !== null;
+
+  // Check if project selections have changed
+  const hasProjectSelectionChanges = featuredProjects.some(
+    (project, index) => project?.id !== initialFeaturedProjects[index]?.id
+  );
+
+  const hasFeaturedChanges =
+    hasProjectSelectionChanges ||
+    featured0State.desktop !== null ||
+    featured0State.mobile !== null ||
+    featured0State.deleteDesktop ||
+    featured0State.deleteMobile ||
+    featured0State.deleteBoth ||
+    featured0State.convertBothTo !== null ||
+    featured1State.desktop !== null ||
+    featured1State.mobile !== null ||
+    featured1State.deleteDesktop ||
+    featured1State.deleteMobile ||
+    featured1State.deleteBoth ||
+    featured1State.convertBothTo !== null ||
+    featured2State.desktop !== null ||
+    featured2State.mobile !== null ||
+    featured2State.deleteDesktop ||
+    featured2State.deleteMobile ||
+    featured2State.deleteBoth ||
+    featured2State.convertBothTo !== null ||
+    featured3State.desktop !== null ||
+    featured3State.mobile !== null ||
+    featured3State.deleteDesktop ||
+    featured3State.deleteMobile ||
+    featured3State.deleteBoth ||
+    featured3State.convertBothTo !== null;
 
   if (isLoading) {
     return (
@@ -320,201 +504,45 @@ export default function AdminHomePage() {
     <div className="px-6 py-12 space-y-16 max-w-7xl mx-auto">
       {/* Hero Section */}
       <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-light tracking-item-subheading uppercase">
-            HERO
-          </h2>
-          <div className="flex gap-3">
-            {(existingDesktop || existingMobile || existingBoth) && (
-              <button
-                onClick={handleDeleteAll}
-                disabled={isSaving}
-                className="px-4 py-2 text-sm font-light tracking-item-subheading uppercase border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 disabled:opacity-50"
-              >
-                Delete All
-              </button>
-            )}
-            {hasChanges && (
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="px-6 py-2 text-sm font-light tracking-item-subheading uppercase bg-foreground text-background hover:opacity-80 transition-all duration-300 disabled:opacity-50"
-              >
-                {isSaving ? 'Saving...' : 'Save Changes'}
-              </button>
-            )}
-          </div>
+        <h2 className="text-xl font-light tracking-item-subheading uppercase">
+          HERO
+        </h2>
+
+        <MediaToolbar
+          previewMode={heroState.previewMode}
+          onPreviewModeChange={heroActions.setPreviewMode}
+          hasChanges={hasHeroChanges}
+          isSaving={isSaving}
+          onSave={handleSave}
+          onReset={heroActions.reset}
+        />
+
+        {/* Upload Box */}
+        <div
+          className={
+            heroState.previewMode === 'desktop'
+              ? 'w-full max-w-md'
+              : 'w-full max-w-[280px] md:max-w-[320px]'
+          }
+        >
+          <MediaUploadBox
+            label={heroState.previewMode === 'desktop' ? 'Desktop' : 'Mobile'}
+            aspectRatio={heroState.previewMode === 'desktop' ? '16/9' : '9/16'}
+            accept="image"
+            currentMedia={heroPreview.currentMedia}
+            onFileSelect={
+              heroState.previewMode === 'desktop'
+                ? heroActions.setDesktop
+                : heroActions.setMobile
+            }
+            onRemove={
+              heroState.previewMode === 'desktop'
+                ? heroActions.removeDesktop
+                : heroActions.removeMobile
+            }
+            isRemovable={heroPreview.isRemovable}
+          />
         </div>
-
-        {/* Media Type Toggle */}
-        <div className="flex gap-3">
-          <button
-            onClick={() => setHeroMediaType('image')}
-            className={`px-6 py-2 text-sm font-light tracking-item-subheading uppercase transition-all duration-300 ${
-              heroMediaType === 'image'
-                ? 'bg-foreground text-background'
-                : 'border border-muted-foreground/40 text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            IMAGE
-          </button>
-          <button
-            disabled
-            onClick={() => setHeroMediaType('video')}
-            className={`px-6 py-2 text-sm font-light tracking-item-subheading uppercase transition-all duration-300 ${
-              heroMediaType === 'video'
-                ? 'bg-foreground text-background'
-                : 'border border-muted-foreground/40 text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            VIDEO
-          </button>
-        </div>
-
-        {/* Use For Both Toggle */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="use-for-both"
-              checked={useForBoth}
-              onCheckedChange={handleToggleUseForBoth}
-            />
-            <Label htmlFor="use-for-both" className="text-xs font-light">
-              Use for both (desktop & mobile)
-            </Label>
-          </div>
-        </div>
-
-        {/* Upload Boxes */}
-        {useForBoth ? (
-          <div className="space-y-4">
-            {/* View Toggle */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setMobileDesktopView('desktop')}
-                className={`px-4 py-1 text-xs font-light tracking-item-subheading uppercase transition-all duration-300 ${
-                  mobileDesktopView === 'desktop'
-                    ? 'bg-foreground text-background'
-                    : 'border border-muted-foreground/40 text-muted-foreground'
-                }`}
-              >
-                Desktop Preview
-              </button>
-              <button
-                onClick={() => setMobileDesktopView('mobile')}
-                className={`px-4 py-1 text-xs font-light tracking-item-subheading uppercase transition-all duration-300 ${
-                  mobileDesktopView === 'mobile'
-                    ? 'bg-foreground text-background'
-                    : 'border border-muted-foreground/40 text-muted-foreground'
-                }`}
-              >
-                Mobile Preview
-              </button>
-            </div>
-
-            {/* Single Upload Box */}
-            <div
-              className={
-                mobileDesktopView === 'desktop'
-                  ? 'w-full max-w-md'
-                  : 'w-full max-w-[280px] md:max-w-[320px]'
-              }
-            >
-              <MediaUploadBox
-                label={
-                  mobileDesktopView === 'desktop'
-                    ? 'Both (Desktop Preview)'
-                    : 'Both (Mobile Preview)'
-                }
-                aspectRatio={mobileDesktopView === 'desktop' ? '16/9' : '9/16'}
-                accept={heroMediaType}
-                currentMedia={
-                  heroMedia
-                    ? {
-                        url: heroMedia.url,
-                        filename: heroMedia.file.name,
-                        type: heroMedia.type,
-                      }
-                    : existingBoth
-                    ? {
-                        url: existingBoth.imageUrl,
-                        filename: 'Existing image',
-                        type: 'image',
-                      }
-                    : {
-                        url: '/assets/home_hero.webp',
-                        filename: 'Fallback image',
-                        type: 'image',
-                      }
-                }
-                onFileSelect={handleHeroMediaSelect}
-                onRemove={handleHeroMediaRemove}
-                isRemovable={!!(heroMedia || existingBoth)}
-              />
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <div className="w-full max-w-md">
-              <MediaUploadBox
-                label="Desktop"
-                aspectRatio="16/9"
-                accept={heroMediaType}
-                currentMedia={
-                  heroDesktop
-                    ? {
-                        url: heroDesktop.url,
-                        filename: heroDesktop.file.name,
-                        type: heroDesktop.type,
-                      }
-                    : existingDesktop
-                    ? {
-                        url: existingDesktop.imageUrl,
-                        filename: 'Existing desktop image',
-                        type: 'image',
-                      }
-                    : {
-                        url: '/assets/home_hero.webp',
-                        filename: 'Fallback image',
-                        type: 'image',
-                      }
-                }
-                onFileSelect={handleHeroDesktopSelect}
-                onRemove={handleHeroDesktopRemove}
-                isRemovable={!!(heroDesktop || existingDesktop)}
-              />
-            </div>
-            <div className="w-full max-w-[280px] md:max-w-[320px]">
-              <MediaUploadBox
-                label="Mobile"
-                aspectRatio="9/16"
-                accept={heroMediaType}
-                currentMedia={
-                  heroMobile
-                    ? {
-                        url: heroMobile.url,
-                        filename: heroMobile.file.name,
-                        type: heroMobile.type,
-                      }
-                    : existingMobile
-                    ? {
-                        url: existingMobile.imageUrl,
-                        filename: 'Existing mobile image',
-                        type: 'image',
-                      }
-                    : {
-                        url: '/assets/home_hero.webp',
-                        filename: 'Fallback image',
-                        type: 'image',
-                      }
-                }
-                onFileSelect={handleHeroMobileSelect}
-                onRemove={handleHeroMobileRemove}
-                isRemovable={!!(heroMobile || existingMobile)}
-              />
-            </div>
-          </div>
-        )}
       </section>
 
       {/* Featured Section */}
@@ -523,16 +551,51 @@ export default function AdminHomePage() {
           FEATURED PROJECTS
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {featuredProjects.map((project, index) => (
-            <FeaturedProjectCard
-              key={index}
-              project={project}
-              onSelect={() => handleFeaturedSelect(index)}
-              onRemove={() => handleFeaturedRemove(index)}
-            />
-          ))}
-        </div>
+        <MediaToolbar
+          hasChanges={hasFeaturedChanges}
+          isSaving={isSaving}
+          onSave={handleSaveAllFeatured}
+          onReset={handleResetFeatured}
+        />
+
+        <FeaturedSlideshow>
+          <FeaturedSlot
+            project={featuredProjects[0]}
+            previewMode={sectionPreview}
+            currentMedia={featured0Preview.currentMedia}
+            isRemovable={featured0Preview.isRemovable}
+            actions={featured0Actions}
+            onSelect={() => handleFeaturedSelect(0)}
+            onProjectRemove={() => handleFeaturedProjectRemove(0)}
+          />
+          <FeaturedSlot
+            project={featuredProjects[1]}
+            previewMode={sectionPreview}
+            currentMedia={featured1Preview.currentMedia}
+            isRemovable={featured1Preview.isRemovable}
+            actions={featured1Actions}
+            onSelect={() => handleFeaturedSelect(1)}
+            onProjectRemove={() => handleFeaturedProjectRemove(1)}
+          />
+          <FeaturedSlot
+            project={featuredProjects[2]}
+            previewMode={sectionPreview}
+            currentMedia={featured2Preview.currentMedia}
+            isRemovable={featured2Preview.isRemovable}
+            actions={featured2Actions}
+            onSelect={() => handleFeaturedSelect(2)}
+            onProjectRemove={() => handleFeaturedProjectRemove(2)}
+          />
+          <FeaturedSlot
+            project={featuredProjects[3]}
+            previewMode={sectionPreview}
+            currentMedia={featured3Preview.currentMedia}
+            isRemovable={featured3Preview.isRemovable}
+            actions={featured3Actions}
+            onSelect={() => handleFeaturedSelect(3)}
+            onProjectRemove={() => handleFeaturedProjectRemove(3)}
+          />
+        </FeaturedSlideshow>
       </section>
 
       {/* Project Selector Dialog */}

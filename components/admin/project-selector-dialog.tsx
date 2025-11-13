@@ -5,6 +5,7 @@ import { AnimatedBorderButton } from '../auth/animated-border-button';
 interface Project {
   id: string;
   title: string;
+  slug: string;
 }
 
 interface ProjectSelectorDialogProps {

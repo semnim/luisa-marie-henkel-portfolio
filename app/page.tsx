@@ -1,4 +1,5 @@
 import { fetchCurrentHero } from '@/app/actions/hero';
+import { fetchFeaturedProjects } from '@/app/actions/featured';
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
 import Image from 'next/image';
 
@@ -12,6 +13,11 @@ export default async function Home() {
   const heroResult = await fetchCurrentHero();
   const heroImages =
     heroResult.success && heroResult.data ? heroResult.data : {};
+
+  // Fetch featured projects
+  const featuredResult = await fetchFeaturedProjects();
+  const featuredProjects =
+    featuredResult.success && featuredResult.data ? featuredResult.data : [];
 
   // Fallback logic
   const heroDesktop =
@@ -59,7 +65,7 @@ export default async function Home() {
         <h2 className="font-light text-lg md:text-3xl h-20 md:h-50 w-full flex items-center justify-center  tracking-hero-heading z-10 bottom-0 absolute bg-linear-to-t from-background md:via-75% md:via-black/75 to-transparent left-1/2 -translate-x-1/2">
           FEATURED
         </h2>
-        <FeaturedShowcase images={[]} />
+        <FeaturedShowcase projects={featuredProjects} />
       </section>
     </main>
   );

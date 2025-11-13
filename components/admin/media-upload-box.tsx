@@ -1,6 +1,6 @@
 'use client';
 
-import { Pencil, Plus, X } from 'lucide-react';
+import { ImageOff, Pencil, Plus, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { toast } from 'sonner';
@@ -113,8 +113,11 @@ export function MediaUploadBox({
             )}
           </>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm font-light">
-            No media
+          <div className="absolute inset-0 flex items-center justify-center">
+            <ImageOff
+              className="w-12 h-12 text-muted-foreground"
+              strokeWidth={1}
+            />
           </div>
         )}
 
@@ -140,11 +143,9 @@ export function MediaUploadBox({
       </div>
 
       {/* Filename */}
-      {currentMedia && (
-        <p className="text-xs text-muted-foreground font-light truncate">
-          {currentMedia.filename}
-        </p>
-      )}
+      <p className="text-xs text-muted-foreground font-light truncate">
+        {currentMedia ? currentMedia.filename : '–'}
+      </p>
     </div>
   );
 }
