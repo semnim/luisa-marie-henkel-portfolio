@@ -1,11 +1,5 @@
 # TO DO
 
-## NOW
-
-- Admin / Portfolio / manage media
-- Admin / Portfolio / Manage gallery
-- Consider adding pre-processing on image upload
-
 ## CLEAN-UP
 
 - Clean up unused components
