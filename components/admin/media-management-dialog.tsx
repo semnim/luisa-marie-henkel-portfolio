@@ -1,22 +1,29 @@
 'use client';
 
+import { saveProjectMedia } from '@/app/actions/project-media';
 import { useMediaPreview } from '@/hooks/use-media-preview';
 import { useMediaUploadState } from '@/hooks/use-media-upload-state';
-import { useState } from 'react';
+import { Image } from '@/lib/schema';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
 import { MediaToolbar } from './media-toolbar';
 import { MediaUploadBox } from './media-upload-box';
 
 interface MediaManagementDialogProps {
   isOpen: boolean;
+  projectId: number;
   projectTitle: string;
+  existingImages: Image[];
   onClose: () => void;
   onSave?: () => void;
 }
 
 export function MediaManagementDialog({
   isOpen,
+  projectId,
   projectTitle,
+  existingImages,
   onClose,
   onSave,
 }: MediaManagementDialogProps) {
@@ -32,6 +39,45 @@ export function MediaManagementDialog({
   // Thumbnail state
   const [thumbnailState, thumbnailActions] = useMediaUploadState();
   const thumbnailPreview = useMediaPreview(thumbnailState, undefined, previewMode);
+
+  // Load existing images when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      // Filter hero images
+      const heroDesktop = existingImages.find(
+        (img) => img.imageType === 'project_hero' && img.variant === 'desktop'
+      );
+      const heroMobile = existingImages.find(
+        (img) => img.imageType === 'project_hero' && img.variant === 'mobile'
+      );
+      const heroBoth = existingImages.find(
+        (img) => img.imageType === 'project_hero' && img.variant === 'both'
+      );
+
+      heroActions.setExistingImages({
+        desktop: heroDesktop || null,
+        mobile: heroMobile || null,
+        both: heroBoth || null,
+      });
+
+      // Filter thumbnail images
+      const thumbDesktop = existingImages.find(
+        (img) => img.imageType === 'thumbnail' && img.variant === 'desktop'
+      );
+      const thumbMobile = existingImages.find(
+        (img) => img.imageType === 'thumbnail' && img.variant === 'mobile'
+      );
+      const thumbBoth = existingImages.find(
+        (img) => img.imageType === 'thumbnail' && img.variant === 'both'
+      );
+
+      thumbnailActions.setExistingImages({
+        desktop: thumbDesktop || null,
+        mobile: thumbMobile || null,
+        both: thumbBoth || null,
+      });
+    }
+  }, [isOpen, existingImages, heroActions, thumbnailActions]);
 
   // UI state
   const [isSavingHero, setIsSavingHero] = useState(false);
@@ -56,16 +102,62 @@ export function MediaManagementDialog({
 
   const handleSaveHero = async () => {
     setIsSavingHero(true);
-    // TODO: Implement save logic
-    console.log('Save hero:', heroState);
-    setIsSavingHero(false);
+
+    try {
+      const files: { desktop?: File; mobile?: File } = {};
+
+      if (heroState.desktop) {
+        files.desktop = heroState.desktop.file;
+      }
+      if (heroState.mobile) {
+        files.mobile = heroState.mobile.file;
+      }
+
+      const result = await saveProjectMedia(projectId, 'project_hero', files);
+
+      if (result.success) {
+        toast.success('Hero images saved successfully');
+        heroActions.reset();
+        onSave?.();
+      } else {
+        toast.error(result.error || 'Failed to save hero images');
+      }
+    } catch (error) {
+      toast.error('Failed to save hero images');
+      console.error('Save hero error:', error);
+    } finally {
+      setIsSavingHero(false);
+    }
   };
 
   const handleSaveThumbnail = async () => {
     setIsSavingThumbnail(true);
-    // TODO: Implement save logic
-    console.log('Save thumbnail:', thumbnailState);
-    setIsSavingThumbnail(false);
+
+    try {
+      const files: { desktop?: File; mobile?: File } = {};
+
+      if (thumbnailState.desktop) {
+        files.desktop = thumbnailState.desktop.file;
+      }
+      if (thumbnailState.mobile) {
+        files.mobile = thumbnailState.mobile.file;
+      }
+
+      const result = await saveProjectMedia(projectId, 'thumbnail', files);
+
+      if (result.success) {
+        toast.success('Thumbnail images saved successfully');
+        thumbnailActions.reset();
+        onSave?.();
+      } else {
+        toast.error(result.error || 'Failed to save thumbnail images');
+      }
+    } catch (error) {
+      toast.error('Failed to save thumbnail images');
+      console.error('Save thumbnail error:', error);
+    } finally {
+      setIsSavingThumbnail(false);
+    }
   };
 
   if (!isOpen) return null;

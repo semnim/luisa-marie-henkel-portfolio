@@ -33,9 +33,20 @@ export default async function DetailPage({
   }
 
   // Filter hero and gallery images by type
-  const heroImage =
-    projectImages.find((img) => img.imageType === 'project_hero') ||
-    projectImages[0];
+  const heroDesktop = projectImages.find(
+    (img) => img.imageType === 'project_hero' && img.variant === 'desktop'
+  );
+  const heroMobile = projectImages.find(
+    (img) => img.imageType === 'project_hero' && img.variant === 'mobile'
+  );
+  const heroBoth = projectImages.find(
+    (img) => img.imageType === 'project_hero' && img.variant === 'both'
+  );
+
+  // Determine which images to use
+  const desktopHeroImage = heroDesktop || heroBoth || projectImages[0];
+  const mobileHeroImage = heroMobile || heroBoth || projectImages[0];
+
   const galleryImages = projectImages.filter(
     (img) => img.imageType === 'gallery'
   );
@@ -48,8 +59,12 @@ export default async function DetailPage({
     >
       <div className="md:h-dvh md:max-h-dvh relative">
         <HeroSection
-          heroImage={{
-            publicId: heroImage.publicId,
+          desktopHeroImage={{
+            publicId: desktopHeroImage.publicId,
+            alt: title,
+          }}
+          mobileHeroImage={{
+            publicId: mobileHeroImage.publicId,
             alt: title,
           }}
           title={title}

@@ -56,6 +56,7 @@ export function GalleryManagementDialog({
   const [newImages, setNewImages] = useState<NewGalleryImage[]>([]);
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Memoize combined images to prevent recalculation on every render
@@ -100,20 +101,17 @@ export function GalleryManagementDialog({
 
   // Sync ordered images only when source data changes
   useEffect(() => {
-    console.log('run');
     setOrderedImages(combinedImages);
   }, [combinedImages, setOrderedImages]);
 
   // Cleanup object URLs
   useEffect(() => {
-    console.log('run 2');
     return () => {
       newImages.forEach((img) => URL.revokeObjectURL(img.preview));
     };
   }, [newImages]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  const processFiles = (files: File[]) => {
     const MAX_SIZE = 1.5 * 1024 * 1024; // 1.5MB
     const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -142,10 +140,49 @@ export function GalleryManagementDialog({
     });
 
     setNewImages((prev) => [...prev, ...newImagePreviews]);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    processFiles(files);
 
     // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    if (isSaving) return;
+
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith('image/')
+    );
+
+    if (files.length > 0) {
+      processFiles(files);
     }
   };
 
@@ -289,8 +326,16 @@ export function GalleryManagementDialog({
           {/* Upload Zone */}
           <button
             onClick={triggerFileInput}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             disabled={isSaving}
-            className="w-full border-2 border-dashed border-muted-foreground/40 py-12 flex flex-col items-center justify-center gap-3 hover:border-muted-foreground/60 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`w-full border-2 border-dashed py-12 flex flex-col items-center justify-center gap-3 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+              isDragging
+                ? 'border-muted-foreground bg-muted-foreground/5'
+                : 'border-muted-foreground/40 hover:border-muted-foreground/60'
+            }`}
           >
             <Upload
               className="w-12 h-12 text-muted-foreground"

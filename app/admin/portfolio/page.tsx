@@ -10,7 +10,7 @@ import { MediaManagementDialog } from '@/components/admin/media-management-dialo
 import { ProjectDialog } from '@/components/admin/project-dialog';
 import { ProjectListItem } from '@/components/admin/project-list-item';
 import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { Project, Image } from '@/lib/schema';
+import { Image, Project } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -44,24 +44,29 @@ export default function AdminPortfolioPage() {
       ...project,
       hasDesktopHero: project.images.some(
         (image) =>
-          image.imageType === 'project_hero' && image.variant === 'desktop'
+          image.imageType === 'project_hero' &&
+          (image.variant === 'desktop' || image.variant === 'both')
       ),
       hasMobileHero: project.images.some(
         (image) =>
-          image.imageType === 'project_hero' && image.variant === 'mobile'
+          image.imageType === 'project_hero' &&
+          (image.variant === 'mobile' || image.variant === 'both')
       ),
       hasDesktopThumb: project.images.some(
         (image) =>
-          image.imageType === 'thumbnail' && image.variant === 'desktop'
+          image.imageType === 'thumbnail' &&
+          (image.variant === 'desktop' || image.variant === 'both')
       ),
       hasMobileThumb: project.images.some(
-        (image) => image.imageType === 'thumbnail' && image.variant === 'mobile'
+        (image) =>
+          image.imageType === 'thumbnail' &&
+          (image.variant === 'mobile' || image.variant === 'both')
       ),
       galleryCount: project.images.filter((img) => img.imageType === 'gallery')
         .length,
     }));
     setProjects(mappedProjects);
-    console.log(mappedProjects);
+    return mappedProjects;
   };
 
   useEffect(() => {
@@ -168,11 +173,19 @@ export default function AdminPortfolioPage() {
 
       <MediaManagementDialog
         isOpen={mediaDialogOpen}
+        projectId={selectedProject?.id || 0}
         projectTitle={selectedProject?.title || ''}
+        existingImages={selectedProject?.images || []}
         onClose={() => setMediaDialogOpen(false)}
-        onSave={(media) => {
-          console.log('Save media:', media);
-          setMediaDialogOpen(false);
+        onSave={async () => {
+          const freshProjects = await loadProjects();
+          // Update selectedProject with fresh data
+          if (selectedProject) {
+            const updated = freshProjects.find(
+              (p) => p.id === selectedProject.id
+            );
+            if (updated) setSelectedProject(updated);
+          }
         }}
       />
 
@@ -183,7 +196,14 @@ export default function AdminPortfolioPage() {
         images={selectedProject?.images || []}
         onClose={() => setGalleryDialogOpen(false)}
         onSave={async () => {
-          await loadProjects();
+          const freshProjects = await loadProjects();
+          // Update selectedProject with fresh data
+          if (selectedProject) {
+            const updated = freshProjects.find(
+              (p) => p.id === selectedProject.id
+            );
+            if (updated) setSelectedProject(updated);
+          }
           setGalleryDialogOpen(false);
         }}
       />

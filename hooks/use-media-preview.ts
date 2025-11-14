@@ -100,7 +100,6 @@ export function useMediaPreview(
 
   // Determine if removable - true if any media is displayed
   // Even if showing opposite variant as fallback, allow remove (will remove current mode's variant)
-  const isRemovable = !!currentMedia;
-
+  const isRemovable = !!currentMedia && currentMedia.url !== fallbackUrl;
   return { currentMedia, isRemovable };
 }

@@ -102,3 +102,80 @@ export async function updateGalleryPositions(
       .where(eq(images.id, update.id));
   }
 }
+
+// ========== PROJECT MEDIA (HERO/THUMBNAIL) FUNCTIONS ==========
+
+export interface NewProjectMediaImage {
+  publicId: string;
+  imageUrl: string;
+  width: number;
+  height: number;
+  format: string;
+  variant: 'desktop' | 'mobile' | 'both';
+}
+
+/**
+ * Fetch project hero or thumbnail images
+ */
+export async function fetchProjectMediaImages(
+  projectSlug: string,
+  imageType: 'project_hero' | 'thumbnail'
+): Promise<Image[]> {
+  const mediaImages = await db
+    .select()
+    .from(images)
+    .where(
+      and(
+        eq(images.projectSlug, projectSlug),
+        eq(images.imageType, imageType)
+      )
+    );
+
+  return mediaImages;
+}
+
+/**
+ * Insert project media images (hero or thumbnail)
+ */
+export async function insertProjectMediaImages(
+  projectSlug: string,
+  imageType: 'project_hero' | 'thumbnail',
+  imageData: NewProjectMediaImage[]
+): Promise<Image[]> {
+  if (imageData.length === 0) {
+    return [];
+  }
+
+  const insertValues = imageData.map((img) => ({
+    projectSlug,
+    publicId: img.publicId,
+    imageUrl: img.imageUrl,
+    imageType,
+    variant: img.variant,
+    width: img.width,
+    height: img.height,
+    format: img.format,
+    position: 0, // Position not used for hero/thumbnail
+    altText: null,
+    caption: null,
+  }));
+
+  const inserted = await db.insert(images).values(insertValues).returning();
+
+  return inserted;
+}
+
+/**
+ * Delete project media images by IDs
+ */
+export async function deleteProjectMediaImages(
+  imageIds: number[]
+): Promise<void> {
+  if (imageIds.length === 0) {
+    return;
+  }
+
+  for (const id of imageIds) {
+    await db.delete(images).where(eq(images.id, id));
+  }
+}

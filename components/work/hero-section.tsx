@@ -4,7 +4,11 @@ import { Image } from '@/components/image';
 import { formatDate } from '@/lib/utils';
 
 type HeroSectionProps = {
-  heroImage: {
+  desktopHeroImage: {
+    publicId: string;
+    alt: string;
+  };
+  mobileHeroImage: {
     publicId: string;
     alt: string;
   };
@@ -15,7 +19,8 @@ type HeroSectionProps = {
 };
 
 export function HeroSection({
-  heroImage,
+  desktopHeroImage,
+  mobileHeroImage,
   title,
   client,
   category,
@@ -25,12 +30,21 @@ export function HeroSection({
     <section className="relative h-dvh md:h-dvh w-full flex flex-col snap-start">
       <figure className="relative h-dvh w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
+        {/* Desktop Hero */}
         <Image
-          src={heroImage.publicId}
-          alt={heroImage.alt}
+          src={desktopHeroImage.publicId}
+          alt={desktopHeroImage.alt}
           fill
           preload
-          className="object-cover object-top z-0"
+          className="hidden md:block object-cover object-top z-0"
+        />
+        {/* Mobile Hero */}
+        <Image
+          src={mobileHeroImage.publicId}
+          alt={mobileHeroImage.alt}
+          fill
+          preload
+          className="block md:hidden object-cover object-top z-0"
         />
         <div className="absolute inset-0 gradient-easing border-b border-background">
           <div className="mx-auto h-full flex flex-col justify-end">
