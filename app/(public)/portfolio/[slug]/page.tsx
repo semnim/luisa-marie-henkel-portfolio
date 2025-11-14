@@ -2,12 +2,53 @@ import { HeroSection } from '@/components/work/hero-section';
 import { ProjectGallery } from '@/components/work/project-gallery';
 import { ProjectMetadata } from '@/components/work/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
+import type { Metadata } from 'next';
 import { fetchProjectData, fetchProjectImages } from './actions';
 
-export const metadata = {
-  title: 'Work | Luisa-Marie Henkel',
-  description: 'Art director & Stylist portfolio',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const projectData = await fetchProjectData(slug);
+  const projectImages = await fetchProjectImages(slug);
+  const title = getProjectTitleFromSlug(slug);
+
+  const thumbnail = projectImages.find((img) => img.imageType === 'thumbnail');
+  const ogImage = thumbnail?.imageUrl || '/opengraph-image.png';
+
+  return {
+    title: title.toUpperCase(),
+    description:
+      projectData?.description ||
+      `${title.toUpperCase()} - Art direction & styling project by Luisa-Marie Henkel`,
+    openGraph: {
+      title: title.toUpperCase(),
+      description:
+        projectData?.description ||
+        `${title.toUpperCase()} - Art direction & styling project`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      type: 'article',
+      publishedTime: projectData?.publishedAt?.toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title.toUpperCase(),
+      description:
+        projectData?.description ||
+        `${title.toUpperCase()} - Art direction & styling project`,
+      images: [ogImage],
+    },
+  };
+}
 
 export default async function DetailPage({
   params,
@@ -51,12 +92,34 @@ export default async function DetailPage({
     (img) => img.imageType === 'gallery'
   );
 
+  // JSON-LD structured data
+  const thumbnail = projectImages.find((img) => img.imageType === 'thumbnail');
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: title,
+    description: projectData.description,
+    creator: {
+      '@type': 'Person',
+      name: 'Luisa-Marie Henkel',
+      jobTitle: ['Art Director', 'Stylist'],
+    },
+    image: thumbnail?.imageUrl,
+    datePublished: projectData.publishedAt?.toISOString(),
+    ...(projectData.client && { client: projectData.client }),
+    ...(projectData.category && { genre: projectData.category }),
+  };
+
   return (
     <main
       className={
         'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory md:snap-none'
       }
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="md:h-dvh md:max-h-dvh relative">
         <HeroSection
           desktopHeroImage={{

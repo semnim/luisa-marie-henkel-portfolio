@@ -5,8 +5,9 @@ import { createSlugFromProjectTitle } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { fetchProjects } from './actions';
+
 export const metadata = {
-  title: 'Work | Luisa-Marie Henkel',
+  title: 'Projects',
   description: 'Art director & Stylist portfolio',
 };
 

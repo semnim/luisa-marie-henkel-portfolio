@@ -5,7 +5,7 @@ import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'Luisa-Marie Henkel',
+  title: 'Art Director Portfolio',
   description: 'Art director & Stylist portfolio',
 };
 
@@ -32,8 +32,26 @@ export default async function Home() {
   const heroAlt =
     heroImages.both?.altText || heroImages.desktop?.altText || 'homepage hero';
 
+  // JSON-LD structured data
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Luisa-Marie Henkel',
+    jobTitle: ['Art Director', 'Stylist'],
+    url: 'https://luisamariehenkel.com',
+    sameAs: [],
+    workExample: featuredProjects.map((project) => ({
+      '@type': 'CreativeWork',
+      name: project.projectTitle,
+    })),
+  };
+
   return (
     <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="relative h-dvh snap-start">
         {/* Desktop Hero */}
         <Image

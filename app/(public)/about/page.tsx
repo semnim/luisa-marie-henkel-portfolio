@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'About | Luisa-Marie Henkel',
+  title: 'About',
   description: 'Art director & Stylist portfolio',
 };
 
