@@ -1,6 +1,7 @@
 'use client';
 
-import { registerUser, type RegisterFormData } from '@/lib/auth-actions';
+import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
+import { AnimatedInput } from '@/components/auth/animated-input';
 import {
   Form,
   FormControl,
@@ -8,13 +9,12 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { AnimatedInput } from '@/components/auth/animated-input';
+import { registerUser } from '@/lib/auth-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import Link from 'next/link';
 
 const registerFormSchema = z
   .object({
@@ -211,7 +211,10 @@ export default function RegisterPage() {
 
                 <p className="text-center text-sm text-muted-foreground">
                   Already have an account?{' '}
-                  <Link href="/login" className="underline hover:text-foreground">
+                  <Link
+                    href="/login"
+                    className="underline hover:text-foreground"
+                  >
                     Login
                   </Link>
                 </p>

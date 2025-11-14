@@ -1,12 +1,8 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-
 type Props = {
   children: React.ReactNode;
   url: string;
-  poster?: string;
 };
 
 const DimmedOverlay = () => {
@@ -15,30 +11,12 @@ const DimmedOverlay = () => {
   );
 };
 
-export const BackgroundVideo = ({ children, url, poster }: Props) => {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-
+export const BackgroundVideo = ({ children }: Props) => {
   return (
     <>
-      {/* <DimmedOverlay /> */}
+      <DimmedOverlay />
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* {poster && (
-          <Image
-            src={poster}
-            alt="Background"
-            fill
-            className="object-cover"
-            priority
-          />
-        )} */}
-
-        <Image
-          src={'/assets/hero_fallback.webp'}
-          className="object-cover"
-          fill
-          alt="fallback"
-        />
-        {/* <video
+        <video
           autoPlay
           loop
           muted
@@ -57,7 +35,7 @@ export const BackgroundVideo = ({ children, url, poster }: Props) => {
             }
             type="video/mp4"
           />
-        </video> */}
+        </video>
       </div>
       {children}
     </>

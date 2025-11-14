@@ -5,24 +5,13 @@ import {
   Check,
   ChevronDown,
   FileImage,
-  Image,
+  Image as ImageIcon,
   RectangleHorizontal,
   RectangleVertical,
   X,
 } from 'lucide-react';
 import { useState } from 'react';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
-
-interface Project {
-  id: string;
-  title: string;
-  category: string;
-  hasDesktopHero: boolean;
-  hasMobileHero: boolean;
-  hasDesktopThumb: boolean;
-  hasMobileThumb: boolean;
-  galleryCount: number;
-}
 
 interface ProjectListItemProps {
   project: PortfolioProjectItem;
@@ -86,7 +75,7 @@ export function ProjectListItem({
                 title="Desktop Thumbnail"
                 className="flex items-center gap-1"
               >
-                <Image className="w-3.5 h-3.5" strokeWidth={1.5} />
+                <ImageIcon className="w-3.5 h-3.5" strokeWidth={1.5} />
                 {project.hasDesktopThumb ? (
                   <Check className="w-3 h-3 text-green-500" strokeWidth={2} />
                 ) : (

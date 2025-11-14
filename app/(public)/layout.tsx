@@ -3,14 +3,9 @@ import '../globals.css';
 
 import { Button } from '@/components/ui/button';
 import { routes } from '@/lib/routes';
-import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
-
-const inter = Inter({
-  subsets: ['latin'],
-});
 
 export default function PublicLayout({
   children,

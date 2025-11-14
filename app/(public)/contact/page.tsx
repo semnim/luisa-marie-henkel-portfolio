@@ -1,6 +1,7 @@
 'use client';
 
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
+import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
 import {
   Form,
   FormControl,
@@ -8,7 +9,6 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,7 +30,6 @@ type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
   const [formState, setFormState] = useState<FormState>('idle');
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -43,7 +42,6 @@ export default function ContactPage() {
 
   const onSubmit = async (data: ContactFormData) => {
     setFormState('loading');
-    setErrorMessage('');
 
     const result = await submitContactForm(data);
 
@@ -52,13 +50,11 @@ export default function ContactPage() {
       form.reset();
     } else {
       setFormState('error');
-      setErrorMessage(result.error || 'An error occurred. Please try again.');
     }
   };
 
   const handleReset = () => {
     setFormState('idle');
-    setErrorMessage('');
     form.reset();
   };
 

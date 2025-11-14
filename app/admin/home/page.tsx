@@ -19,7 +19,7 @@ import { MediaUploadBox } from '@/components/admin/media-upload-box';
 import { ProjectSelectorDialog } from '@/components/admin/project-selector-dialog';
 import { useMediaPreview } from '@/hooks/use-media-preview';
 import { useMediaUploadState } from '@/hooks/use-media-upload-state';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface FeaturedProject {
@@ -43,17 +43,37 @@ export default function AdminHomePage() {
 
   // Hero upload state using custom hook
   const [heroState, heroActions] = useMediaUploadState();
-  const heroPreview = useMediaPreview(heroState, '/assets/home_hero.webp', previewMode);
+  const heroPreview = useMediaPreview(
+    heroState,
+    '/assets/home_hero.webp',
+    previewMode
+  );
 
   // Featured upload states for each slot (4 slots)
   const [featured0State, featured0Actions] = useMediaUploadState();
   const [featured1State, featured1Actions] = useMediaUploadState();
   const [featured2State, featured2Actions] = useMediaUploadState();
   const [featured3State, featured3Actions] = useMediaUploadState();
-  const featured0Preview = useMediaPreview(featured0State, undefined, previewMode);
-  const featured1Preview = useMediaPreview(featured1State, undefined, previewMode);
-  const featured2Preview = useMediaPreview(featured2State, undefined, previewMode);
-  const featured3Preview = useMediaPreview(featured3State, undefined, previewMode);
+  const featured0Preview = useMediaPreview(
+    featured0State,
+    undefined,
+    previewMode
+  );
+  const featured1Preview = useMediaPreview(
+    featured1State,
+    undefined,
+    previewMode
+  );
+  const featured2Preview = useMediaPreview(
+    featured2State,
+    undefined,
+    previewMode
+  );
+  const featured3Preview = useMediaPreview(
+    featured3State,
+    undefined,
+    previewMode
+  );
 
   // UI states
   const [isSaving, setIsSaving] = useState(false);
@@ -84,7 +104,7 @@ export default function AdminHomePage() {
   );
 
   // Load featured images from DB
-  const loadFeaturedImages = async () => {
+  const loadFeaturedImages = useCallback(async () => {
     const result = await fetchFeaturedProjects();
     if (result.success && result.data) {
       // Map projects by position and set existing images on upload states
@@ -124,7 +144,13 @@ export default function AdminHomePage() {
       setFeaturedProjects(projectsTyped);
       setInitialFeaturedProjects(projectsTyped);
     }
-  };
+  }, [
+    featured0Actions,
+    featured1Actions,
+    featured2Actions,
+    featured3Actions,
+    featuredProjects,
+  ]);
 
   // Fetch existing hero images on mount
   useEffect(() => {
@@ -145,7 +171,7 @@ export default function AdminHomePage() {
   // Load featured images on mount
   useEffect(() => {
     loadFeaturedImages();
-  }, []);
+  }, [loadFeaturedImages]);
 
   // Load available projects on mount
   useEffect(() => {

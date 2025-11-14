@@ -51,7 +51,6 @@ export function FeaturedProjectCard({
       ? images?.both?.imageUrl || images?.desktop?.imageUrl
       : images?.mobile?.imageUrl || images?.both?.imageUrl;
 
-  const hasImages = !!(images?.desktop || images?.mobile || images?.both);
   const isDesktopActive = !!images?.desktop;
   const isMobileActive = !!images?.mobile;
   const isBothActive = !!images?.both;
@@ -105,7 +104,9 @@ export function FeaturedProjectCard({
 
               {/* Both */}
               <button
-                onClick={(e) => !isBothDisabled && handleVariantClick(e, 'both')}
+                onClick={(e) =>
+                  !isBothDisabled && handleVariantClick(e, 'both')
+                }
                 disabled={isBothDisabled}
                 className="p-3 border border-muted-foreground/40 hover:border-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >

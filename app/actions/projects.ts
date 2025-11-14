@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { Project, projects, NewProject } from '@/lib/schema';
+import { NewProject, Project, projects } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 
 export interface ProjectListItem {
@@ -28,8 +28,7 @@ export interface ActionResult {
 }
 
 function validateProjectData(
-  data: ProjectFormData,
-  mode: 'create' | 'update'
+  data: ProjectFormData
 ): Array<{ field: string; message: string }> {
   const errors: Array<{ field: string; message: string }> = [];
 
@@ -114,7 +113,7 @@ export async function createProject(
 ): Promise<ActionResult> {
   try {
     // Validate input
-    const validationErrors = validateProjectData(data, 'create');
+    const validationErrors = validateProjectData(data);
     if (validationErrors.length > 0) {
       return { success: false, errors: validationErrors };
     }
@@ -137,9 +136,7 @@ export async function createProject(
     }
 
     // Parse published date
-    const publishedAt = data.publishedAt
-      ? new Date(data.publishedAt)
-      : null;
+    const publishedAt = data.publishedAt ? new Date(data.publishedAt) : null;
 
     // Insert project
     const newProject: NewProject = {
@@ -170,7 +167,7 @@ export async function updateProject(
 ): Promise<ActionResult> {
   try {
     // Validate input
-    const validationErrors = validateProjectData(data, 'update');
+    const validationErrors = validateProjectData(data);
     if (validationErrors.length > 0) {
       return { success: false, errors: validationErrors };
     }
@@ -205,9 +202,7 @@ export async function updateProject(
     }
 
     // Parse published date
-    const publishedAt = data.publishedAt
-      ? new Date(data.publishedAt)
-      : null;
+    const publishedAt = data.publishedAt ? new Date(data.publishedAt) : null;
 
     // Update project (now includes slug)
     const [updated] = await db

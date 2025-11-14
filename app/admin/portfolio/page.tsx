@@ -10,9 +10,9 @@ import { MediaManagementDialog } from '@/components/admin/media-management-dialo
 import { ProjectDialog } from '@/components/admin/project-dialog';
 import { ProjectListItem } from '@/components/admin/project-list-item';
 import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { Image, Project } from '@/lib/schema';
+import { Image, Project, ProjectWithImages } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export type PortfolioProjectItem = Project & {
@@ -24,6 +24,33 @@ export type PortfolioProjectItem = Project & {
   galleryCount: number;
 };
 
+const mapProjectsToDto = (projectsResponse: ProjectWithImages[]) => {
+  return projectsResponse.map((project) => ({
+    ...project,
+    hasDesktopHero: project.images.some(
+      (image) =>
+        image.imageType === 'project_hero' &&
+        (image.variant === 'desktop' || image.variant === 'both')
+    ),
+    hasMobileHero: project.images.some(
+      (image) =>
+        image.imageType === 'project_hero' &&
+        (image.variant === 'mobile' || image.variant === 'both')
+    ),
+    hasDesktopThumb: project.images.some(
+      (image) =>
+        image.imageType === 'thumbnail' &&
+        (image.variant === 'desktop' || image.variant === 'both')
+    ),
+    hasMobileThumb: project.images.some(
+      (image) =>
+        image.imageType === 'thumbnail' &&
+        (image.variant === 'mobile' || image.variant === 'both')
+    ),
+    galleryCount: project.images.filter((img) => img.imageType === 'gallery')
+      .length,
+  }));
+};
 export default function AdminPortfolioPage() {
   const [projects, setProjects] = useState<PortfolioProjectItem[]>([]);
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
@@ -38,40 +65,20 @@ export default function AdminPortfolioPage() {
   const [projectToDelete, setProjectToDelete] =
     useState<PortfolioProjectItem | null>(null);
 
-  const loadProjects = async () => {
-    const projectsResponse = await fetchAllProjectsWithImages();
-    const mappedProjects = projectsResponse.map((project) => ({
-      ...project,
-      hasDesktopHero: project.images.some(
-        (image) =>
-          image.imageType === 'project_hero' &&
-          (image.variant === 'desktop' || image.variant === 'both')
-      ),
-      hasMobileHero: project.images.some(
-        (image) =>
-          image.imageType === 'project_hero' &&
-          (image.variant === 'mobile' || image.variant === 'both')
-      ),
-      hasDesktopThumb: project.images.some(
-        (image) =>
-          image.imageType === 'thumbnail' &&
-          (image.variant === 'desktop' || image.variant === 'both')
-      ),
-      hasMobileThumb: project.images.some(
-        (image) =>
-          image.imageType === 'thumbnail' &&
-          (image.variant === 'mobile' || image.variant === 'both')
-      ),
-      galleryCount: project.images.filter((img) => img.imageType === 'gallery')
-        .length,
-    }));
-    setProjects(mappedProjects);
-    return mappedProjects;
-  };
+  const loadProjects = useCallback(async () => {
+    return await fetchAllProjectsWithImages();
+  }, []);
 
   useEffect(() => {
-    loadProjects();
-  }, []);
+    loadProjects()
+      .then((projects) => {
+        const mapped = mapProjectsToDto(projects);
+        setProjects(mapped);
+      })
+      .catch((error) => {
+        toast.error("Couldn't load projects, error:", error);
+      });
+  }, [loadProjects]);
 
   const handleCreateProject = () => {
     setProjectDialogMode('create');
