@@ -144,13 +144,8 @@ export default function AdminHomePage() {
       setFeaturedProjects(projectsTyped);
       setInitialFeaturedProjects(projectsTyped);
     }
-  }, [
-    featured0Actions,
-    featured1Actions,
-    featured2Actions,
-    featured3Actions,
-    featuredProjects,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fetch existing hero images on mount
   useEffect(() => {
