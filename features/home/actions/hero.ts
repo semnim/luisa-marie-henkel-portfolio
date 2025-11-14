@@ -14,12 +14,6 @@ cloudinary.config({
 
 type HeroVariant = 'desktop' | 'mobile' | 'both';
 
-interface HeroImages {
-  desktop?: Image;
-  mobile?: Image;
-  both?: Image;
-}
-
 interface ActionResult<T = unknown> {
   success: boolean;
   error?: string;
@@ -28,34 +22,6 @@ interface ActionResult<T = unknown> {
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-
-/**
- * Fetch current hero images from database
- */
-export async function fetchCurrentHero(): Promise<ActionResult<HeroImages>> {
-  try {
-    const heroImages = await db
-      .select()
-      .from(images)
-      .where(eq(images.imageType, 'home_hero'));
-
-    const result: HeroImages = {};
-
-    for (const img of heroImages) {
-      if (img.variant === 'desktop') result.desktop = img;
-      else if (img.variant === 'mobile') result.mobile = img;
-      else if (img.variant === 'both') result.both = img;
-    }
-
-    return { success: true, data: result };
-  } catch (error) {
-    console.error('Failed to fetch hero images:', error);
-    return {
-      success: false,
-      error: 'Failed to fetch hero images',
-    };
-  }
-}
 
 /**
  * Upload hero image to Cloudinary and save to database

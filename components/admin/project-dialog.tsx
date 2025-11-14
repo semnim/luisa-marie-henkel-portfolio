@@ -1,7 +1,7 @@
 'use client';
 
-import { createProject, updateProject } from '@/app/actions/projects';
-import type { ProjectFormData } from '@/app/actions/projects';
+import { createProject, updateProject } from '@/features/projects/actions/projects';
+import type { ProjectFormData } from '@/features/projects/actions/projects';
 import { CATEGORIES } from '@/lib/constants';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import { validateTitle, validateTeamMember, validatePublishedDate } from '@/lib/validation';

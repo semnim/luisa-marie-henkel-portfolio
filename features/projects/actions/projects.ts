@@ -4,13 +4,6 @@ import { db } from '@/lib/db';
 import { NewProject, Project, projects } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 
-export interface ProjectListItem {
-  id: number;
-  slug: string;
-  title: string;
-  category: string;
-}
-
 export interface ProjectFormData {
   title: string;
   slug: string;
@@ -73,39 +66,6 @@ function validateProjectData(
   }
 
   return errors;
-}
-
-export async function fetchAllProjects(): Promise<ProjectListItem[]> {
-  try {
-    const projects = await db.query.projects.findMany({
-      columns: {
-        id: true,
-        slug: true,
-        title: true,
-        category: true,
-      },
-      orderBy: (projects, { desc }) => [desc(projects.createdAt)],
-    });
-
-    return projects;
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    return [];
-  }
-}
-
-export async function fetchAllProjectsWithImages() {
-  try {
-    const projects = await db.query.projects.findMany({
-      with: { images: true },
-      orderBy: (projects, { desc }) => [desc(projects.createdAt)],
-    });
-
-    return projects;
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    return [];
-  }
 }
 
 export async function createProject(
@@ -225,35 +185,6 @@ export async function updateProject(
     return {
       success: false,
       errors: [{ field: '_general', message: 'Failed to update project' }],
-    };
-  }
-}
-
-export async function deleteProject(
-  projectId: number
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    // Verify project exists
-    const existingProject = await db.query.projects.findFirst({
-      where: eq(projects.id, projectId),
-    });
-
-    if (!existingProject) {
-      return {
-        success: false,
-        error: 'Project not found',
-      };
-    }
-
-    // Delete project (CASCADE will delete associated images)
-    await db.delete(projects).where(eq(projects.id, projectId));
-
-    return { success: true };
-  } catch (error) {
-    console.error('Error deleting project:', error);
-    return {
-      success: false,
-      error: 'Failed to delete project',
     };
   }
 }

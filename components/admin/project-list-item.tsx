@@ -1,6 +1,6 @@
 'use client';
 
-import { PortfolioProjectItem } from '@/app/admin/portfolio/page';
+import { PortfolioProjectItem } from '@/features/projects/components/projects-list';
 import {
   Check,
   ChevronDown,

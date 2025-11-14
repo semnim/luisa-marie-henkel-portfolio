@@ -1,7 +1,7 @@
-import { fetchFeaturedProjects } from '@/app/actions/featured';
-import { fetchCurrentHero } from '@/app/actions/hero';
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
 import { Button } from '@/components/ui/button';
+import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
+import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -68,10 +68,13 @@ export default async function Home() {
           <h2 className="text-lg md:text-3xl tracking-hero-heading">
             FEATURED
           </h2>
-          <p className="text-xs mt-2 tracking-widest text-foreground font-light">
+          <p className="text-xs mt-2 tracking-widest text-foreground font-light text-nowrap before:content-['—'] before:mr-2 after:content-['—'] after:ml-2">
             A CURATED SELECTION
           </p>
-          <Button variant={'link'} className="mt-4 text-xs">
+          <Button
+            variant={'link'}
+            className="mt-4 text-xs border rounded-none border-foreground"
+          >
             <Link href="/portfolio">SEE ALL PROJECTS</Link>
           </Button>
         </div>
