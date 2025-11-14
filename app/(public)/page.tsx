@@ -1,7 +1,9 @@
-import { fetchCurrentHero } from '@/app/actions/hero';
 import { fetchFeaturedProjects } from '@/app/actions/featured';
+import { fetchCurrentHero } from '@/app/actions/hero';
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export const metadata = {
   title: 'Luisa-Marie Henkel',
@@ -62,9 +64,17 @@ export default async function Home() {
         </div>
       </section>
       <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
-        <h2 className="font-light text-lg md:text-3xl h-20 md:h-50 w-full flex items-center justify-center  tracking-hero-heading z-10 bottom-0 absolute bg-linear-to-t from-background md:via-75% md:via-black/75 to-transparent left-1/2 -translate-x-1/2">
-          FEATURED
-        </h2>
+        <div className="font-light w-full pb-2 flex flex-col items-center justify-end absolute bg-linear-to-t from-background md:via-75% md:via-black/75 to-transparent left-1/2 -translate-x-1/2 bottom-0 z-10 h-20 md:h-50">
+          <h2 className="text-lg md:text-3xl tracking-hero-heading">
+            FEATURED
+          </h2>
+          <p className="text-xs mt-2 tracking-widest text-foreground font-light">
+            A CURATED SELECTION
+          </p>
+          <Button variant={'link'} className="mt-4 text-xs">
+            <Link href="/portfolio">SEE ALL PROJECTS</Link>
+          </Button>
+        </div>
         <FeaturedShowcase projects={featuredProjects} />
       </section>
     </main>
