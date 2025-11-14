@@ -1,7 +1,6 @@
 'use client';
 import '../globals.css';
 
-import { Button } from '@/components/ui/button';
 import { routes } from '@/lib/routes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,13 +11,13 @@ export default function PublicLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   return (
     <>
       <header
         className={`md:mix-blend-difference fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 ${
-          mobileMenuOpen ? 'h-dvh backdrop-blur-md backdrop-brightness-25' : ''
+          menuOpen ? 'h-dvh backdrop-blur-md backdrop-brightness-25' : ''
         }`}
       >
         <nav
@@ -32,22 +31,20 @@ export default function PublicLayout({
               luisa-marie henkel
             </Link>
 
-            {mobileMenuOpen ? (
-              <Button
-                variant={'ghost'}
-                className="font-semibold mix-blend-difference"
-                onClick={() => setMobileMenuOpen((prev) => !prev)}
+            {menuOpen ? (
+              <button
+                className="font-semibold mix-blend-difference p-2"
+                onClick={() => setMenuOpen((prev) => !prev)}
               >
                 close
-              </Button>
+              </button>
             ) : (
-              <Button
-                variant={'ghost'}
-                className="font-semibold mix-blend-difference"
-                onClick={() => setMobileMenuOpen((prev) => !prev)}
+              <button
+                className="font-semibold mix-blend-difference p-2"
+                onClick={() => setMenuOpen((prev) => !prev)}
               >
                 menu
-              </Button>
+              </button>
             )}
           </div>
         </nav>
@@ -57,7 +54,7 @@ export default function PublicLayout({
           {routes.map((route) => (
             <Link
               key={route.id}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => setMenuOpen(false)}
               className={`text-5xl ${
                 pathname === route.url
                   ? 'text-muted-foreground italic'
