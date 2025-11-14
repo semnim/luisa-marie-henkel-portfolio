@@ -1,8 +1,8 @@
-import { Image } from '@/components/image';
 import { IndexPopover } from '@/components/portfolio/index-popover';
 import { MasonryGrid } from '@/components/work/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { fetchProjects } from './actions';
 
@@ -55,6 +55,7 @@ export default async function WorkPage() {
                   className="flex flex-1 w-full h-full relative"
                 >
                   <Image
+                    unoptimized
                     src={thumbnail?.imageUrl ?? ''}
                     alt={item.title}
                     fill

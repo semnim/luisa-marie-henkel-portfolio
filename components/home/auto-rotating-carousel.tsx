@@ -1,7 +1,7 @@
 'use client';
 
-import { Image } from '@/components/image';
 import { Project } from '@/lib/schema';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface AutoRotatingCarouselProps {
@@ -106,6 +106,7 @@ export function AutoRotatingCarousel({ projects }: AutoRotatingCarouselProps) {
                 alt={project.title}
                 fill
                 className="object-contain object-center"
+                unoptimized
               />
             </div>
 

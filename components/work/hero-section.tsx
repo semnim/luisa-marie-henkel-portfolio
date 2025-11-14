@@ -1,15 +1,15 @@
 'use client';
 
-import { Image } from '@/components/image';
 import { formatDate } from '@/lib/utils';
+import Image from 'next/image';
 
 type HeroSectionProps = {
   desktopHeroImage: {
-    publicId: string;
+    url: string;
     alt: string;
   };
   mobileHeroImage: {
-    publicId: string;
+    url: string;
     alt: string;
   };
   title: string;
@@ -32,7 +32,8 @@ export function HeroSection({
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         {/* Desktop Hero */}
         <Image
-          src={desktopHeroImage.publicId}
+          unoptimized
+          src={desktopHeroImage.url}
           alt={desktopHeroImage.alt}
           fill
           preload
@@ -40,7 +41,7 @@ export function HeroSection({
         />
         {/* Mobile Hero */}
         <Image
-          src={mobileHeroImage.publicId}
+          src={mobileHeroImage.url}
           alt={mobileHeroImage.alt}
           fill
           preload

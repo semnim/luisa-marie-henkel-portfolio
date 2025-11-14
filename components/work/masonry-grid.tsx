@@ -1,7 +1,7 @@
 'use client';
 
-import { Image } from '@/components/image';
 import { createSlugFromProjectTitle } from '@/lib/utils';
+import Image from 'next/image';
 import Link from 'next/link';
 
 type ProjectImage = {
@@ -46,7 +46,8 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
           >
             <div className="relative overflow-hidden">
               <Image
-                src={img.publicId}
+                unoptimized
+                src={img.imageUrl}
                 alt={`${title} - Image ${index + 1}`}
                 width={img.width || 800}
                 height={img.height || 1200}

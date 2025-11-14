@@ -1,7 +1,7 @@
 'use client';
 
-import { Image } from '@/components/image';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import React from 'react';
 import {
   Carousel,
@@ -62,7 +62,7 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
         <CarouselContent className="h-full">
           {images.map((img, index) => {
             // Use mobile variant if available, otherwise fallback to desktop
-            const imageSrc = img.mobilePublicId || img.publicId;
+            const imageSrc = img.mobileImageUrl || img.imageUrl;
 
             return (
               <CarouselItem
@@ -71,6 +71,7 @@ export function MobileSlideshow({ images, title }: MobileSlideshowProps) {
               >
                 <div className="relative w-full h-dvh">
                   <Image
+                    unoptimized
                     loading="eager"
                     src={imageSrc}
                     alt={`${title} - Image ${index + 1}`}

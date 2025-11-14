@@ -123,11 +123,11 @@ export default async function DetailPage({
       <div className="md:h-dvh md:max-h-dvh relative">
         <HeroSection
           desktopHeroImage={{
-            publicId: desktopHeroImage.publicId,
+            url: desktopHeroImage.imageUrl,
             alt: title,
           }}
           mobileHeroImage={{
-            publicId: mobileHeroImage.publicId,
+            url: mobileHeroImage.imageUrl,
             alt: title,
           }}
           title={title}

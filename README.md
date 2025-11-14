@@ -2,9 +2,9 @@
 
 ## About
 
-This project is a realization of a minimal, bold art director portfolio.
+This project is the realization of a minimal, bold art director portfolio for Luisa-Marie Henkel.
 
-[Check it out here.](https://luisa-marie-henkel-portfolio.vercel.app/)
+[Check it out here.](https://luisamariehenkel.com/)
 
 ## Stack
 
