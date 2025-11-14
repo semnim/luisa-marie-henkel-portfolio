@@ -17,7 +17,7 @@ export default function PublicLayout({
   return (
     <>
       <header
-        className={`mix-blend-difference fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 ${
+        className={`md:mix-blend-difference fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 ${
           mobileMenuOpen ? 'h-dvh backdrop-blur-md backdrop-brightness-25' : ''
         }`}
       >

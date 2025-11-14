@@ -2,6 +2,7 @@ import { Image } from '@/components/image';
 import { IndexPopover } from '@/components/portfolio/index-popover';
 import { MasonryGrid } from '@/components/work/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
+import { ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { fetchProjects } from './actions';
 export const metadata = {
@@ -13,11 +14,28 @@ export default async function WorkPage() {
   const projects = await fetchProjects();
   return (
     <main className="md:h-screen">
-      <h2 className="hidden text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-50 h-15 fixed top-0 left-1/2 -translate-x-1/2 md:flex items-center mix-blend-difference">
+      <h2 className="hidden text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-20 h-15 fixed top-0 left-1/2 -translate-x-1/2 md:flex items-center mix-blend-difference">
         PROJECTS
       </h2>
       <section className="h-dvh md:h-screen md:max-h-screen flex flex-col overflow-y-scroll md:overflow-y-hidden max-h-dvh md:snap-none md:hidden snap-mandatory snap-y overscroll-none">
         <div className="grid grid-cols-1 lg:grid-cols-3 relative">
+          <div className="group overflow-hidden snap-start relative h-dvh lg:h-[500px] flex items-center bg-linear-to-b from-background via-background/95 to-background">
+            <div className="w-full my-auto text-center space-y-6 px-8">
+              <div className="space-y-4">
+                <h2 className="text-xl font-light tracking-hero-heading">
+                  PROJECTS
+                </h2>
+                <p className="text-xs tracking-widest text-muted-foreground font-light before:content-['—'] before:mr-3 after:content-['—'] after:ml-3">
+                  EXPLORE THE PORTFOLIO
+                </p>
+              </div>
+              <div className="flex items-center justify-center gap-4 pt-4">
+                <p className="text-[10px] tracking-wider text-muted-foreground/70 uppercase absolute bottom-4">
+                  <ChevronDown />
+                </p>
+              </div>
+            </div>
+          </div>
           {projects.map((item, index) => {
             if (item === null) {
               return <div className="h-0" key={'empty' + index} />;
@@ -29,7 +47,7 @@ export default async function WorkPage() {
               <Link
                 href={`/portfolio/${createSlugFromProjectTitle(item.title)}`}
                 key={item.id}
-                className={` group overflow-hidden snap-start relative h-dvh lg:h-[500px]`}
+                className="group overflow-hidden snap-start relative h-dvh lg:h-[500px]"
               >
                 <figure
                   key={item.id}

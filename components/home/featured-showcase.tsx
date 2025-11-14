@@ -90,6 +90,7 @@ export const FeaturedShowcase = ({ projects }: FeaturedShowcaseProps) => {
                     fill
                     sizes="(max-width: 768px) 100vw, 25vw"
                     className="object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
+                    unoptimized
                   />
                 ) : null}
                 <figcaption className="absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
