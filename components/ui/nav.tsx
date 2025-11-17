@@ -73,7 +73,7 @@ export const Nav = ({ open, onOpen, onClose }: NavProps) => {
             </Link>
           </p>
           <p>
-            &copy;&nbsp;{new Date().getFullYear()}&nbsp; Luisa-Marie Henkel. All
+            &copy;&nbsp;{new Date().getFullYear()}&nbsp;Luisa-Marie Henkel. All
             rights reserved.
           </p>
         </div>
