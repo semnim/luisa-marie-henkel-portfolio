@@ -15,10 +15,9 @@ type ProjectImage = {
 
 type MasonryGridProps = {
   images: ProjectImage[];
-  title: string;
 };
 
-export function MasonryGrid({ images, title }: MasonryGridProps) {
+export function MasonryGrid({ images }: MasonryGridProps) {
   if (images.length === 0) {
     return (
       <div className="hidden md:flex items-center justify-center min-h-[400px] bg-gray-100">
@@ -48,7 +47,7 @@ export function MasonryGrid({ images, title }: MasonryGridProps) {
               <Image
                 unoptimized
                 src={img.imageUrl}
-                alt={`${title} - Image ${index + 1}`}
+                alt={`Grid - Image ${index + 1}`}
                 width={img.width || 800}
                 height={img.height || 1200}
                 className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"

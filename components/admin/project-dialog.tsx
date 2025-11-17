@@ -1,10 +1,17 @@
 'use client';
 
-import { createProject, updateProject } from '@/features/projects/actions/projects';
 import type { ProjectFormData } from '@/features/projects/actions/projects';
+import {
+  createProject,
+  updateProject,
+} from '@/features/projects/actions/projects';
 import { CATEGORIES } from '@/lib/constants';
 import { createSlugFromProjectTitle } from '@/lib/utils';
-import { validateTitle, validateTeamMember, validatePublishedDate } from '@/lib/validation';
+import {
+  validatePublishedDate,
+  validateTeamMember,
+  validateTitle,
+} from '@/lib/validation';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -193,7 +200,7 @@ export function ProjectDialog({
       <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="space-y-6">
           {/* Header */}
-          <h2 className="text-xl font-light tracking-item-subheading uppercase">
+          <h2 className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10">
             {mode === 'create' ? 'CREATE PROJECT' : 'EDIT PROJECT'}
           </h2>
 
@@ -347,7 +354,7 @@ export function ProjectDialog({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-6">
+          <div className="flex justify-center gap-3 bg-background pt-6 pb-3 fixed bottom-0 inset-x-0 w-full">
             <AnimatedBorderButton onClick={onClose} className="flex-1">
               CANCEL
             </AnimatedBorderButton>

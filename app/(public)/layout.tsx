@@ -1,9 +1,7 @@
 'use client';
+import { Nav } from '@/components/ui/nav';
 import '../globals.css';
 
-import { routes } from '@/lib/routes';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
 export default function PublicLayout({
@@ -12,7 +10,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
+
+  const handleOpen = () => setMenuOpen(true);
+  const handleClose = () => setMenuOpen(false);
+
   return (
     <>
       <header
@@ -20,52 +21,7 @@ export default function PublicLayout({
           menuOpen ? 'h-dvh backdrop-blur-md backdrop-brightness-25' : ''
         }`}
       >
-        <nav
-          className={`w-full h-15 min-h-15 top-4 px-4 flex flex-col items-center justify-between gap-8`}
-        >
-          <div className="flex flex-1 w-full items-center">
-            <Link
-              href="/"
-              className="text-foreground font-semibold mr-auto mix-blend-difference"
-            >
-              luisa-marie henkel
-            </Link>
-
-            {menuOpen ? (
-              <button
-                className="font-semibold mix-blend-difference p-2"
-                onClick={() => setMenuOpen((prev) => !prev)}
-              >
-                close
-              </button>
-            ) : (
-              <button
-                className="font-semibold mix-blend-difference p-2"
-                onClick={() => setMenuOpen((prev) => !prev)}
-              >
-                menu
-              </button>
-            )}
-          </div>
-        </nav>
-        <div
-          className={`w-full flex min-h-0 flex-0 flex-col z-50 px-8 gap-4 mt-15`}
-        >
-          {routes.map((route) => (
-            <Link
-              key={route.id}
-              onClick={() => setMenuOpen(false)}
-              className={`text-5xl ${
-                pathname === route.url
-                  ? 'text-muted-foreground italic'
-                  : 'text-foreground'
-              }`}
-              href={route.url}
-            >
-              {route.id}
-            </Link>
-          ))}
-        </div>
+        <Nav open={menuOpen} onOpen={handleOpen} onClose={handleClose} />
       </header>
       {children}
     </>

@@ -7,8 +7,9 @@ import Link from 'next/link';
 import { fetchProjects } from './actions';
 
 export const metadata = {
-  title: 'Projects',
-  description: 'Art director & Stylist portfolio',
+  title: 'Portfolio',
+  description:
+    'Fashion art direction and styling work spanning commercial campaigns, premium brands, and editorial projects.',
 };
 
 export default async function WorkPage() {
@@ -91,7 +92,6 @@ export default async function WorkPage() {
               title: project.title,
             };
           })}
-          title={'Projects'}
         />
       </section>
     </main>

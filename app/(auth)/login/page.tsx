@@ -59,7 +59,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
+    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
       <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
         <div className="w-full max-w-2xl">
           {formState !== 'error' && (

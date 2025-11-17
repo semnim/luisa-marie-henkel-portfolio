@@ -140,7 +140,7 @@ export default async function DetailPage({
           team={projectData.team}
         />
       </div>
-      <ProjectGallery images={galleryImages} title={title} />
+      <ProjectGallery images={galleryImages} />
     </main>
   );
 }

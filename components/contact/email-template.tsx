@@ -1,12 +1,10 @@
-export const EmailTemplate = ({
-  name,
-  email,
-  message,
-}: {
+type Props = {
   name: string;
   email: string;
   message: string;
-}) => {
+};
+
+export const EmailTemplate = ({ name, email, message }: Props) => {
   return (
     <>
       <h2>New Contact Form Submission</h2>

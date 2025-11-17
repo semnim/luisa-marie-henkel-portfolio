@@ -1,29 +1,18 @@
 'use client';
 
+import { Image } from '@/lib/schema';
 import { MasonryGrid } from './masonry-grid';
 import { MobileSlideshow } from './mobile-slideshow';
 
-type ProjectImage = {
-  id: number;
-  publicId: string;
-  imageUrl: string;
-  mobilePublicId?: string | null;
-  mobileImageUrl?: string | null;
-  width: number | null;
-  height: number | null;
-  linkTo?: string;
-};
-
 type ProjectGalleryProps = {
-  images: ProjectImage[];
-  title: string;
+  images: Image[];
 };
 
-export function ProjectGallery({ images, title }: ProjectGalleryProps) {
+export function ProjectGallery({ images }: ProjectGalleryProps) {
   return (
     <section className="snap-start h-[calc(100dvh-60px)] md:h-auto md:mt-12">
-      <MobileSlideshow images={images} title={title} />
-      <MasonryGrid images={images} title={title} />
+      <MobileSlideshow images={images} withCount />
+      <MasonryGrid images={images} />
     </section>
   );
 }

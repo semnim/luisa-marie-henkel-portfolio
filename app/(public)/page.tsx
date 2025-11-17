@@ -1,14 +1,16 @@
+import { CtaOverlay } from '@/components/home/cta-overlay';
 import { FeaturedShowcase } from '@/components/home/featured-showcase';
-import { HomeCta } from '@/components/home/home-cta';
 import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import Image from 'next/image';
 
 export const metadata = {
-  title: 'Art Director Portfolio',
-  description: 'Art director & Stylist portfolio',
+  description:
+    'Fashion and editorial art direction and styling. View selected works and creative projects.',
 };
 
+const HERO_TITLE = 'LUISA-MARIE HENKEL';
+const HERO_SUBTITLE = 'ART DIRECTOR & STYLIST';
 export default async function Home() {
   // Fetch hero images from database
   const heroResult = await fetchCurrentHero();
@@ -53,7 +55,6 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="relative h-dvh snap-start">
-        {/* Desktop Hero */}
         <Image
           src={heroDesktop}
           className="hidden md:block object-cover z-0"
@@ -63,7 +64,6 @@ export default async function Home() {
           priority
           unoptimized
         />
-        {/* Mobile Hero */}
         <Image
           src={heroMobile}
           className="md:hidden object-cover z-0"
@@ -75,16 +75,16 @@ export default async function Home() {
         />
         <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
-            LUISA-MARIE HENKEL
+            {HERO_TITLE}
           </h1>
           <p className="text-xs md:text-md mt-4 tracking-hero-heading text-muted-foreground font-light">
-            ART DIRECTOR & STYLIST
+            {HERO_SUBTITLE}
           </p>
         </div>
       </section>
       <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
         <FeaturedShowcase projects={featuredProjects} />
-        <HomeCta />
+        <CtaOverlay />
       </section>
     </main>
   );

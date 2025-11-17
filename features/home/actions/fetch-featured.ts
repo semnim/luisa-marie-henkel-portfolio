@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { images, projects, type Image } from '@/lib/schema';
 import { eq } from 'drizzle-orm';
 
-interface FeaturedProject {
+export type FeaturedProject = {
   projectSlug: string;
   projectTitle: string;
   position: number;
@@ -13,7 +13,7 @@ interface FeaturedProject {
     mobile?: Image;
     both?: Image;
   };
-}
+};
 
 interface ActionResult<T = unknown> {
   success: boolean;

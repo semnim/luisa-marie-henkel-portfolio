@@ -2,7 +2,8 @@ import Image from 'next/image';
 
 export const metadata = {
   title: 'About',
-  description: 'Art director & Stylist portfolio',
+  description:
+    'Fashion art director and stylist with expertise in haute couture design, commercial campaigns, premium brands, and editorial work.',
 };
 
 export default function AboutPage() {

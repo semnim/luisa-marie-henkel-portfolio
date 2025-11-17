@@ -12,8 +12,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://luisamariehenkel.com'),
   title: {
-    default: 'Luisa-Marie Henkel: Art Director & Stylist',
-    template: 'Luisa-Marie Henkel → %s',
+    default: 'Luisa-Marie Henkel',
+    template: 'Luisa-Marie Henkel - %s',
   },
   description:
     'Art director & stylist portfolio showcasing creative work in fashion, editorial, and commercial projects.',
