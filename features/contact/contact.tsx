@@ -2,6 +2,7 @@
 
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
 import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
+import { AnimatedInput } from '@/components/auth/animated-input';
 import {
   Form,
   FormControl,
@@ -9,6 +10,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -111,21 +113,11 @@ export function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative group">
-                          <input
-                            className="w-full border-0 outline-0 border-muted-foreground rounded-none bg-transparent border-t pt-2"
-                            placeholder="Name*"
-                            {...field}
-                            disabled={formState === 'loading'}
-                          />
-                          <div
-                            className={`absolute top-0 left-0 h-px bg-foreground transition-all duration-500 ease-out ${
-                              field.value
-                                ? 'w-full'
-                                : 'w-0 group-focus-within:w-full group-hover:w-full'
-                            }`}
-                          />
-                        </div>
+                        <AnimatedInput
+                          placeholder="Name*"
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -138,22 +130,12 @@ export function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative group">
-                          <input
-                            type="email"
-                            className="w-full border-0 outline-0 border-muted-foreground rounded-none bg-transparent border-t pt-2"
-                            placeholder="Email*"
-                            {...field}
-                            disabled={formState === 'loading'}
-                          />
-                          <div
-                            className={`absolute top-0 left-0 h-px bg-foreground transition-all duration-500 ease-out ${
-                              field.value
-                                ? 'w-full'
-                                : 'w-0 group-focus-within:w-full group-hover:w-full'
-                            }`}
-                          />
-                        </div>
+                        <AnimatedInput
+                          type="email"
+                          placeholder="Email*"
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -166,31 +148,11 @@ export function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative group">
-                          <textarea
-                            placeholder="Tell me about your project..."
-                            className="w-full p-4 text-foreground outline-0 border-muted-foreground border resize-none min-h-[120px] h-full"
-                            {...field}
-                            disabled={formState === 'loading'}
-                          />
-                          {/* Animated borders */}
-                          <span
-                            tabIndex={-1}
-                            className="absolute top-0 left-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
-                          />
-                          <span
-                            tabIndex={-1}
-                            className="absolute top-0 left-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
-                          />
-                          <span
-                            tabIndex={-1}
-                            className="absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out"
-                          />
-                          <span
-                            tabIndex={-1}
-                            className="absolute top-0 right-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out"
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Tell me about your project..."
+                          {...field}
+                          disabled={formState === 'loading'}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

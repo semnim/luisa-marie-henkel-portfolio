@@ -100,7 +100,6 @@ export default function LoginPage() {
                         <AnimatedInput
                           type="email"
                           placeholder="Email*"
-                          hasValue={!!field.value}
                           disabled={formState === 'loading'}
                           {...field}
                         />
@@ -119,7 +118,6 @@ export default function LoginPage() {
                         <AnimatedInput
                           type="password"
                           placeholder="Password*"
-                          hasValue={!!field.value}
                           disabled={formState === 'loading'}
                           {...field}
                         />

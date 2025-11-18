@@ -10,6 +10,7 @@ import { Skeleton } from '../ui/skeleton';
 const navItems = [
   { href: '/admin/home', label: 'HOME' },
   { href: '/admin/portfolio', label: 'PORTFOLIO' },
+  { href: '/admin/about', label: 'ABOUT' },
 ];
 
 const NavContent = ({

@@ -1,3 +1,4 @@
+import { fetchAboutContent } from '@/features/about/actions';
 import Image from 'next/image';
 
 export const metadata = {
@@ -6,7 +7,16 @@ export const metadata = {
     'Fashion art director and stylist with expertise in haute couture design, commercial campaigns, premium brands, and editorial work.',
 };
 
-export default function AboutPage() {
+const Paragraph = ({ text }: { text: string }) => {
+  return (
+    <p className="text-xs md:text-lg text-justify font-light leading-relaxed text-foreground/90">
+      {text}
+    </p>
+  );
+};
+
+export default async function AboutPage() {
+  const { paragraphs } = await fetchAboutContent();
   return (
     <main className="overscroll-none">
       <section className="mt-15 snap-start flex items-center justify-center px-6 h-full">
@@ -27,32 +37,9 @@ export default function AboutPage() {
               alt="about image"
             />
             <div className="space-y-3">
-              <p className="text-xs md:text-lg text-justify font-light leading-relaxed text-foreground/90">
-                Luisa-Marie Henkel is an Art Director and Stylist based in
-                Berlin. Most recently at Wiethe Content, she led premium
-                e-commerce productions for clients including Adidas and Zalando,
-                creating visual content that bridges editorial aesthetics with
-                commercial needs.
-              </p>
-
-              <p className="text-xs md:text-lg text-justify font-light leading-relaxed text-foreground/90">
-                Her background spans haute couture ateliers in Paris—where she
-                trained in pattern-making and draping alongside names like
-                Margiela and Dior—to fashion styling for both editorial projects
-                and brand campaigns. This foundation in garment construction
-                informs her approach to styling, bringing technical
-                understanding to how clothes move, fit, and photograph.
-              </p>
-
-              <p className="text-xs md:text-lg text-justify font-light leading-relaxed text-foreground/90">
-                She&apos;s worked across the fashion industry&apos;s various
-                touchpoints: from directing model shoots and bust styling at
-                Breuninger, to organizing exhibitions as Gallery Manager at
-                Sobering Galerie in Paris. Whether it&apos;s a fashion
-                editorial, a product campaign, or e-commerce content, she
-                approaches each project with attention to detail and an eye for
-                creating images that feel considered, not contrived.
-              </p>
+              {paragraphs.map((p, index) => (
+                <Paragraph key={index} text={p} />
+              ))}
             </div>
 
             <div className="hidden md:block border-t border-white/10 pt-8 mt-12 mb-6">

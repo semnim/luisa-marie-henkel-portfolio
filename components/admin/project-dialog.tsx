@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { AnimatedBorderButton } from '../auth/animated-border-button';
 import { AnimatedInput } from '../auth/animated-input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 
 interface ProjectDialogProps {
   isOpen: boolean;
@@ -194,67 +196,76 @@ export function ProjectDialog({
   };
 
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="w-full container overflow-y-auto max-h-dvh">
         <div className="space-y-6">
           {/* Header */}
           <h2 className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10">
             {mode === 'create' ? 'CREATE PROJECT' : 'EDIT PROJECT'}
           </h2>
 
-          {/* Form */}
           <div className="space-y-6">
-            {/* Title */}
-            <div>
-              <AnimatedInput
-                placeholder="Title*"
-                value={formData.title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                required
-              />
-              <ErrorMessage field="title" />
-            </div>
+            <div className="space-y-6 lg:gap-4 lg:grid lg:grid-cols-2">
+              <div className="space-y-2 relative">
+                <div className="flex justify-between">
+                  <Label
+                    htmlFor="title"
+                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                  >
+                    Title*
+                  </Label>
+                  <p className="absolute top-10 right-0 text-sm font-light lowercase text-muted-foreground">
+                    {formData.slug}
+                  </p>
+                </div>
+                <AnimatedInput
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  required
+                />
 
-            {/* Slug */}
-            <AnimatedInput
-              placeholder="Slug (generated)"
-              value={formData.slug}
-              className="text-muted-foreground"
-              // onChange={(e) =>
-              //   setFormData((prev) => ({ ...prev, slug: e.target.value }))
-              // }
-              disabled
-              required
-            />
+                <ErrorMessage field="title" />
+              </div>
 
-            {/* Category */}
-            <div className="space-y-2">
-              <label className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground">
-                Category*
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, category: e.target.value }))
-                }
-                className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light focus:outline-none focus:border-foreground transition-colors duration-500"
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat} className="bg-background">
-                    {cat}
-                  </option>
-                ))}
-              </select>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="category"
+                  className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                >
+                  Category*
+                </Label>
+                <select
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light focus:outline-none focus:border-foreground transition-colors duration-500"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat} className="bg-background">
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground">
+              <Label
+                htmlFor="description"
+                className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+              >
                 Description
-              </label>
-              <textarea
+              </Label>
+              <Textarea
+                id="description"
                 value={formData.description}
                 placeholder="A background text describing this project..."
                 onChange={(e) => {
@@ -265,39 +276,61 @@ export function ProjectDialog({
                   clearFieldError('description');
                 }}
                 rows={8}
-                className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light resize-none focus:outline-none focus:border-foreground transition-colors duration-500"
               />
               <ErrorMessage field="description" />
             </div>
 
             {/* Client */}
-            <div>
-              <AnimatedInput
-                placeholder="Magazine"
-                value={formData.client}
-                onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, client: e.target.value }));
-                  clearFieldError('client');
-                }}
-              />
-              <ErrorMessage field="client" />
-            </div>
+            <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-4">
+              <div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="magazine"
+                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                  >
+                    Magazine
+                  </Label>
+                  <AnimatedInput
+                    id="magazine"
+                    placeholder="Magazine"
+                    value={formData.client}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        client: e.target.value,
+                      }));
+                      clearFieldError('client');
+                    }}
+                  />
+                </div>
+                <ErrorMessage field="client" />
+              </div>
 
-            {/* Published Date */}
-            <div>
-              <AnimatedInput
-                placeholder="Published Date"
-                type="date"
-                value={formData.publishedAt}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    publishedAt: e.target.value,
-                  }));
-                  clearFieldError('publishedAt');
-                }}
-              />
-              <ErrorMessage field="publishedAt" />
+              {/* Published Date */}
+              <div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="published_date"
+                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                  >
+                    Published Date
+                  </Label>
+                  <AnimatedInput
+                    id="published_date"
+                    placeholder={'Published Date'}
+                    type="date"
+                    value={formData.publishedAt}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        publishedAt: e.target.value,
+                      }));
+                      clearFieldError('publishedAt');
+                    }}
+                  />
+                </div>
+                <ErrorMessage field="publishedAt" />
+              </div>
             </div>
 
             {/* Team Members */}
@@ -316,7 +349,14 @@ export function ProjectDialog({
               {formData.team.map((member, index) => (
                 <div key={index} className="flex gap-3 items-start">
                   <div className="flex-1">
+                    <Label
+                      htmlFor={`role_${index}`}
+                      className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                    >
+                      Role
+                    </Label>
                     <AnimatedInput
+                      id={`role_${index}`}
                       placeholder="Role"
                       value={member.role}
                       onChange={(e) => {
@@ -327,7 +367,14 @@ export function ProjectDialog({
                     <ErrorMessage field={`team.${index}.role`} />
                   </div>
                   <div className="flex-1">
+                    <Label
+                      htmlFor={`team_member_name_${index}`}
+                      className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                    >
+                      Name
+                    </Label>
                     <AnimatedInput
+                      id={`team_member_name_${index}`}
                       placeholder="Name"
                       value={member.name}
                       onChange={(e) => {

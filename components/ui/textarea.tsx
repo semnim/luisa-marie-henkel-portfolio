@@ -1,22 +1,47 @@
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
-function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+function Textarea({
+  className,
+  ...props
+}: React.ComponentProps<'textarea'> & { active?: boolean }) {
   return (
-    <textarea
-      data-slot="textarea"
-      className={cn(
-        "min-h-32 w-full rounded-sm border border-white/10 bg-white/15 px-4 py-3 text-base font-light text-foreground outline-none transition-all resize-none",
-        "placeholder:text-muted-foreground/50",
-        "focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:border-white/20",
-        "aria-invalid:border-red-400/90 aria-invalid:ring-red-400/20",
-        "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      {...props}
-    />
-  )
+    <div className="relative group">
+      <textarea
+        className={cn(
+          'w-full p-4 text-foreground outline-0 border-muted-foreground border resize-none min-h-[120px] h-full block',
+          className
+        )}
+        {...props}
+      />
+      {/* Animated borders */}
+      <span
+        tabIndex={-1}
+        className={`absolute top-0 left-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out ${
+          props.active && 'w-full'
+        }`}
+      />
+      <span
+        tabIndex={-1}
+        className={`absolute top-0 left-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out ${
+          props.active && 'h-full'
+        }`}
+      />
+      <span
+        tabIndex={-1}
+        className={`absolute bottom-0 right-0 w-0 h-px bg-foreground group-focus-within:w-full group-focus-visible:w-full group-focus:w-full group-hover:w-full transition-all duration-500 ease-out ${
+          props.active && 'w-full'
+        }`}
+      />
+      <span
+        tabIndex={-1}
+        className={`absolute top-0 right-0 w-px h-0 bg-foreground group-focus-within:h-full group-focus-visible:h-full group-focus:h-full group-hover:h-full transition-all duration-500 ease-out ${
+          props.active && 'h-full'
+        }`}
+      />
+    </div>
+  );
 }
 
-export { Textarea }
+export { Textarea };
