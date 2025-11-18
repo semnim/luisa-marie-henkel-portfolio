@@ -1,25 +1,18 @@
 'use client';
 
-import {
-  deleteFeaturedImages,
-  saveAllFeatured,
-} from '../actions/featured';
-import {
-  convertHero,
-  deleteHero,
-  uploadHero,
-} from '../actions/hero';
 import { FeaturedSlideshow } from '@/components/admin/featured-slideshow';
 import { FeaturedSlot } from '@/components/admin/featured-slot';
 import { MediaToolbar } from '@/components/admin/media-toolbar';
 import { MediaUploadBox } from '@/components/admin/media-upload-box';
 import { ProjectSelectorDialog } from '@/components/admin/project-selector-dialog';
+import { useProjects } from '@/features/projects/api';
 import { useMediaPreview } from '@/hooks/use-media-preview';
 import { useMediaUploadState } from '@/hooks/use-media-upload-state';
-import { useHero, useFeaturedProjects } from '../api';
-import { useProjects } from '@/features/projects/api';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { deleteFeaturedImages, saveAllFeatured } from '../actions/featured';
+import { convertHero, deleteHero, uploadHero } from '../actions/hero';
+import { useFeaturedProjects, useHero } from '../api';
 
 interface FeaturedProject {
   id: string;

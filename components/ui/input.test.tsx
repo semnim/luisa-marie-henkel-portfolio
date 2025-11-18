@@ -1,22 +1,22 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { AnimatedInput } from './animated-input';
+import { describe, expect, it } from 'vitest';
+import { Input } from './input';
 
-describe('AnimatedInput', () => {
+describe('Input', () => {
   it('renders input with placeholder', () => {
-    render(<AnimatedInput placeholder="Email" />);
+    render(<Input placeholder="Email" />);
     expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument();
   });
 
   it('passes through input props', () => {
-    render(<AnimatedInput type="password" disabled data-testid="password-input" />);
+    render(<Input type="password" disabled data-testid="password-input" />);
     const input = screen.getByTestId('password-input');
     expect(input).toHaveAttribute('type', 'password');
     expect(input).toBeDisabled();
   });
 
   it('applies custom className', () => {
-    render(<AnimatedInput className="custom-input" />);
+    render(<Input className="custom-input" />);
     expect(screen.getByRole('textbox')).toHaveClass('custom-input');
   });
 });

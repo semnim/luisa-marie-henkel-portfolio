@@ -1,6 +1,6 @@
 'use client';
 
-import { Monitor, RotateCcw, Save, Smartphone } from 'lucide-react';
+import { Monitor, Smartphone } from 'lucide-react';
 
 interface MediaToolbarProps {
   previewMode?: 'desktop' | 'mobile';
@@ -57,20 +57,16 @@ export function MediaToolbar({
           <button
             onClick={onReset}
             disabled={isSaving}
-            className="p-2 text-sm font-light tracking-item-subheading uppercase border text-muted-foreground hover:bg-red-700 transition-all duration-300 disabled:opacity-50"
+            className="p-2 text-sm font-light tracking-item-subheading uppercase border hover:bg-red-700 transition-all duration-300 disabled:opacity-50"
           >
-            <RotateCcw className="w-4 h-4 text-foreground" />
+            Reset
           </button>
           <button
             onClick={onSave}
             disabled={isSaving}
-            className="p-2 text-sm font-light tracking-item-subheading uppercase border text-muted-foreground hover:bg-green-700 hover:opacity-80 transition-all duration-300 disabled:opacity-50"
+            className="p-2 text-sm font-light tracking-item-subheading uppercase border hover:bg-foreground hover:text-background hover:opacity-80 transition-all duration-300 disabled:opacity-50"
           >
-            {isSaving ? (
-              'Saving...'
-            ) : (
-              <Save className="w-4 h-4 text-foreground" />
-            )}
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
       )}

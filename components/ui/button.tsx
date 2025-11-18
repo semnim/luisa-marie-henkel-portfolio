@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ComponentProps } from 'react';
 
-export const AnimatedBorderButton = ({
+export const Button = ({
   children,
   className,
   ...props
@@ -10,7 +10,7 @@ export const AnimatedBorderButton = ({
     <div className="relative" tabIndex={-1}>
       <button
         className={cn(
-          `relative w-full group uppercase tracking-item-subheading bg-background border border-muted-foreground px-4 py-2 overflow-hidden font-light transition-colors ${
+          `relative w-full group uppercase tracking-item-subheading bg-background border border-muted-foreground px-4 py-2 overflow-hidden font-light transition-colors cursor-pointer ${
             props.disabled &&
             'bg-accent/25 text-muted-foreground cursor-not-allowed'
           }`,

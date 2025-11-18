@@ -1,8 +1,7 @@
 'use client';
 
 import { submitContactForm, type ContactFormData } from '@/app/actions/contact';
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { AnimatedInput } from '@/components/auth/animated-input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -10,6 +9,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -94,12 +94,12 @@ export function Contact() {
                   Failed to send message.
                 </p>
               </div>
-              <AnimatedBorderButton
+              <Button
                 onClick={handleReset}
                 className="uppercase tracking-item-subheading font-light"
               >
                 Try Again
-              </AnimatedBorderButton>
+              </Button>
             </div>
           ) : (
             <Form {...form}>
@@ -113,7 +113,7 @@ export function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <AnimatedInput
+                        <Input
                           placeholder="Name*"
                           {...field}
                           disabled={formState === 'loading'}
@@ -130,7 +130,7 @@ export function Contact() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <AnimatedInput
+                        <Input
                           type="email"
                           placeholder="Email*"
                           {...field}
@@ -159,14 +159,11 @@ export function Contact() {
                   )}
                 />
 
-                <AnimatedBorderButton
-                  type="submit"
-                  disabled={formState === 'loading'}
-                >
+                <Button type="submit" disabled={formState === 'loading'}>
                   <span className="relative z-10">
                     {formState === 'loading' ? 'Sending...' : 'Send'}
                   </span>
-                </AnimatedBorderButton>
+                </Button>
               </form>
             </Form>
           )}

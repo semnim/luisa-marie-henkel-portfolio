@@ -1,23 +1,32 @@
-import * as React from "react"
+import { cn } from '@/lib/utils';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
-import { cn } from "@/lib/utils"
-
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+export const Input = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(({ className, placeholder, type, ...props }, ref) => {
   return (
-    <input
-      type={type}
-      data-slot="input"
-      className={cn(
-        "h-11 w-full rounded-sm border border-white/10 bg-white/15 px-4 py-3 text-base font-light text-foreground outline-none transition-all",
-        "placeholder:text-muted-foreground/50",
-        "focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:border-white/20",
-        "aria-invalid:border-red-400/90 aria-invalid:ring-red-400/20",
-        "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      {...props}
-    />
-  )
-}
+    <div className="relative group">
+      <input
+        type={type}
+        ref={ref}
+        placeholder={placeholder}
+        className={cn(
+          'w-full border-0 outline-0 border-muted-foreground rounded-none bg-transparent border-t pt-2 peer',
+          className
+        )}
+        {...props}
+      />
+      <div
+        className={cn(
+          'absolute top-0 left-0 h-px bg-foreground transition-all duration-500 ease-out',
+          props.value
+            ? 'w-full'
+            : 'w-0 group-focus-within:w-full group-hover:w-full'
+        )}
+      />
+    </div>
+  );
+});
 
-export { Input }
+Input.displayName = 'Input';

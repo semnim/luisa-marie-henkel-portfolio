@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { Button } from '../ui/button';
 
 interface Project {
   id: string;
@@ -60,9 +60,9 @@ export function ProjectSelectorDialog({
 
           {/* Actions */}
           <div className="pt-6">
-            <AnimatedBorderButton onClick={onClose} className="w-full">
+            <Button onClick={onClose} className="w-full">
               CANCEL
-            </AnimatedBorderButton>
+            </Button>
           </div>
         </div>
       </div>

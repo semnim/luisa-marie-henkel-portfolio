@@ -128,7 +128,7 @@ export function MediaUploadBox({
         {currentMedia && isRemovable && (
           <button
             onClick={handleRemoveClick}
-            className="absolute top-3 right-3 p-2 bg-transparent rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:text-red-400 z-10"
+            className="absolute top-3 right-3 p-2 bg-transparent rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:text-red-400 z-10 cursor-pointer"
             aria-label="Remove media"
           >
             <X className="w-4 h-4" strokeWidth={1.5} />

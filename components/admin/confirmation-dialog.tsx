@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { Button } from '../ui/button';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -41,19 +41,17 @@ export function ConfirmationDialog({
 
           {/* Actions */}
           <div className="flex gap-3">
-            <AnimatedBorderButton onClick={onCancel} className="flex-1">
+            <Button onClick={onCancel} className="flex-1">
               {cancelLabel}
-            </AnimatedBorderButton>
-            <AnimatedBorderButton
+            </Button>
+            <Button
               onClick={onConfirm}
               className={`flex-1 ${
-                variant === 'danger'
-                  ? 'text-red-500 hover:text-red-400'
-                  : ''
+                variant === 'danger' ? 'text-red-500 hover:text-red-400' : ''
               }`}
             >
               {confirmLabel}
-            </AnimatedBorderButton>
+            </Button>
           </div>
         </div>
       </div>

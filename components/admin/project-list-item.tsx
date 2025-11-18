@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useState } from 'react';
-import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { Button } from '../ui/button';
 
 interface ProjectListItemProps {
   project: PortfolioProjectItem;
@@ -114,30 +114,21 @@ export function ProjectListItem({
       {/* Expanded Actions */}
       {isExpanded && (
         <div className="px-6 pb-4 flex flex-col lg:flex-row gap-2 lg:gap-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-500">
-          <AnimatedBorderButton
-            onClick={onEditMetadata}
-            className="w-full text-sm"
-          >
+          <Button onClick={onEditMetadata} className="w-full text-sm">
             edit
-          </AnimatedBorderButton>
-          <AnimatedBorderButton
-            onClick={onManageMedia}
-            className="w-full text-sm"
-          >
+          </Button>
+          <Button onClick={onManageMedia} className="w-full text-sm">
             media
-          </AnimatedBorderButton>
-          <AnimatedBorderButton
-            onClick={onManageGallery}
-            className="w-full text-sm"
-          >
+          </Button>
+          <Button onClick={onManageGallery} className="w-full text-sm">
             gallery
-          </AnimatedBorderButton>
-          <AnimatedBorderButton
+          </Button>
+          <Button
             onClick={onDelete}
             className="w-full text-sm text-red-500 hover:text-red-400"
           >
             DELETE
-          </AnimatedBorderButton>
+          </Button>
         </div>
       )}
     </div>

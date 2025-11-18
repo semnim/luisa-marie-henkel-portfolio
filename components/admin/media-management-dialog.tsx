@@ -6,7 +6,7 @@ import { useMediaUploadState } from '@/hooks/use-media-upload-state';
 import { Image } from '@/lib/schema';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { Button } from '../ui/button';
 import { MediaToolbar } from './media-toolbar';
 import { MediaUploadBox } from './media-upload-box';
 
@@ -38,7 +38,11 @@ export function MediaManagementDialog({
 
   // Thumbnail state
   const [thumbnailState, thumbnailActions] = useMediaUploadState();
-  const thumbnailPreview = useMediaPreview(thumbnailState, undefined, previewMode);
+  const thumbnailPreview = useMediaPreview(
+    thumbnailState,
+    undefined,
+    previewMode
+  );
 
   // Load existing images when dialog opens
   useEffect(() => {
@@ -268,13 +272,13 @@ export function MediaManagementDialog({
           </div>
           {/* Close Button */}
           <div className="flex pt-6">
-            <AnimatedBorderButton
+            <Button
               onClick={onClose}
               disabled={isSavingHero || isSavingThumbnail}
               className="w-full max-w-xs mx-auto"
             >
               CANCEL
-            </AnimatedBorderButton>
+            </Button>
           </div>
         </div>
       </div>

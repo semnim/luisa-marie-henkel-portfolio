@@ -7,7 +7,7 @@ import { CheckCircle2, GripVertical, Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { AnimatedBorderButton } from '../auth/animated-border-button';
+import { Button } from '../ui/button';
 
 type UploadStatus = 'pending' | 'uploading' | 'success' | 'error';
 
@@ -357,7 +357,10 @@ export function GalleryManagementDialog({
               <h3 className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-4">
                 Gallery Images ({orderedImages.length})
               </h3>
-              <div ref={dragContainer} className="space-y-2">
+              <div
+                ref={dragContainer}
+                className="space-y-2 pointer-events-auto"
+              >
                 {orderedImages.map((image) => (
                   <div
                     key={image.id}
@@ -447,20 +450,20 @@ export function GalleryManagementDialog({
 
           {/* Actions */}
           <div className="flex gap-3 pt-6">
-            <AnimatedBorderButton
+            <Button
               onClick={handleClose}
               disabled={isSaving}
               className="flex-1"
             >
               CANCEL
-            </AnimatedBorderButton>
-            <AnimatedBorderButton
+            </Button>
+            <Button
               onClick={handleSave}
               disabled={isSaving || !projectId}
               className="flex-1"
             >
               {isSaving ? 'SAVING...' : 'SAVE'}
-            </AnimatedBorderButton>
+            </Button>
           </div>
         </div>
       </div>

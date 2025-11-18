@@ -69,7 +69,7 @@ export function FeaturedSlot({
         </h3>
         <button
           onClick={onProjectRemove}
-          className="text-xs hover:text-red-500 uppercase tracking-item-subheading shrink-0 flex justify-start items-start"
+          className="text-xs hover:text-red-500 uppercase tracking-item-subheading shrink-0 flex justify-start items-start cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

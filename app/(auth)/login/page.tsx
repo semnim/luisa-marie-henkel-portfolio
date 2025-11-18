@@ -1,7 +1,6 @@
 'use client';
 
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
-import { AnimatedInput } from '@/components/auth/animated-input';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -9,6 +8,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { loginUser, type LoginFormData } from '@/lib/auth-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -78,12 +78,12 @@ export default function LoginPage() {
                   {errorMessage}
                 </p>
               </div>
-              <AnimatedBorderButton
+              <Button
                 onClick={handleReset}
                 className="uppercase tracking-item-subheading font-light"
               >
                 Try Again
-              </AnimatedBorderButton>
+              </Button>
             </div>
           ) : (
             <Form {...form}>
@@ -97,7 +97,7 @@ export default function LoginPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <AnimatedInput
+                        <Input
                           type="email"
                           placeholder="Email*"
                           disabled={formState === 'loading'}
@@ -115,7 +115,7 @@ export default function LoginPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <AnimatedInput
+                        <Input
                           type="password"
                           placeholder="Password*"
                           disabled={formState === 'loading'}
@@ -127,12 +127,9 @@ export default function LoginPage() {
                   )}
                 />
 
-                <AnimatedBorderButton
-                  type="submit"
-                  disabled={formState === 'loading'}
-                >
+                <Button type="submit" disabled={formState === 'loading'}>
                   {formState === 'loading' ? 'Logging in...' : 'Login'}
-                </AnimatedBorderButton>
+                </Button>
 
                 <p className="text-center text-sm text-muted-foreground">
                   Need an account?{' '}

@@ -1,11 +1,11 @@
 'use client';
 
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
+import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useAboutContent } from './api/get-about-content';
 import { useUpdateAboutParagraphs } from './api/update-about-paragraphs';
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
 
 export const AboutAdmin = () => {
   const { data: content } = useAboutContent();
@@ -74,12 +74,12 @@ export const AboutAdmin = () => {
           ABOUT
         </h2>
         <div className="flex w-fit gap-3">
-          <AnimatedBorderButton onClick={handleReset} disabled={isPending}>
+          <Button onClick={handleReset} disabled={isPending}>
             Reset
-          </AnimatedBorderButton>
-          <AnimatedBorderButton onClick={handleSave} disabled={isPending}>
+          </Button>
+          <Button onClick={handleSave} disabled={isPending}>
             {isPending ? 'Saving...' : 'Save'}
-          </AnimatedBorderButton>
+          </Button>
         </div>
       </div>
       <div className="space-y-16">
@@ -90,12 +90,12 @@ export const AboutAdmin = () => {
             value={currentParagraph}
             onChange={(e) => setCurrentParagraph(e.target.value)}
           />
-          <AnimatedBorderButton
+          <Button
             onClick={handleAddParagraph}
             disabled={currentParagraph.trim().length === 0 || isPending}
           >
             ADD PARAGRAPH
-          </AnimatedBorderButton>
+          </Button>
         </div>
         <section className="space-y-6">
           {paragraphs.map((p, index) => (
@@ -109,13 +109,13 @@ export const AboutAdmin = () => {
                 value={p}
                 onChange={(e) => handleUpdateParagraph(index, e.target.value)}
               />
-              <AnimatedBorderButton
+              <Button
                 className="max-w-[150px] mt-2"
                 onClick={() => handleDeleteParagraph(index)}
                 disabled={isPending}
               >
                 Delete
-              </AnimatedBorderButton>
+              </Button>
             </div>
           ))}
         </section>

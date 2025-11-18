@@ -15,8 +15,8 @@ import {
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { AnimatedBorderButton } from '../auth/animated-border-button';
-import { AnimatedInput } from '../auth/animated-input';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 
@@ -197,15 +197,15 @@ export function ProjectDialog({
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95">
-      <div className="w-full container overflow-y-auto max-h-dvh">
-        <div className="space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95">
+      <div className="w-full overflow-y-auto max-h-dvh px-6">
+        <div className="space-y-6 container mx-auto">
           {/* Header */}
-          <h2 className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10">
+          <h2 className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10 pt-4">
             {mode === 'create' ? 'CREATE PROJECT' : 'EDIT PROJECT'}
           </h2>
 
-          <div className="space-y-6">
+          <div className="space-y-6 mb-30">
             <div className="space-y-6 lg:gap-4 lg:grid lg:grid-cols-2">
               <div className="space-y-2 relative">
                 <div className="flex justify-between">
@@ -219,7 +219,7 @@ export function ProjectDialog({
                     {formData.slug}
                   </p>
                 </div>
-                <AnimatedInput
+                <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
@@ -290,7 +290,7 @@ export function ProjectDialog({
                   >
                     Magazine
                   </Label>
-                  <AnimatedInput
+                  <Input
                     id="magazine"
                     placeholder="Magazine"
                     value={formData.client}
@@ -315,7 +315,7 @@ export function ProjectDialog({
                   >
                     Published Date
                   </Label>
-                  <AnimatedInput
+                  <Input
                     id="published_date"
                     placeholder={'Published Date'}
                     type="date"
@@ -347,49 +347,61 @@ export function ProjectDialog({
                 </button>
               </div>
               {formData.team.map((member, index) => (
-                <div key={index} className="flex gap-3 items-start">
-                  <div className="flex-1">
-                    <Label
-                      htmlFor={`role_${index}`}
-                      className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
-                    >
-                      Role
-                    </Label>
-                    <AnimatedInput
-                      id={`role_${index}`}
-                      placeholder="Role"
-                      value={member.role}
-                      onChange={(e) => {
-                        updateTeamMember(index, 'role', e.target.value);
-                        clearFieldError(`team.${index}.role`);
-                      }}
-                    />
-                    <ErrorMessage field={`team.${index}.role`} />
+                <div
+                  key={index}
+                  className="flex gap-3 items-start border-b pb-8 border-border p-2"
+                >
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-center">
+                      <p className="text-muted-foreground tracking-widest text-xs">
+                        TEAM MEMBER #{index + 1}
+                      </p>
+                      <button
+                        onClick={() => removeTeamMember(index)}
+                        className="ml-auto flex-0 min-w-4 text-red-500 hover:text-red-400 transition-colors flex items-start h-full duration-300 cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="flex flex-col lg:flex-row gap-8">
+                      <div className="flex-1">
+                        <Label
+                          htmlFor={`role_${index}`}
+                          className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
+                        >
+                          Role
+                        </Label>
+                        <Input
+                          id={`role_${index}`}
+                          placeholder="Role"
+                          value={member.role}
+                          onChange={(e) => {
+                            updateTeamMember(index, 'role', e.target.value);
+                            clearFieldError(`team.${index}.role`);
+                          }}
+                        />
+                        <ErrorMessage field={`team.${index}.role`} />
+                      </div>
+                      <div className="flex-1">
+                        <Label
+                          htmlFor={`team_member_name_${index}`}
+                          className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
+                        >
+                          Name
+                        </Label>
+                        <Input
+                          id={`team_member_name_${index}`}
+                          placeholder="Name"
+                          value={member.name}
+                          onChange={(e) => {
+                            updateTeamMember(index, 'name', e.target.value);
+                            clearFieldError(`team.${index}.name`);
+                          }}
+                        />
+                        <ErrorMessage field={`team.${index}.name`} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <Label
-                      htmlFor={`team_member_name_${index}`}
-                      className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
-                    >
-                      Name
-                    </Label>
-                    <AnimatedInput
-                      id={`team_member_name_${index}`}
-                      placeholder="Name"
-                      value={member.name}
-                      onChange={(e) => {
-                        updateTeamMember(index, 'name', e.target.value);
-                        clearFieldError(`team.${index}.name`);
-                      }}
-                    />
-                    <ErrorMessage field={`team.${index}.name`} />
-                  </div>
-                  <button
-                    onClick={() => removeTeamMember(index)}
-                    className="text-red-500 hover:text-red-400 transition-colors flex items-start duration-300"
-                  >
-                    <X />
-                  </button>
                 </div>
               ))}
               {formData.team.length === 0 && (
@@ -401,17 +413,17 @@ export function ProjectDialog({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-center gap-3 bg-background pt-6 pb-3 fixed bottom-0 inset-x-0 w-full">
-            <AnimatedBorderButton onClick={onClose} className="flex-1">
+          <div className="flex justify-center gap-3 bg-background pt-3 pb-3 fixed bottom-0 inset-x-0 w-full">
+            <Button onClick={onClose} className="flex-1">
               CANCEL
-            </AnimatedBorderButton>
-            <AnimatedBorderButton
+            </Button>
+            <Button
               onClick={handleSave}
               className="flex-1"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'SAVING...' : 'SAVE'}
-            </AnimatedBorderButton>
+            </Button>
           </div>
         </div>
       </div>

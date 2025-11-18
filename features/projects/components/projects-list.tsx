@@ -5,14 +5,14 @@ import { GalleryManagementDialog } from '@/components/admin/gallery-management-d
 import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
 import { ProjectDialog } from '@/components/admin/project-dialog';
 import { ProjectListItem } from '@/components/admin/project-list-item';
-import { AnimatedBorderButton } from '@/components/auth/animated-border-button';
+import { Button } from '@/components/ui/button';
+import { ErrorState, LoadingSpinner } from '@/features/shared/components';
 import { Image, Project, ProjectWithImages } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
-import { useProjectsWithImages, useDeleteProject } from '../api';
-import { fetchAllProjectsWithImages } from '../actions';
-import { ErrorState, LoadingSpinner } from '@/features/shared/components';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
+import { fetchAllProjectsWithImages } from '../actions';
+import { useDeleteProject, useProjectsWithImages } from '../api';
 
 export type PortfolioProjectItem = Project & {
   images: Image[];
@@ -137,9 +137,7 @@ export function ProjectsList() {
           <h1 className="text-xl mt-2 lg:mt-0 font-light tracking-item-subheading uppercase">
             PROJECTS
           </h1>
-          <AnimatedBorderButton onClick={handleCreateProject}>
-            CREATE NEW PROJECT
-          </AnimatedBorderButton>
+          <Button onClick={handleCreateProject}>CREATE NEW PROJECT</Button>
         </div>
 
         {/* Project List */}

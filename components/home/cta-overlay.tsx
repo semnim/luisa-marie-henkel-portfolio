@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const TITLE = 'FEATURED';
 const SUBTITLE = 'A CURATED SELECTION';
-const LINK_LABEL = 'see all projects';
+const LINK_LABEL = 'SEE ALL PROJECTS';
 
 export const CtaOverlay = () => {
   return (
@@ -15,7 +15,7 @@ export const CtaOverlay = () => {
       </p>
 
       <Link
-        className="mt-4 text-xs border rounded-none border-foreground/40 p-2 relative"
+        className="mt-4 text-xs border-b border-foreground/50 hover:border-foreground transition-[border] rounded-none p-2 relative"
         href="/portfolio"
         onClick={(e) => {
           e.stopPropagation();
