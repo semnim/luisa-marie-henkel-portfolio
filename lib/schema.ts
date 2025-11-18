@@ -76,6 +76,34 @@ export const images = pgTable(
   ]
 );
 
+export const contentItems = pgTable(
+  'content_items',
+  {
+    id: serial('id').primaryKey(),
+    page: text('page').notNull(),
+    section: text('section').notNull(),
+    key: text('key').notNull(),
+    value: text('value').notNull(),
+    position: integer('position'),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
+  },
+  (table) => [
+    // Single items: unique by page/section/key
+    index('unique_single_content_idx')
+      .on(table.page, table.section, table.key)
+      .where(sql`position IS NULL`),
+
+    // Array items: unique by page/section/key/position
+    index('unique_array_content_idx')
+      .on(table.page, table.section, table.key, table.position)
+      .where(sql`position IS NOT NULL`),
+
+    // Query optimization
+    index('content_lookup_idx').on(table.page, table.section),
+  ]
+);
+
 // Relations
 export const projectsRelations = relations(projects, ({ many }) => ({
   images: many(images),
@@ -100,3 +128,6 @@ export type ProjectWithImages = Project & { images: Image[] };
 export type Category = (typeof categoryEnum.enumValues)[number];
 export type ImageType = (typeof imageTypeEnum.enumValues)[number];
 export type ImageVariant = (typeof imageVariantEnum.enumValues)[number];
+
+export type ContentItem = typeof contentItems.$inferSelect;
+export type NewContentItem = typeof contentItems.$inferInsert;
