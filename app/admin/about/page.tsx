@@ -1,4 +1,4 @@
-import { AboutAdmin } from '@/features/about/about-admin';
+import { AboutAdmin } from '@/features/admin/about/components/about-admin';
 import { getAboutContentQueryOptions } from '@/features/about/api/get-about-content';
 import {
   dehydrate,

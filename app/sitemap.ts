@@ -1,12 +1,14 @@
-import type { MetadataRoute } from 'next';
-import { fetchProjects } from './(public)/portfolio/actions';
+import { fetchAllProjectsWithImages } from '@/features/portfolio/actions/fetch-projects';
 import { createSlugFromProjectTitle } from '@/lib/utils';
+import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const projects = await fetchProjects();
+  const projects = await fetchAllProjectsWithImages();
 
   const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
-    url: `https://luisamariehenkel.com/portfolio/${createSlugFromProjectTitle(project.title)}`,
+    url: `https://luisamariehenkel.com/portfolio/${createSlugFromProjectTitle(
+      project.title
+    )}`,
     lastModified: project.createdAt || new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,

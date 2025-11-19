@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { AboutAdmin } from '@/features/admin/about/components/about-admin';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AboutAdmin } from './about-admin';
-import * as actions from './actions';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as actions from './actions/about-content';
 
 // Mock sonner toast
 vi.mock('sonner', () => ({
@@ -68,7 +68,9 @@ describe('AboutAdmin Integration', () => {
       </QueryClientProvider>
     );
 
-    await waitFor(() => screen.getByPlaceholderText('Write a new paragraph...'));
+    await waitFor(() =>
+      screen.getByPlaceholderText('Write a new paragraph...')
+    );
 
     const input = screen.getByPlaceholderText('Write a new paragraph...');
     await user.type(input, 'New paragraph');
@@ -155,7 +157,9 @@ describe('AboutAdmin Integration', () => {
 
     // Should revert to original
     await waitFor(() => {
-      const resetTextareas = screen.getAllByPlaceholderText('Write a paragraph...');
+      const resetTextareas = screen.getAllByPlaceholderText(
+        'Write a paragraph...'
+      );
       expect(resetTextareas[0]).toHaveValue('Test paragraph 1');
     });
   });
@@ -226,7 +230,9 @@ describe('AboutAdmin Integration', () => {
     await user.click(saveButton);
 
     const { toast } = await import('sonner');
-    expect(toast.error).toHaveBeenCalledWith('At least one paragraph is required');
+    expect(toast.error).toHaveBeenCalledWith(
+      'At least one paragraph is required'
+    );
     expect(actions.updateAboutParagraphs).not.toHaveBeenCalled();
   });
 
@@ -294,7 +300,9 @@ describe('AboutAdmin Integration', () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('About content saved successfully');
+      expect(toast.success).toHaveBeenCalledWith(
+        'About content saved successfully'
+      );
     });
   });
 
@@ -345,7 +353,9 @@ describe('AboutAdmin Integration', () => {
       </QueryClientProvider>
     );
 
-    await waitFor(() => screen.getByPlaceholderText('Write a new paragraph...'));
+    await waitFor(() =>
+      screen.getByPlaceholderText('Write a new paragraph...')
+    );
 
     const input = screen.getByPlaceholderText('Write a new paragraph...');
     const addButton = screen.getByText('ADD PARAGRAPH');

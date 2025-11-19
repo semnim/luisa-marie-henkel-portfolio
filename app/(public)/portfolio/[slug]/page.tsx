@@ -1,9 +1,12 @@
-import { HeroSection } from '@/components/work/hero-section';
-import { ProjectGallery } from '@/components/work/project-gallery';
-import { ProjectMetadata } from '@/components/work/project-metadata';
+import {
+  fetchProjectData,
+  fetchProjectImages,
+} from '@/features/portfolio/actions/fetch-projects';
+import { HeroSection } from '@/features/portfolio/components/hero-section';
+import { ProjectGallery } from '@/features/portfolio/components/project-gallery';
+import { ProjectMetadata } from '@/features/portfolio/components/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import type { Metadata } from 'next';
-import { fetchProjectData, fetchProjectImages } from './actions';
 
 export async function generateMetadata({
   params,

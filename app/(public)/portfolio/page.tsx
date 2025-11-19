@@ -1,10 +1,10 @@
-import { IndexPopover } from '@/components/portfolio/index-popover';
-import { MasonryGrid } from '@/components/work/masonry-grid';
+import { fetchAllProjectsWithImages } from '@/features/portfolio/actions/fetch-projects';
+import { IndexPopover } from '@/features/portfolio/components/index-popover';
+import { MasonryGrid } from '@/features/portfolio/components/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { fetchProjects } from './actions';
 
 export const metadata = {
   title: 'Portfolio',
@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 export default async function WorkPage() {
-  const projects = await fetchProjects();
+  const projects = await fetchAllProjectsWithImages();
   return (
     <main className="md:h-screen">
       <h2 className="hidden text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-20 h-15 fixed top-0 left-1/2 -translate-x-1/2 md:flex items-center mix-blend-difference">

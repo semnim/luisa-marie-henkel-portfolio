@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/admin/sidebar';
+import { Sidebar } from '@/components/ui/sidebar';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';

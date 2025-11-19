@@ -1,5 +1,9 @@
-import { useMutation, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
-import { updateAboutParagraphs } from '../actions';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
+import { updateAboutParagraphs } from '../actions/about-content';
 
 type UseUpdateAboutParagraphsOptions = {
   mutationConfig?: UseMutationOptions<

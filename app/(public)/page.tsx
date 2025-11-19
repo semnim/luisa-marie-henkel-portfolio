@@ -1,5 +1,5 @@
-import { CtaOverlay } from '@/components/home/cta-overlay';
-import { FeaturedShowcase } from '@/components/home/featured-showcase';
+import { CtaOverlay } from '@/features/home/components/cta-overlay';
+import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
 import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import Image from 'next/image';

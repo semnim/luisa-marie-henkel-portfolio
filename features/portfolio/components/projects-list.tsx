@@ -1,12 +1,13 @@
 'use client';
 
-import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
-import { GalleryManagementDialog } from '@/components/admin/gallery-management-dialog';
-import { MediaManagementDialog } from '@/components/admin/media-management-dialog';
-import { ProjectDialog } from '@/components/admin/project-dialog';
-import { ProjectListItem } from '@/components/admin/project-list-item';
 import { Button } from '@/components/ui/button';
-import { ErrorState, LoadingSpinner } from '@/features/shared/components';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { ErrorState } from '@/components/ui/error-state';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { GalleryManagementDialog } from '@/features/admin/portfolio/components/gallery-management-dialog';
+import { MediaManagementDialog } from '@/features/admin/portfolio/components/media-management-dialog';
+import { ProjectDialog } from '@/features/admin/portfolio/components/project-dialog';
+import { ProjectListItem } from '@/features/admin/portfolio/components/project-list-item';
 import { Image, Project, ProjectWithImages } from '@/lib/schema';
 import { toPartial } from '@/lib/utils';
 import { useCallback, useState } from 'react';

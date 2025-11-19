@@ -8,7 +8,7 @@ import {
   getFeaturedProjectsQueryOptions,
 } from '@/features/home/api';
 import { getProjectsQueryOptions } from '@/features/portfolio/api';
-import { HomeAdmin } from '@/features/home/components';
+import { HomeAdmin } from '@/features/admin/home/components/home-admin';
 
 export default async function AdminHomePage() {
   const queryClient = new QueryClient();

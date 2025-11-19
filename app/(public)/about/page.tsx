@@ -1,4 +1,4 @@
-import { fetchAboutContent } from '@/features/about/actions';
+import { fetchAboutContent } from '@/features/about/actions/about-content';
 import Image from 'next/image';
 
 export const metadata = {
