@@ -1,7 +1,7 @@
-import { CtaOverlay } from '@/features/home/components/cta-overlay';
-import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
 import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
+import { CtaOverlay } from '@/features/home/components/cta-overlay';
+import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
 import Image from 'next/image';
 
 export const metadata = {
@@ -41,7 +41,7 @@ export default async function Home() {
     name: 'Luisa-Marie Henkel',
     jobTitle: ['Art Director', 'Stylist'],
     url: 'https://luisamariehenkel.com',
-    sameAs: [],
+    sameAs: ['https://www.instagram.com/oh_luisa/'],
     workExample: featuredProjects.map((project) => ({
       '@type': 'CreativeWork',
       name: project.projectTitle,
@@ -62,7 +62,6 @@ export default async function Home() {
           sizes="(min-width: 768px) 100vw, 0px"
           alt={heroAlt}
           priority
-          unoptimized
         />
         <Image
           src={heroMobile}
