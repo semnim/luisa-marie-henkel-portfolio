@@ -1,6 +1,6 @@
 import { QueryClient, HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { getProjectsWithImagesQueryOptions } from '@/features/projects/api';
-import { ProjectsList } from '@/features/projects/components';
+import { getProjectsWithImagesQueryOptions } from '@/features/portfolio/api';
+import { ProjectsList } from '@/features/portfolio/components';
 
 export default async function AdminPortfolioPage() {
   const queryClient = new QueryClient();

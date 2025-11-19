@@ -5,7 +5,7 @@ import { FeaturedSlot } from '@/components/admin/featured-slot';
 import { MediaToolbar } from '@/components/admin/media-toolbar';
 import { MediaUploadBox } from '@/components/admin/media-upload-box';
 import { ProjectSelectorDialog } from '@/components/admin/project-selector-dialog';
-import { useProjects } from '@/features/projects/api';
+import { useProjects } from '@/features/portfolio/api';
 import { useMediaPreview } from '@/hooks/use-media-preview';
 import { useMediaUploadState } from '@/hooks/use-media-upload-state';
 import { useCallback, useEffect, useState } from 'react';

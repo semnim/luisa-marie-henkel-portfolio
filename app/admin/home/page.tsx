@@ -7,7 +7,7 @@ import {
   getHeroQueryOptions,
   getFeaturedProjectsQueryOptions,
 } from '@/features/home/api';
-import { getProjectsQueryOptions } from '@/features/projects/api';
+import { getProjectsQueryOptions } from '@/features/portfolio/api';
 import { HomeAdmin } from '@/features/home/components';
 
 export default async function AdminHomePage() {

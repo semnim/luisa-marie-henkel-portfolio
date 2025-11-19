@@ -1,10 +1,10 @@
 'use client';
 
-import type { ProjectFormData } from '@/features/projects/actions/projects';
+import type { ProjectFormData } from '@/features/portfolio/actions/projects';
 import {
   createProject,
   updateProject,
-} from '@/features/projects/actions/projects';
+} from '@/features/portfolio/actions/projects';
 import { CATEGORIES } from '@/lib/constants';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import {
