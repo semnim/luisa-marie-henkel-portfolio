@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     default: 'Luisa-Marie Henkel',
     template: 'Luisa-Marie Henkel - %s',
   },
+  alternates: {
+    canonical: './',
+  },
   description:
     'Art director & stylist portfolio showcasing creative work in fashion, editorial, and commercial projects.',
   keywords: [
