@@ -1,16 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { loginUser } from './auth-actions';
 
-// Mock auth client
-vi.mock('./auth-client', () => ({
-  authClient: {
-    signIn: {
-      email: vi.fn(),
+// Mock auth
+vi.mock('./auth', () => ({
+  auth: {
+    api: {
+      signInEmail: vi.fn(),
     },
   },
 }));
 
-import { authClient } from './auth-client';
+// Mock next/headers
+vi.mock('next/headers', () => ({
+  headers: vi.fn(),
+}));
+
+import { auth } from './auth';
 
 describe('loginUser', () => {
   beforeEach(() => {
@@ -18,9 +23,11 @@ describe('loginUser', () => {
   });
 
   it('returns success when login succeeds', async () => {
-    vi.mocked(authClient.signIn.email).mockResolvedValue({
-      data: { user: { id: '1', email: 'test@example.com' } },
-      error: null,
+    vi.mocked(auth.api.signInEmail).mockResolvedValue({
+      user: { id: '1', email: 'test@example.com', name: 'Test User', image: null, emailVerified: true, createdAt: new Date(), updatedAt: new Date() },
+      token: 'token',
+      redirect: false,
+      url: undefined
     });
 
     const result = await loginUser({
@@ -33,10 +40,7 @@ describe('loginUser', () => {
   });
 
   it('returns error when login fails', async () => {
-    vi.mocked(authClient.signIn.email).mockResolvedValue({
-      data: null,
-      error: { message: 'Invalid credentials' },
-    });
+    vi.mocked(auth.api.signInEmail).mockResolvedValue(null as unknown as Awaited<ReturnType<typeof auth.api.signInEmail>>);
 
     const result = await loginUser({
       email: 'test@example.com',
@@ -44,11 +48,11 @@ describe('loginUser', () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error).toBe('Invalid credentials');
+    expect(result.error).toBe('Login failed');
   });
 
   it('handles network errors gracefully', async () => {
-    vi.mocked(authClient.signIn.email).mockRejectedValue(
+    vi.mocked(auth.api.signInEmail).mockRejectedValue(
       new Error('Network error')
     );
 
@@ -58,6 +62,6 @@ describe('loginUser', () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error).toBe('Unable to connect. Please try again.');
+    expect(result.error).toBe('Network error');
   });
 });

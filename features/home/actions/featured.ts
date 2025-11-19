@@ -1,9 +1,9 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { images, type Image } from '@/lib/schema';
+import { images } from '@/lib/schema';
 import { v2 as cloudinary } from 'cloudinary';
-import { eq, and } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,

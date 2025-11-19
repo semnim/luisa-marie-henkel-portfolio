@@ -14,7 +14,7 @@ vi.mock('sonner', () => ({
 }));
 
 // Mock server actions
-vi.mock('./actions', () => ({
+vi.mock('./actions/about-content', () => ({
   fetchAboutContent: vi.fn(),
   updateAboutParagraphs: vi.fn(),
 }));
@@ -240,13 +240,13 @@ describe('AboutAdmin Integration', () => {
     const user = userEvent.setup();
 
     // Make mutation pending by not resolving immediately
-    let resolveMutation: (value: any) => void;
-    const mutationPromise = new Promise((resolve) => {
+    let resolveMutation: (value: actions.ActionResult) => void;
+    const mutationPromise = new Promise<actions.ActionResult>((resolve) => {
       resolveMutation = resolve;
     });
 
     vi.mocked(actions.updateAboutParagraphs).mockReturnValue(
-      mutationPromise as any
+      mutationPromise
     );
 
     render(

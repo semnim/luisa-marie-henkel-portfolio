@@ -1,6 +1,5 @@
 'use client';
 
-import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { queryConfig } from '@/lib/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -22,14 +21,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       {process.env.DEV && <ReactQueryDevtools />}
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
-      >
         {children}
         <Toaster />
-      </ThemeProvider>
     </QueryClientProvider>
   );
 };

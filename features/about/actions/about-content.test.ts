@@ -34,6 +34,8 @@ describe('fetchAboutContent', () => {
         key: 'paragraph',
         value: 'Para 1',
         position: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         id: 2,
@@ -42,6 +44,8 @@ describe('fetchAboutContent', () => {
         key: 'paragraph',
         value: 'Para 2',
         position: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ];
 
@@ -83,8 +87,8 @@ describe('updateAboutParagraphs', () => {
     const deleteMock = vi.fn();
     const valuesMock = vi.fn();
 
-    vi.mocked(db.delete).mockReturnValue({ where: deleteMock } as any);
-    vi.mocked(db.insert).mockReturnValue({ values: valuesMock } as any);
+    vi.mocked(db.delete).mockReturnValue({ where: deleteMock } as unknown as ReturnType<typeof db.delete>);
+    vi.mocked(db.insert).mockReturnValue({ values: valuesMock } as unknown as ReturnType<typeof db.insert>);
 
     const result = await updateAboutParagraphs(['Para 1', 'Para 2']);
 
@@ -118,8 +122,8 @@ describe('updateAboutParagraphs', () => {
     const deleteMock = vi.fn();
     const valuesMock = vi.fn();
 
-    vi.mocked(db.delete).mockReturnValue({ where: deleteMock } as any);
-    vi.mocked(db.insert).mockReturnValue({ values: valuesMock } as any);
+    vi.mocked(db.delete).mockReturnValue({ where: deleteMock } as unknown as ReturnType<typeof db.delete>);
+    vi.mocked(db.insert).mockReturnValue({ values: valuesMock } as unknown as ReturnType<typeof db.insert>);
 
     await updateAboutParagraphs(['  Para 1  ', '  Para 2  ']);
 

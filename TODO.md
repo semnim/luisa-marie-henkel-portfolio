@@ -2,7 +2,6 @@
 
 ## CLEAN-UP
 
-- Clean up unused components
 - Clean up package json
 - Extract common UI components
 - Evaluate which UI components should be radix / shadcn
