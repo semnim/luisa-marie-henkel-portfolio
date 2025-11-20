@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /admin/
-Disallow: /login
-
-Sitemap: https://luisamariehenkel.com/sitemap.xml
