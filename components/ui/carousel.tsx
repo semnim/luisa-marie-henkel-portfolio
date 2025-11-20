@@ -178,7 +178,7 @@ function IconButton({
   return (
     <button
       className={cn(
-        "absolute rounded-full size-7 bg-background/50 inline-flex items-center justify-center [&_svg:not([class*='size-'])]:size-4",
+        "absolute rounded-full size-7 bg-background/50 inline-flex items-center justify-center [&_svg:not([class*='size-'])]:size-4 z-50",
         props.disabled ? 'opacity-0' : 'opacity-100',
         className
       )}
@@ -190,19 +190,21 @@ function IconButton({
   );
 }
 function CarouselPrevious(props: React.ComponentProps<'button'>) {
+  const { className, ...restProps } = props;
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <IconButton
       data-slot="carousel-previous"
-      className={
+      className={cn(
         orientation === 'horizontal'
-          ? 'top-1/2 -right-12 -translate-y-1/2'
-          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90'
-      }
+          ? 'top-1/2 -left-12 -translate-y-1/2'
+          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
+        className
+      )}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
-      {...props}
+      {...restProps}
     >
       <ChevronLeft />
     </IconButton>
@@ -210,19 +212,21 @@ function CarouselPrevious(props: React.ComponentProps<'button'>) {
 }
 
 function CarouselNext(props: React.ComponentProps<'button'>) {
+  const { className, ...restProps } = props;
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
     <IconButton
       data-slot="carousel-next"
-      className={
+      className={cn(
         orientation === 'horizontal'
           ? 'top-1/2 -right-12 -translate-y-1/2'
-          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90'
-      }
+          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
+        className
+      )}
       disabled={!canScrollNext}
       onClick={scrollNext}
-      {...props}
+      {...restProps}
     >
       <ChevronRight />
     </IconButton>

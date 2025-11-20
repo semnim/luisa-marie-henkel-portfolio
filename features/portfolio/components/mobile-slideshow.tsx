@@ -1,11 +1,5 @@
 'use client';
 
-import { useIsMobile } from '@/hooks/use-is-mobile';
-import type { Image as ImageType } from '@/lib/schema';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
 import {
   Carousel,
   CarouselApi,
@@ -13,6 +7,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import { useIsMobile } from '@/hooks/use-is-mobile';
+import type { Image as ImageType } from '@/lib/schema';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 type ExtendedImage = ImageType & {
   href?: string;
@@ -45,7 +45,7 @@ export function MobileSlideshow({
 }: MobileSlideshowProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const count = images.length;
   const isMobile = useIsMobile();
 
   React.useEffect(() => {
@@ -53,7 +53,6 @@ export function MobileSlideshow({
       return;
     }
 
-    setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
 
     api.on('select', () => {
@@ -127,11 +126,11 @@ export function MobileSlideshow({
 
       {withCount && (
         <>
-          <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 bottom-18">
+          <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 z-50 bottom-18">
             {current + 1} / {count}
           </div>
 
-          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2">
+          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2  z-50">
             {images.map((_, index) => (
               <button
                 key={index}

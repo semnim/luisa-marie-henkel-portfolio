@@ -2,6 +2,7 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import React from 'react';
 import { AppProvider } from './provider';
 
@@ -37,7 +38,9 @@ export const metadata: Metadata = {
     'set design',
     'visual storytelling',
   ],
-  authors: [{ name: 'Luisa-Marie Henkel', url: 'https://luisamariehenkel.com' }],
+  authors: [
+    { name: 'Luisa-Marie Henkel', url: 'https://luisamariehenkel.com' },
+  ],
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -82,6 +85,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <body className={`${inter.className} antialiased flex flex-col`}>
+        <NextTopLoader color="#fafafa" showSpinner={false} />
+
         <AppProvider>{children}</AppProvider>
       </body>
     </html>
