@@ -33,7 +33,6 @@ export default async function Home() {
 
   const heroAlt =
     heroImages.both?.altText || heroImages.desktop?.altText || 'homepage hero';
-
   // JSON-LD structured data
   const jsonLd = {
     '@context': 'https://schema.org',
