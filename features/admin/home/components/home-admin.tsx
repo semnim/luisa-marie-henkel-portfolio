@@ -2,16 +2,26 @@
 
 import { FeaturedSlideshow } from '@/features/admin/home/components/featured-slideshow';
 import { FeaturedSlot } from '@/features/admin/home/components/featured-slot';
+import { hasFeaturedChanges } from '@/features/admin/home/lib/has-featured-changes';
+import { getProjectsToDelete } from '@/features/admin/home/utils/featured-changes';
+import { getUnselectedProjects } from '@/features/admin/home/utils/filter-projects';
+import { useMediaPreview, useMediaUploadState } from '@/features/admin/hooks';
 import { MediaToolbar } from '@/features/admin/portfolio/components/media-toolbar';
 import { MediaUploadBox } from '@/features/admin/portfolio/components/media-upload-box';
 import { ProjectSelectorDialog } from '@/features/admin/portfolio/components/project-selector-dialog';
+import {
+  deleteFeaturedImages,
+  saveAllFeatured,
+} from '@/features/home/actions/featured';
+import {
+  convertHero,
+  deleteHero,
+  uploadHero,
+} from '@/features/home/actions/hero';
+import { useFeaturedProjects, useHero } from '@/features/home/api';
 import { useProjects } from '@/features/portfolio/api';
-import { useMediaPreview, useMediaUploadState } from '@/features/admin/hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { deleteFeaturedImages, saveAllFeatured } from '@/features/home/actions/featured';
-import { convertHero, deleteHero, uploadHero } from '@/features/home/actions/hero';
-import { useFeaturedProjects, useHero } from '@/features/home/api';
 
 interface FeaturedProject {
   id: string;
@@ -325,19 +335,8 @@ export function HomeAdmin() {
     setSelectedSlotIndex(null);
   };
 
-  const handleFeaturedProjectRemove = async (index: number) => {
-    const project = featuredProjects[index];
-
-    // Delete images from Cloudinary and DB if they exist
-    if (project) {
-      const result = await deleteFeaturedImages(project.slug);
-      if (!result.success) {
-        toast.error('Failed to delete images');
-        return;
-      }
-    }
-
-    // Clear from projects array and reset upload state
+  const handleFeaturedProjectRemove = (index: number) => {
+    // Only clear from state - actual deletion happens on save
     const updated = [...featuredProjects] as [
       FeaturedProject | undefined,
       FeaturedProject | undefined,
@@ -378,6 +377,18 @@ export function HomeAdmin() {
         featured2Actions,
         featured3Actions,
       ];
+
+      // Handle removed projects first
+      const projectsToDelete = getProjectsToDelete(
+        initialFeaturedProjects,
+        featuredProjects
+      );
+      for (const slug of projectsToDelete) {
+        const result = await deleteFeaturedImages(slug);
+        if (!result.success) {
+          throw new Error(`Failed to delete ${slug}: ${result.error}`);
+        }
+      }
 
       // Build data array for projects with changes
       const dataToSave: Array<{
@@ -481,6 +492,8 @@ export function HomeAdmin() {
     featured2Actions.reset();
     featured3Actions.reset();
     setFeaturedProjects(initialFeaturedProjects);
+    // Restore existingImages for initial projects
+    loadFeaturedImages();
   };
 
   const hasHeroChanges =
@@ -491,37 +504,11 @@ export function HomeAdmin() {
     heroState.deleteBoth ||
     heroState.convertBothTo !== null;
 
-  // Check if project selections have changed
-  const hasProjectSelectionChanges = featuredProjects.some(
-    (project, index) => project?.id !== initialFeaturedProjects[index]?.id
+  const hasFeaturedChangesValue = hasFeaturedChanges(
+    initialFeaturedProjects,
+    featuredProjects,
+    [featured0State, featured1State, featured2State, featured3State]
   );
-
-  const hasFeaturedChanges =
-    hasProjectSelectionChanges ||
-    featured0State.desktop !== null ||
-    featured0State.mobile !== null ||
-    featured0State.deleteDesktop ||
-    featured0State.deleteMobile ||
-    featured0State.deleteBoth ||
-    featured0State.convertBothTo !== null ||
-    featured1State.desktop !== null ||
-    featured1State.mobile !== null ||
-    featured1State.deleteDesktop ||
-    featured1State.deleteMobile ||
-    featured1State.deleteBoth ||
-    featured1State.convertBothTo !== null ||
-    featured2State.desktop !== null ||
-    featured2State.mobile !== null ||
-    featured2State.deleteDesktop ||
-    featured2State.deleteMobile ||
-    featured2State.deleteBoth ||
-    featured2State.convertBothTo !== null ||
-    featured3State.desktop !== null ||
-    featured3State.mobile !== null ||
-    featured3State.deleteDesktop ||
-    featured3State.deleteMobile ||
-    featured3State.deleteBoth ||
-    featured3State.convertBothTo !== null;
 
   if (isLoading) {
     return (
@@ -634,9 +621,9 @@ export function HomeAdmin() {
           </FeaturedSlideshow>
 
           {/* Featured Actions */}
-          {hasFeaturedChanges && (
+          {hasFeaturedChangesValue && (
             <MediaToolbar
-              hasChanges={hasFeaturedChanges}
+              hasChanges={hasFeaturedChangesValue}
               isSaving={isSaving}
               onSave={handleSaveAllFeatured}
               onReset={handleResetFeatured}
@@ -648,11 +635,13 @@ export function HomeAdmin() {
       {/* Project Selector Dialog */}
       <ProjectSelectorDialog
         isOpen={selectorOpen}
-        projects={availableProjects.map((p) => ({
-          id: p.slug,
-          title: p.title,
-          slug: p.slug,
-        }))}
+        projects={getUnselectedProjects(availableProjects, featuredProjects).map(
+          (p) => ({
+            id: p.slug,
+            title: p.title,
+            slug: p.slug,
+          })
+        )}
         onClose={() => {
           setSelectorOpen(false);
           setSelectedSlotIndex(null);
