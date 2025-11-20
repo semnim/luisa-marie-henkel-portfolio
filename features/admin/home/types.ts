@@ -15,6 +15,16 @@ export interface AvailableProject {
 
 export type PreviewMode = 'desktop' | 'mobile';
 
+type FeaturedSlots = readonly [
+  FeaturedProject | undefined,
+  FeaturedProject | undefined,
+  FeaturedProject | undefined,
+  FeaturedProject | undefined
+];
+
+type MediaUploadStates = readonly [MediaUploadState, MediaUploadState, MediaUploadState, MediaUploadState];
+type MediaUploadActionsArray = readonly [MediaUploadActions, MediaUploadActions, MediaUploadActions, MediaUploadActions];
+
 export interface HeroStateReturn {
   state: MediaUploadState;
   actions: MediaUploadActions;
@@ -28,21 +38,11 @@ export interface HeroHandlersReturn {
 }
 
 export interface FeaturedStateReturn {
-  projects: readonly [
-    FeaturedProject | undefined,
-    FeaturedProject | undefined,
-    FeaturedProject | undefined,
-    FeaturedProject | undefined
-  ];
-  setProjects: (projects: readonly [FeaturedProject | undefined, FeaturedProject | undefined, FeaturedProject | undefined, FeaturedProject | undefined]) => void;
-  initialProjects: readonly [
-    FeaturedProject | undefined,
-    FeaturedProject | undefined,
-    FeaturedProject | undefined,
-    FeaturedProject | undefined
-  ];
-  states: [MediaUploadState, MediaUploadState, MediaUploadState, MediaUploadState];
-  actions: [MediaUploadActions, MediaUploadActions, MediaUploadActions, MediaUploadActions];
+  projects: FeaturedSlots;
+  setProjects: (projects: FeaturedSlots) => void;
+  initialProjects: FeaturedSlots;
+  states: MediaUploadStates;
+  actions: MediaUploadActionsArray;
   loadProjects: () => Promise<void>;
 }
 
