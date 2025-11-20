@@ -1,8 +1,8 @@
 'use client';
 
-import type { PreviewMode, AvailableProject } from '../../types';
 import type { Image } from '@/lib/schema';
-import { useFeaturedState, useFeaturedHandlers } from '../../hooks';
+import { useFeaturedHandlers, useFeaturedState } from '../../hooks';
+import type { AvailableProject, PreviewMode } from '../../types';
 import { FeaturedGrid } from './featured-grid';
 import { FeaturedToolbar } from './featured-toolbar';
 import { ProjectSelector } from './project-selector';
@@ -44,19 +44,21 @@ export function FeaturedSection({
   });
 
   return (
-    <section className="space-y-6">
-      <h2 className="text-xl font-light tracking-item-subheading uppercase">
+    <section className="h-[calc(100dvh-32px)] flex flex-col md:block md:h-auto md:space-y-6">
+      <h2 className="text-xl font-light tracking-item-subheading uppercase shrink-0 mb-3 md:mb-6">
         FEATURED PROJECTS
       </h2>
 
-      <FeaturedGrid
-        projects={featuredState.projects}
-        states={featuredState.states}
-        actions={featuredState.actions}
-        previewMode={previewMode}
-        onSelect={handlers.handleSelect}
-        onRemove={handlers.handleRemove}
-      />
+      <div className="flex-1 min-h-0 md:contents">
+        <FeaturedGrid
+          projects={featuredState.projects}
+          states={featuredState.states}
+          actions={featuredState.actions}
+          previewMode={previewMode}
+          onSelect={handlers.handleSelect}
+          onRemove={handlers.handleRemove}
+        />
+      </div>
 
       {handlers.hasChanges && (
         <FeaturedToolbar

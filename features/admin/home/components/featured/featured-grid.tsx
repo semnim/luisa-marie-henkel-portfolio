@@ -1,7 +1,11 @@
 'use client';
 
+import type {
+  MediaUploadActions,
+  MediaUploadState,
+} from '@/features/admin/hooks';
 import type { FeaturedProject, PreviewMode } from '../../types';
-import type { MediaUploadState, MediaUploadActions } from '@/features/admin/hooks';
+import { FeaturedMobileSlideshow } from './featured-mobile-slideshow';
 import { FeaturedSlotWrapper } from './featured-slot-wrapper';
 
 interface FeaturedGridProps {
@@ -11,8 +15,18 @@ interface FeaturedGridProps {
     FeaturedProject | undefined,
     FeaturedProject | undefined
   ];
-  states: readonly [MediaUploadState, MediaUploadState, MediaUploadState, MediaUploadState];
-  actions: readonly [MediaUploadActions, MediaUploadActions, MediaUploadActions, MediaUploadActions];
+  states: readonly [
+    MediaUploadState,
+    MediaUploadState,
+    MediaUploadState,
+    MediaUploadState
+  ];
+  actions: readonly [
+    MediaUploadActions,
+    MediaUploadActions,
+    MediaUploadActions,
+    MediaUploadActions
+  ];
   previewMode: PreviewMode;
   onSelect: (index: number) => void;
   onRemove: (index: number) => void;
@@ -27,19 +41,34 @@ export function FeaturedGrid({
   onRemove,
 }: FeaturedGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      {[0, 1, 2, 3].map((index) => (
-        <FeaturedSlotWrapper
-          key={index}
-          index={index}
-          project={projects[index]}
-          state={states[index]}
-          actions={actions[index]}
+    <>
+      {/* Mobile slideshow - visible on small viewports */}
+      <div className="h-full md:hidden">
+        <FeaturedMobileSlideshow
+          projects={projects}
+          states={states}
+          actions={actions}
           previewMode={previewMode}
-          onSelect={() => onSelect(index)}
-          onRemove={() => onRemove(index)}
+          onSelect={onSelect}
+          onRemove={onRemove}
         />
-      ))}
-    </div>
+      </div>
+
+      {/* Desktop grid - visible on medium+ viewports */}
+      <div className="hidden md:grid grid-cols-4 gap-4">
+        {[0, 1, 2, 3].map((index) => (
+          <FeaturedSlotWrapper
+            key={index}
+            index={index}
+            project={projects[index]}
+            state={states[index]}
+            actions={actions[index]}
+            previewMode={previewMode}
+            onSelect={() => onSelect(index)}
+            onRemove={() => onRemove(index)}
+          />
+        ))}
+      </div>
+    </>
   );
 }

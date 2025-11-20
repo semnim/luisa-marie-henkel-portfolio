@@ -30,6 +30,7 @@ type ImageWithTitle = ImageType & {
 type MobileSlideshowProps = {
   images: ExtendedImage[];
   withCount?: boolean;
+  onImageClick?: (image: ExtendedImage) => void;
 };
 
 const withOverlay = (img: ExtendedImage): img is ImageWithTitle => {
@@ -42,6 +43,7 @@ const withLink = (img: ExtendedImage): img is ImageWithLink => {
 export function MobileSlideshow({
   images,
   withCount = false,
+  onImageClick,
 }: MobileSlideshowProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
@@ -114,9 +116,13 @@ export function MobileSlideshow({
               );
             }
             return (
-              <div key={index} className={wrapperClassName}>
+              <button
+                key={index}
+                className={wrapperClassName}
+                onClick={() => onImageClick?.(img)}
+              >
                 {figure}
-              </div>
+              </button>
             );
           })}
         </CarouselContent>

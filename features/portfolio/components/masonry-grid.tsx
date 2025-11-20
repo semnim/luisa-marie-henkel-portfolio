@@ -15,9 +15,10 @@ type ProjectImage = {
 
 type MasonryGridProps = {
   images: ProjectImage[];
+  onImageClick?: (image: ProjectImage) => void;
 };
 
-export function MasonryGrid({ images }: MasonryGridProps) {
+export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
   if (images.length === 0) {
     return (
       <div className="hidden md:flex items-center justify-center min-h-[400px] bg-gray-100">
@@ -29,16 +30,8 @@ export function MasonryGrid({ images }: MasonryGridProps) {
   return (
     <div className="hidden md:block columns-2 lg:columns-3 gap-0 relative pt-0">
       <div className="absolute bottom-0 inset-x-0 h-[200px] z-20 mask-t-from-1% bg-radial from-100% from-background to-99% to-transparent" />
-      {images.map((img, index) => (
-        <Link
-          href={
-            img.title
-              ? `/portfolio/${createSlugFromProjectTitle(img.title)}`
-              : ''
-          }
-          key={img.id}
-          className={` group overflow-hidden snap-center relative h-dvh lg:h-[500px]`}
-        >
+      {images.map((img, index) => {
+        const content = (
           <figure
             key={img.id}
             className="break-inside-avoid p-1 group cursor-pointer"
@@ -63,8 +56,29 @@ export function MasonryGrid({ images }: MasonryGridProps) {
               )}
             </div>
           </figure>
-        </Link>
-      ))}
+        );
+
+        if (img.title) {
+          return (
+            <Link
+              href={`/portfolio/${createSlugFromProjectTitle(img.title)}`}
+              key={img.id}
+            >
+              {content}
+            </Link>
+          );
+        }
+
+        return (
+          <button
+            key={img.id}
+            onClick={() => onImageClick?.(img)}
+            className="w-full text-left"
+          >
+            {content}
+          </button>
+        );
+      })}
     </div>
   );
 }

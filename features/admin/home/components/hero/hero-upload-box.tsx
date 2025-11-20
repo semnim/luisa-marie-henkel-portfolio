@@ -18,14 +18,18 @@ export function HeroUploadBox({
   onFileSelect,
   onRemove,
 }: HeroUploadBoxProps) {
+  const isMobile = aspectRatio === '9/16';
+
   return (
-    <MediaUploadBox
-      aspectRatio={aspectRatio}
-      accept="both"
-      currentMedia={currentMedia}
-      onFileSelect={onFileSelect}
-      onRemove={onRemove}
-      isRemovable={isRemovable}
-    />
+    <div className={isMobile ? 'max-w-md mx-auto' : ''}>
+      <MediaUploadBox
+        aspectRatio={aspectRatio}
+        accept="both"
+        currentMedia={currentMedia}
+        onFileSelect={onFileSelect}
+        onRemove={onRemove}
+        isRemovable={isRemovable}
+      />
+    </div>
   );
 }

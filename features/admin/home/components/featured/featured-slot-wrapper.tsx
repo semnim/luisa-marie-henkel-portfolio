@@ -1,8 +1,11 @@
 'use client';
 
-import type { FeaturedProject, PreviewMode } from '../../types';
-import type { MediaUploadActions, MediaUploadState } from '@/features/admin/hooks';
+import type {
+  MediaUploadActions,
+  MediaUploadState,
+} from '@/features/admin/hooks';
 import { useMediaPreview } from '@/features/admin/hooks';
+import type { FeaturedProject, PreviewMode } from '../../types';
 import { FeaturedSlot } from '../featured-slot';
 
 interface FeaturedSlotWrapperProps {
@@ -13,6 +16,7 @@ interface FeaturedSlotWrapperProps {
   previewMode: PreviewMode;
   onSelect: () => void;
   onRemove: () => void;
+  isMobileSlideshow?: boolean;
 }
 
 export function FeaturedSlotWrapper({
@@ -22,6 +26,7 @@ export function FeaturedSlotWrapper({
   previewMode,
   onSelect,
   onRemove,
+  isMobileSlideshow = false,
 }: FeaturedSlotWrapperProps) {
   const { currentMedia, isRemovable } = useMediaPreview(
     state,
@@ -38,6 +43,7 @@ export function FeaturedSlotWrapper({
       actions={actions}
       onSelect={onSelect}
       onProjectRemove={onRemove}
+      isMobileSlideshow={isMobileSlideshow}
     />
   );
 }
