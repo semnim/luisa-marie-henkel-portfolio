@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 type MasonryGridProps = {
-  images: ImageType[];
+  images: (ImageType | (ImageType & { title: string }))[];
   onImageClick?: (image: ImageType) => void;
 };
 
@@ -37,7 +37,7 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
                 height={img.height || 1200}
                 className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
               />
-              {img.title && (
+              {'title' in img && img.title && (
                 <figcaption className="absolute inset-x-0 bottom-0 lg:hidden flex lg:group-hover:flex flex-col justify-start items-center bg-linear-to-t from-black/75 to-transparent mb-auto">
                   <div className="text-center z-20 pb-8">
                     <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
@@ -50,7 +50,7 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
           </figure>
         );
 
-        if (img.title) {
+        if ('title' in img && img.title) {
           return (
             <Link
               href={`/portfolio/${createSlugFromProjectTitle(img.title)}`}
@@ -65,7 +65,8 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
           <button
             key={img.id}
             onClick={() => onImageClick?.(img)}
-            className="w-full text-left"
+            className="w-full text-left outline-0 focus:outline-0"
+            tabIndex={-1}
           >
             {content}
           </button>
