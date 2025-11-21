@@ -1,21 +1,13 @@
 'use client';
 
+import { Image as ImageType } from '@/lib/schema';
 import { createSlugFromProjectTitle } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type ProjectImage = {
-  id: number;
-  publicId: string;
-  imageUrl: string;
-  width: number | null;
-  height: number | null;
-  title?: string;
-};
-
 type MasonryGridProps = {
-  images: ProjectImage[];
-  onImageClick?: (image: ProjectImage) => void;
+  images: ImageType[];
+  onImageClick?: (image: ImageType) => void;
 };
 
 export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
