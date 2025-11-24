@@ -79,19 +79,15 @@ export default async function WorkPage() {
       </section>
       <section className="h-dvh max-h-dvh md:h-[calc(100dvh-60px)] md:max-h-[calc(100dvh-60px)] flex-col hidden md:block">
         <MasonryGrid
-          images={projects.map((project) => {
-            const thumbnail = project.images.find(
-              (i) => i.imageType === 'thumbnail'
-            );
-            return {
-              id: project.id,
-              publicId: thumbnail?.publicId ?? '',
-              imageUrl: thumbnail?.imageUrl ?? '',
-              width: null,
-              height: null,
-              title: project.title,
-            };
-          })}
+          images={projects
+            .map((project) => {
+              const thumbnail = project.images.find(
+                (i) => i.imageType === 'thumbnail'
+              );
+              if (!thumbnail) return undefined;
+              return { ...thumbnail, title: project.title };
+            })
+            .filter((img) => img !== undefined)}
         />
       </section>
     </main>
