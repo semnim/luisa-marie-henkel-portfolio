@@ -132,11 +132,11 @@ export function MobileSlideshow({
 
       {withCount && (
         <>
-          <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 z-40 bottom-18">
+          <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 z-30 bottom-18">
             {current + 1} / {count}
           </div>
 
-          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2  z-40">
+          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2  z-30">
             {images.map((_, index) => (
               <button
                 key={index}
