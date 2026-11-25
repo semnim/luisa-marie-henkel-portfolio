@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  FullscreenDialog,
+  FullscreenDialogDescription,
+  FullscreenDialogTitle,
+} from '@/components/ui/fullscreen-dialog';
 import { Button } from '@/components/ui/button';
 import { saveGalleryImages } from '@/features/admin/portfolio/actions/gallery';
 import { Image as DBImage } from '@/lib/schema';
@@ -297,19 +302,22 @@ export function GalleryManagementDialog({
     onClose();
   };
 
-  if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95 overflow-y-auto">
+    <FullscreenDialog
+      open={isOpen}
+      onClose={handleClose}
+      dismissible={!isSaving}
+    >
       <div className="w-full max-w-3xl py-4">
         <div className="space-y-8">
           {/* Header */}
           <div>
-            <h2 className="text-xl font-light tracking-item-subheading uppercase mb-2">
+            <FullscreenDialogTitle className="text-xl font-light tracking-item-subheading uppercase mb-2">
               MANAGE GALLERY
-            </h2>
-            <p className="text-sm text-muted-foreground font-light">
+            </FullscreenDialogTitle>
+            <FullscreenDialogDescription className="text-sm text-muted-foreground font-light">
               {projectTitle}
-            </p>
+            </FullscreenDialogDescription>
           </div>
 
           {/* Hidden File Input */}
@@ -467,6 +475,6 @@ export function GalleryManagementDialog({
           </div>
         </div>
       </div>
-    </div>
+    </FullscreenDialog>
   );
 }

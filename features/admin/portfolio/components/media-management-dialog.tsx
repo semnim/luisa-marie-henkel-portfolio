@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  FullscreenDialog,
+  FullscreenDialogDescription,
+  FullscreenDialogTitle,
+} from '@/components/ui/fullscreen-dialog';
 import { Button } from '@/components/ui/button';
 import { useMediaPreview, useMediaUploadState } from '@/features/admin/hooks';
 import { saveProjectMedia } from '@/features/admin/portfolio/actions/project-media';
@@ -163,27 +168,30 @@ export function MediaManagementDialog({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center px-6 bg-background/95 overflow-y-auto">
+    <FullscreenDialog
+      open={isOpen}
+      onClose={onClose}
+      align="start"
+      dismissible={!isSavingHero && !isSavingThumbnail}
+    >
       <div className="w-full max-w-5xl py-4">
         <div className="space-y-8">
           {/* Header */}
           <div>
             <div className="flex justify-between">
-              <h1 className="text-xl font-light tracking-item-subheading uppercase mb-2">
+              <FullscreenDialogTitle className="text-xl font-light tracking-item-subheading uppercase mb-2">
                 MANAGE MEDIA
-              </h1>
+              </FullscreenDialogTitle>
               {/* Shared Preview Toolbar */}
               <MediaToolbar
                 previewMode={previewMode}
                 onPreviewModeChange={setPreviewMode}
               />
             </div>
-            <p className="text-sm text-muted-foreground font-light">
+            <FullscreenDialogDescription className="text-sm text-muted-foreground font-light">
               {projectTitle}
-            </p>
+            </FullscreenDialogDescription>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-4">
@@ -281,6 +289,6 @@ export function MediaManagementDialog({
           </div>
         </div>
       </div>
-    </div>
+    </FullscreenDialog>
   );
 }

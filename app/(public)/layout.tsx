@@ -1,7 +1,5 @@
 'use client';
 import { Nav } from '@/components/ui/nav';
-import '../globals.css';
-
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 

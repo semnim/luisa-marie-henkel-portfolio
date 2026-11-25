@@ -77,7 +77,7 @@ export function MobileSlideshow({
     (img) => img.variant === 'mobile' || img.variant === 'both'
   );
   return (
-    <div className="relative md:hidden flex flex-col justify-start max-h-dvh h-dvh overscroll-none">
+    <div className="relative md:hidden flex flex-col justify-start max-h-dvh h-dvh">
       <Carousel
         className="flex-1 flex flex-col justify-center max-h-dvh h-dvh"
         setApi={setApi}
@@ -88,9 +88,10 @@ export function MobileSlideshow({
               <figure className="flex flex-1 relative">
                 <Image
                   src={img.imageUrl}
-                  alt={`Image #${index}`}
+                  alt={img.altText || img.title || `Image ${index + 1}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 25vw"
+                  loading={index === 0 ? 'eager' : undefined}
                   className="object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
                   unoptimized
                 />
@@ -117,9 +118,11 @@ export function MobileSlideshow({
             }
             return (
               <button
+                type="button"
                 key={index}
                 className={wrapperClassName}
                 onClick={() => onImageClick?.(img)}
+                aria-label={`Enlarge image ${index + 1}`}
               >
                 {figure}
               </button>

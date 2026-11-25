@@ -2,6 +2,7 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { PageScrollArea } from '@/components/ui/page-scroll-area';
 import NextTopLoader from 'nextjs-toploader';
 import React from 'react';
 import { AppProvider } from './provider';
@@ -84,10 +85,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${inter.className} antialiased flex flex-col`}>
+      <body className={`${inter.className} antialiased h-dvh overflow-hidden`}>
         <NextTopLoader color="#fafafa" showSpinner={false} />
 
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <PageScrollArea>{children}</PageScrollArea>
+        </AppProvider>
       </body>
     </html>
   );

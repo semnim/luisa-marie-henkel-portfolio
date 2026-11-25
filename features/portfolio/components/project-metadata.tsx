@@ -36,33 +36,40 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
       <div className="md:hidden mb-4 flex-1 flex flex-col">
         <div className="flex gap-2">
           {description && (
-            <h2
+            <button
+              type="button"
+              aria-pressed={selectedTab === 'description'}
               onClick={() => setSelectedTab('description')}
-              className={`mb-3 text-lg md:text-2xl tracking-wide ${
+              className={`mb-3 text-lg md:text-2xl tracking-wide cursor-pointer ${
                 selectedTab === 'description'
                   ? 'text-foreground'
                   : 'text-muted-foreground'
               }`}
             >
               DESCRIPTION
-            </h2>
+            </button>
           )}
           {team && description && (
-            <h2 className="mb-3 text-lg md:text-2xl tracking-wide text-white/75">
+            <span
+              aria-hidden
+              className="mb-3 text-lg md:text-2xl tracking-wide text-white/75"
+            >
               /
-            </h2>
+            </span>
           )}
           {team && (
-            <h2
+            <button
+              type="button"
+              aria-pressed={selectedTab === 'team'}
               onClick={() => setSelectedTab('team')}
-              className={`mb-3 text-lg md:text-2xl tracking-wide ${
+              className={`mb-3 text-lg md:text-2xl tracking-wide cursor-pointer ${
                 selectedTab === 'team'
                   ? 'text-foreground'
                   : 'text-muted-foreground'
               }`}
             >
               TEAM
-            </h2>
+            </button>
           )}
         </div>
         {selectedTab === 'description' && (

@@ -173,10 +173,12 @@ function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
 function IconButton({
   className,
   children,
+  label,
   ...props
-}: React.ComponentProps<'button'>) {
+}: React.ComponentProps<'button'> & { label: string }) {
   return (
     <button
+      type="button"
       className={cn(
         "absolute rounded-full size-7 bg-background/50 inline-flex items-center justify-center [&_svg:not([class*='size-'])]:size-4 z-30",
         props.disabled ? 'opacity-0' : 'opacity-100',
@@ -185,7 +187,7 @@ function IconButton({
       {...props}
     >
       {children}
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{label}</span>
     </button>
   );
 }
@@ -195,6 +197,7 @@ function CarouselPrevious(props: React.ComponentProps<'button'>) {
 
   return (
     <IconButton
+      label="Previous slide"
       data-slot="carousel-previous"
       className={cn(
         orientation === 'horizontal'
@@ -217,6 +220,7 @@ function CarouselNext(props: React.ComponentProps<'button'>) {
 
   return (
     <IconButton
+      label="Next slide"
       data-slot="carousel-next"
       className={cn(
         orientation === 'horizontal'

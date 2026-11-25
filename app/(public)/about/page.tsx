@@ -18,8 +18,9 @@ const Paragraph = ({ text }: { text: string }) => {
 export default async function AboutPage() {
   const { paragraphs } = await fetchAboutContent();
   return (
-    <main className="overscroll-none">
-      <section className="mt-15 snap-start flex items-center justify-center px-6 h-full">
+    <main>
+      <h1 className="sr-only">About</h1>
+      <section className="mt-15 flex items-center justify-center px-6">
         <div className="max-w-xl w-full my-auto">
           <div className="space-y-8 text-center max-w-xl mx-auto mt-4">
             <Image

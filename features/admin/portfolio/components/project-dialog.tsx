@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  FullscreenDialog,
+  FullscreenDialogDescription,
+  FullscreenDialogTitle,
+} from '@/components/ui/fullscreen-dialog';
 import type { ProjectFormData } from '@/features/portfolio/actions/create-project';
 import {
   createProject,
@@ -195,238 +200,243 @@ export function ProjectDialog({
     ) : null;
   };
 
-  if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95">
-      <div className="w-full overflow-y-auto max-h-dvh px-6">
-        <div className="space-y-6 container mx-auto">
-          {/* Header */}
-          <h2 className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10 pt-4">
-            {mode === 'create' ? 'CREATE PROJECT' : 'EDIT PROJECT'}
-          </h2>
+    <FullscreenDialog
+      open={isOpen}
+      onClose={onClose}
+      align="start"
+      dismissible={!isSubmitting}
+    >
+      <div className="space-y-6 container mx-auto">
+        {/* Header */}
+        <FullscreenDialogTitle className="text-xl font-light tracking-item-subheading uppercase sticky top-0 bg-background z-10 pt-4">
+          {mode === 'create' ? 'CREATE PROJECT' : 'EDIT PROJECT'}
+        </FullscreenDialogTitle>
+        <FullscreenDialogDescription className="sr-only">
+          Fields marked with * are required.
+        </FullscreenDialogDescription>
 
-          <div className="space-y-6 mb-30">
-            <div className="space-y-6 lg:gap-4 lg:grid lg:grid-cols-2">
-              <div className="space-y-2 relative">
-                <div className="flex justify-between">
-                  <Label
-                    htmlFor="title"
-                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
-                  >
-                    Title*
-                  </Label>
-                  <p className="absolute top-10 right-0 text-sm font-light lowercase text-muted-foreground">
-                    {formData.slug}
-                  </p>
-                </div>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  required
-                />
-
-                <ErrorMessage field="title" />
-              </div>
-
-              <div className="space-y-2">
+        <div className="space-y-6 mb-30">
+          <div className="space-y-6 lg:gap-4 lg:grid lg:grid-cols-2">
+            <div className="space-y-2 relative">
+              <div className="flex justify-between">
                 <Label
-                  htmlFor="category"
+                  htmlFor="title"
                   className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
                 >
-                  Category*
+                  Title*
                 </Label>
-                <select
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      category: e.target.value,
-                    }))
-                  }
-                  className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light focus:outline-none focus:border-foreground transition-colors duration-500"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-background">
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                <p className="absolute top-10 right-0 text-sm font-light lowercase text-muted-foreground">
+                  {formData.slug}
+                </p>
               </div>
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                required
+              />
+
+              <ErrorMessage field="title" />
             </div>
 
-            {/* Description */}
             <div className="space-y-2">
               <Label
-                htmlFor="description"
+                htmlFor="category"
                 className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
               >
-                Description
+                Category*
               </Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                placeholder="A background text describing this project..."
-                onChange={(e) => {
+              <select
+                id="category"
+                value={formData.category}
+                onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    description: e.target.value,
-                  }));
-                  clearFieldError('description');
-                }}
-                rows={8}
-              />
-              <ErrorMessage field="description" />
+                    category: e.target.value,
+                  }))
+                }
+                className="w-full bg-transparent border-t border-muted-foreground pt-2 text-foreground font-light focus:outline-none focus:border-foreground transition-colors duration-500"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat} className="bg-background">
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label
+              htmlFor="description"
+              className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+            >
+              Description
+            </Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              placeholder="A background text describing this project..."
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }));
+                clearFieldError('description');
+              }}
+              rows={8}
+            />
+            <ErrorMessage field="description" />
+          </div>
+
+          {/* Client */}
+          <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-4">
+            <div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="magazine"
+                  className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                >
+                  Magazine
+                </Label>
+                <Input
+                  id="magazine"
+                  placeholder="Magazine"
+                  value={formData.client}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      client: e.target.value,
+                    }));
+                    clearFieldError('client');
+                  }}
+                />
+              </div>
+              <ErrorMessage field="client" />
             </div>
 
-            {/* Client */}
-            <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-4">
-              <div>
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="magazine"
-                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
-                  >
-                    Magazine
-                  </Label>
-                  <Input
-                    id="magazine"
-                    placeholder="Magazine"
-                    value={formData.client}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        client: e.target.value,
-                      }));
-                      clearFieldError('client');
-                    }}
-                  />
-                </div>
-                <ErrorMessage field="client" />
+            {/* Published Date */}
+            <div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="published_date"
+                  className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
+                >
+                  Published Date
+                </Label>
+                <Input
+                  id="published_date"
+                  placeholder={'Published Date'}
+                  type="date"
+                  value={formData.publishedAt}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      publishedAt: e.target.value,
+                    }));
+                    clearFieldError('publishedAt');
+                  }}
+                />
               </div>
-
-              {/* Published Date */}
-              <div>
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="published_date"
-                    className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground"
-                  >
-                    Published Date
-                  </Label>
-                  <Input
-                    id="published_date"
-                    placeholder={'Published Date'}
-                    type="date"
-                    value={formData.publishedAt}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        publishedAt: e.target.value,
-                      }));
-                      clearFieldError('publishedAt');
-                    }}
-                  />
-                </div>
-                <ErrorMessage field="publishedAt" />
-              </div>
+              <ErrorMessage field="publishedAt" />
             </div>
+          </div>
 
-            {/* Team Members */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground">
-                  Team Members
-                </label>
-                <button
-                  onClick={addTeamMember}
-                  className="text-xs font-light tracking-item-subheading uppercase text-muted-foreground hover:text-foreground transition-colors duration-300"
-                >
-                  + ADD
-                </button>
-              </div>
-              {formData.team.map((member, index) => (
-                <div
-                  key={index}
-                  className="flex gap-3 items-start border-b pb-8 border-border p-2"
-                >
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center justify-center">
-                      <p className="text-muted-foreground tracking-widest text-xs">
-                        TEAM MEMBER #{index + 1}
-                      </p>
-                      <button
-                        onClick={() => removeTeamMember(index)}
-                        className="ml-auto flex-0 min-w-4 text-red-500 hover:text-red-400 transition-colors flex items-start h-full duration-300 cursor-pointer"
+          {/* Team Members */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground">
+                Team Members
+              </label>
+              <button
+                onClick={addTeamMember}
+                className="text-xs font-light tracking-item-subheading uppercase text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                + ADD
+              </button>
+            </div>
+            {formData.team.map((member, index) => (
+              <div
+                key={index}
+                className="flex gap-3 items-start border-b pb-8 border-border p-2"
+              >
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center justify-center">
+                    <p className="text-muted-foreground tracking-widest text-xs">
+                      TEAM MEMBER #{index + 1}
+                    </p>
+                    <button
+                      onClick={() => removeTeamMember(index)}
+                      className="ml-auto flex-0 min-w-4 text-red-500 hover:text-red-400 transition-colors flex items-start h-full duration-300 cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex-1">
+                      <Label
+                        htmlFor={`role_${index}`}
+                        className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
                       >
-                        <X className="w-5 h-5" />
-                      </button>
+                        Role
+                      </Label>
+                      <Input
+                        id={`role_${index}`}
+                        placeholder="Role"
+                        value={member.role}
+                        onChange={(e) => {
+                          updateTeamMember(index, 'role', e.target.value);
+                          clearFieldError(`team.${index}.role`);
+                        }}
+                      />
+                      <ErrorMessage field={`team.${index}.role`} />
                     </div>
-                    <div className="flex flex-col lg:flex-row gap-8">
-                      <div className="flex-1">
-                        <Label
-                          htmlFor={`role_${index}`}
-                          className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
-                        >
-                          Role
-                        </Label>
-                        <Input
-                          id={`role_${index}`}
-                          placeholder="Role"
-                          value={member.role}
-                          onChange={(e) => {
-                            updateTeamMember(index, 'role', e.target.value);
-                            clearFieldError(`team.${index}.role`);
-                          }}
-                        />
-                        <ErrorMessage field={`team.${index}.role`} />
-                      </div>
-                      <div className="flex-1">
-                        <Label
-                          htmlFor={`team_member_name_${index}`}
-                          className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
-                        >
-                          Name
-                        </Label>
-                        <Input
-                          id={`team_member_name_${index}`}
-                          placeholder="Name"
-                          value={member.name}
-                          onChange={(e) => {
-                            updateTeamMember(index, 'name', e.target.value);
-                            clearFieldError(`team.${index}.name`);
-                          }}
-                        />
-                        <ErrorMessage field={`team.${index}.name`} />
-                      </div>
+                    <div className="flex-1">
+                      <Label
+                        htmlFor={`team_member_name_${index}`}
+                        className="text-sm font-light tracking-item-subheading uppercase text-muted-foreground mb-2"
+                      >
+                        Name
+                      </Label>
+                      <Input
+                        id={`team_member_name_${index}`}
+                        placeholder="Name"
+                        value={member.name}
+                        onChange={(e) => {
+                          updateTeamMember(index, 'name', e.target.value);
+                          clearFieldError(`team.${index}.name`);
+                        }}
+                      />
+                      <ErrorMessage field={`team.${index}.name`} />
                     </div>
                   </div>
                 </div>
-              ))}
-              {formData.team.length === 0 && (
-                <p className="text-xs text-muted-foreground/50">
-                  No team members added yet.
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-center gap-3 bg-background pt-3 pb-3 fixed bottom-0 inset-x-0 w-full">
-            <Button onClick={onClose} className="flex-1">
-              CANCEL
-            </Button>
-            <Button
-              onClick={handleSave}
-              className="flex-1"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'SAVING...' : 'SAVE'}
-            </Button>
+              </div>
+            ))}
+            {formData.team.length === 0 && (
+              <p className="text-xs text-muted-foreground/50">
+                No team members added yet.
+              </p>
+            )}
           </div>
         </div>
+
+        {/* Actions */}
+        <div className="flex justify-center gap-3 bg-background pt-3 pb-3 fixed bottom-0 inset-x-0 w-full">
+          <Button onClick={onClose} className="flex-1">
+            CANCEL
+          </Button>
+          <Button
+            onClick={handleSave}
+            className="flex-1"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'SAVING...' : 'SAVE'}
+          </Button>
+        </div>
       </div>
-    </div>
+    </FullscreenDialog>
   );
 }

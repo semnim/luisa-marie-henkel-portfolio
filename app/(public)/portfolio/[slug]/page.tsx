@@ -65,7 +65,7 @@ export default async function DetailPage({
   // Handle empty state
   if (projectImages.length === 0 || projectData === undefined) {
     return (
-      <main className="h-dvh md:h-screen overflow-y-scroll">
+      <main>
         <div className="h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-3xl font-light mb-4">{title}</h1>
@@ -114,11 +114,7 @@ export default async function DetailPage({
   };
 
   return (
-    <main
-      className={
-        'max-h-dvh h-dvh overflow-y-scroll snap-y snap-mandatory md:snap-none'
-      }
-    >
+    <main data-mobile-snap>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

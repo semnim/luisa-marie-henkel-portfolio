@@ -1,6 +1,11 @@
 'use client';
 
 import { Button } from './button';
+import {
+  FullscreenDialog,
+  FullscreenDialogDescription,
+  FullscreenDialogTitle,
+} from './fullscreen-dialog';
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -23,23 +28,21 @@ export function ConfirmationDialog({
   onCancel,
   variant = 'default',
 }: ConfirmationDialogProps) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95">
+    <FullscreenDialog open={isOpen} onClose={onCancel} role="alertdialog">
       <div className="w-full max-w-md">
         <div className="space-y-6">
           {/* Header */}
           <div>
-            <h2 className="text-xl font-light tracking-item-subheading uppercase mb-3">
+            <FullscreenDialogTitle className="text-xl font-light tracking-item-subheading uppercase mb-3">
               {title}
-            </h2>
-            <p className="text-sm text-muted-foreground font-light">
+            </FullscreenDialogTitle>
+            <FullscreenDialogDescription className="text-sm text-muted-foreground font-light">
               {message}
-            </p>
+            </FullscreenDialogDescription>
           </div>
 
-          {/* Actions */}
+          {/* Actions: Cancel comes first, so it gets the initial focus */}
           <div className="flex gap-3">
             <Button onClick={onCancel} className="flex-1">
               {cancelLabel}
@@ -55,6 +58,6 @@ export function ConfirmationDialog({
           </div>
         </div>
       </div>
-    </div>
+    </FullscreenDialog>
   );
 }

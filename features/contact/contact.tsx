@@ -64,13 +64,13 @@ export function Contact() {
   };
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden">
+    <main>
       <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
         <div className="w-full max-w-2xl">
           {formState !== 'error' && (
-            <h2 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
+            <h1 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
               GET IN TOUCH
-            </h2>
+            </h1>
           )}
 
           {formState === 'success' ? (

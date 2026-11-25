@@ -1,8 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { useReturnFocus } from '@/hooks/use-return-focus';
+import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
-import { useEffect } from 'react';
 
 type ImageOverlayProps = {
   imageUrl: string;
@@ -21,55 +21,43 @@ export function ImageOverlay({
   isOpen,
   onClose,
 }: ImageOverlayProps) {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
+  const returnFocus = useReturnFocus(isOpen);
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-background/95 flex items-center justify-center p-4 md:p-8"
-      onClick={onClose}
-    >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 md:top-8 md:right-8 text-foreground/60 hover:text-foreground text-2xl md:text-4xl font-light transition-colors z-50"
-        aria-label="Close"
-      >
-        ×
-      </button>
+    <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-background/95" />
+        <Dialog.Content
+          aria-describedby={undefined}
+          onCloseAutoFocus={returnFocus}
+          onClick={onClose}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 outline-none"
+        >
+          <Dialog.Title className="sr-only">{alt}</Dialog.Title>
+          <Dialog.Close
+            aria-label="Close"
+            className="absolute top-4 right-4 md:top-8 md:right-8 text-foreground/60 hover:text-foreground text-2xl md:text-4xl font-light transition-colors z-50 cursor-pointer"
+          >
+            <span aria-hidden>×</span>
+          </Dialog.Close>
 
-      <div
-        className="relative max-w-full max-h-full flex items-center justify-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Image
-          src={imageUrl}
-          alt={alt}
-          width={width || 1200}
-          height={height || 1600}
-          className={cn(
-            'max-w-full max-h-[calc(100dvh-2rem)] md:max-h-[calc(100dvh-4rem)] w-auto h-auto object-contain'
-          )}
-          unoptimized
-          priority
-        />
-      </div>
-    </div>
+          <div
+            className="relative max-w-full max-h-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={alt}
+                width={width || 1200}
+                height={height || 1600}
+                className="max-w-full max-h-[calc(100dvh-2rem)] md:max-h-[calc(100dvh-4rem)] w-auto h-auto object-contain"
+                unoptimized
+              />
+            ) : null}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

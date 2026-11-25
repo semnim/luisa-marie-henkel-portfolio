@@ -44,6 +44,7 @@ export function HeroSection({
           src={mobileHeroImage.url}
           alt={mobileHeroImage.alt}
           fill
+          sizes="(max-width: 767px) 100vw, 0px"
           preload
           className="block md:hidden object-cover object-top z-0"
         />

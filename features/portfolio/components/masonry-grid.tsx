@@ -24,15 +24,17 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
       <div className="absolute bottom-0 inset-x-0 h-[200px] z-20 mask-t-from-1% bg-radial from-100% from-background to-99% to-transparent" />
       {images.map((img, index) => {
         const content = (
-          <figure
-            key={img.id}
-            className="break-inside-avoid p-1 group cursor-pointer"
-          >
+          <figure className="break-inside-avoid p-1 group cursor-pointer">
             <div className="relative overflow-hidden">
               <Image
                 unoptimized
                 src={img.imageUrl}
-                alt={`Grid - Image ${index + 1}`}
+                alt={
+                  img.altText ||
+                  ('title' in img && img.title
+                    ? img.title
+                    : `Gallery image ${index + 1}`)
+                }
                 width={img.width || 800}
                 height={img.height || 1200}
                 className="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02]"
@@ -63,10 +65,11 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
 
         return (
           <button
+            type="button"
             key={img.id}
             onClick={() => onImageClick?.(img)}
-            className="w-full text-left outline-0 focus:outline-0"
-            tabIndex={-1}
+            aria-label={`Enlarge image ${index + 1}`}
+            className="w-full text-left outline-none focus-visible:outline focus-visible:outline-foreground"
           >
             {content}
           </button>

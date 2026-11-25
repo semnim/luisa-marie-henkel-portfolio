@@ -4,7 +4,7 @@ import { authClient } from '@/lib/auth-client';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Skeleton } from './skeleton';
 
 const navItems = [
@@ -72,13 +72,25 @@ export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
+
   return (
     <>
       {/* Mobile Menu Button */}
       <button
+        type="button"
         onClick={() => setMobileOpen(!mobileOpen)}
         className="fixed bottom-3 left-3 z-50 md:hidden text-foreground bg-background rounded-full p-2"
-        aria-label="Toggle menu"
+        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={mobileOpen}
+        aria-controls="admin-mobile-nav"
       >
         {mobileOpen ? (
           <X className="w-6 h-6" strokeWidth={1} />
@@ -94,8 +106,10 @@ export function Sidebar() {
         />
       )}
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer: off-screen while closed, so keep it out of the tab order */}
       <aside
+        id="admin-mobile-nav"
+        inert={!mobileOpen}
         className={`fixed top-0 left-0 h-full w-64 bg-background border-r border-muted-foreground/20 z-40 flex flex-col transition-transform duration-500 ease-out md:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}

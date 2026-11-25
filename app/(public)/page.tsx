@@ -48,7 +48,7 @@ export default async function Home() {
   };
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
+    <main data-mobile-snap>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -60,7 +60,7 @@ export default async function Home() {
           fill
           sizes="(min-width: 768px) 100vw, 0px"
           alt={heroAlt}
-          priority
+          preload
         />
         <Image
           src={heroMobile}
@@ -68,7 +68,7 @@ export default async function Home() {
           fill
           sizes="(max-width: 767px) 100vw, 0px"
           alt={heroAlt}
-          priority
+          preload
           unoptimized
         />
         <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
