@@ -6,6 +6,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -59,7 +60,7 @@ export default function LoginPage() {
 
   return (
     <main>
-      <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
+      <section className="relative min-h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-2xl">
           {formState !== 'error' && (
             <h1 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
@@ -87,6 +88,7 @@ export default function LoginPage() {
           ) : (
             <Form {...form}>
               <form
+                noValidate
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6 max-w-xl mx-auto"
               >
@@ -95,10 +97,14 @@ export default function LoginPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-xs font-light uppercase tracking-item-subheading text-muted-foreground">
+                        Email
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="Email*"
+                          autoComplete="username"
+                          required
                           disabled={formState === 'loading'}
                           {...field}
                         />
@@ -113,10 +119,14 @@ export default function LoginPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-xs font-light uppercase tracking-item-subheading text-muted-foreground">
+                        Password
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="password"
-                          placeholder="Password*"
+                          autoComplete="current-password"
+                          required
                           disabled={formState === 'loading'}
                           {...field}
                         />

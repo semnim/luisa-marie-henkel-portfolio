@@ -2,7 +2,7 @@ import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import { CtaOverlay } from '@/features/home/components/cta-overlay';
 import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
-import Image from 'next/image';
+import { ArtDirectedImage } from '@/components/ui/fade-image';
 
 export const metadata = {
   description:
@@ -54,28 +54,17 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="relative h-dvh snap-start">
-        <Image
-          src={heroDesktop}
-          className="hidden md:block object-cover z-0"
-          fill
-          sizes="(min-width: 768px) 100vw, 0px"
+        <ArtDirectedImage
+          desktop={{ src: heroDesktop }}
+          mobile={{ src: heroMobile, unoptimized: true }}
           alt={heroAlt}
-          preload
-        />
-        <Image
-          src={heroMobile}
-          className="md:hidden object-cover z-0"
-          fill
-          sizes="(max-width: 767px) 100vw, 0px"
-          alt={heroAlt}
-          preload
-          unoptimized
+          className="object-cover z-0"
         />
         <div className="text-center z-20 absolute inset-0 flex flex-col items-center justify-center">
           <h1 className="text-xl md:text-5xl tracking-hero-heading font-light">
             {HERO_TITLE}
           </h1>
-          <p className="text-xs md:text-md mt-4 tracking-hero-heading text-muted-foreground font-light">
+          <p className="text-xs md:text-sm mt-4 tracking-hero-heading text-foreground/80 font-light">
             {HERO_SUBTITLE}
           </p>
         </div>

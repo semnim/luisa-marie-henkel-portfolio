@@ -10,7 +10,7 @@ import {
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import type { Image as ImageType } from '@/lib/schema';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+import { FadeImage as Image } from '@/components/ui/fade-image';
 import Link from 'next/link';
 import React from 'react';
 
@@ -129,33 +129,44 @@ export function MobileSlideshow({
             );
           })}
         </CarouselContent>
-        <CarouselPrevious className="left-4" />
-        <CarouselNext className="right-4" />
+        <CarouselPrevious className="left-2" />
+        <CarouselNext className="right-2" />
       </Carousel>
 
       {withCount && (
-        <>
-          <div className="text-center text-sm text-foreground pb-4 absolute inset-x-0 z-30 bottom-18">
-            {current + 1} / {count}
+        <div className="absolute inset-x-0 bottom-6 z-30 flex justify-center">
+          <div className="flex items-center gap-2 rounded-full bg-background/60 px-4 backdrop-blur-sm">
+            <p className="text-sm tabular-nums" aria-live="polite">
+              {current + 1} / {count}
+            </p>
+            {/* Dots stay usable up to a handful of images; beyond that the
+                counter alone is clearer than a row of tiny targets. */}
+            {count <= 8 && (
+              <div className="flex">
+                {images.map((_, index) => (
+                  <button
+                    type="button"
+                    key={index}
+                    onClick={() => api?.scrollTo(index)}
+                    className="flex h-11 w-6 items-center justify-center"
+                    aria-label={`Go to image ${index + 1}`}
+                    aria-current={index === current}
+                  >
+                    <span
+                      className={cn(
+                        'h-2 rounded-full transition-all',
+                        index === current
+                          ? 'w-4 bg-foreground'
+                          : 'w-2 bg-foreground/40'
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+            {count > 8 && <span className="h-11" />}
           </div>
-
-          <div className="absolute inset-x-0 bottom-16 flex justify-center gap-2 mt-4 pb-2  z-30">
-            {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => api?.scrollTo(index)}
-                className={cn(
-                  'w-2 h-2 rounded-full transition-all',
-                  index === current
-                    ? 'bg-foreground w-6'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                )}
-                aria-label={`Go to image ${index + 1}`}
-                aria-current={index === current}
-              />
-            ))}
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

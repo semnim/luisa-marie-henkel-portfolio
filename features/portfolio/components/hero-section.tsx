@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDate } from '@/lib/utils';
-import Image from 'next/image';
+import { ArtDirectedImage } from '@/components/ui/fade-image';
 
 type HeroSectionProps = {
   desktopHeroImage: {
@@ -30,23 +30,11 @@ export function HeroSection({
     <section className="relative h-dvh md:h-dvh w-full flex flex-col snap-start">
       <figure className="relative h-dvh w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
-        {/* Desktop Hero */}
-        <Image
-          unoptimized
-          src={desktopHeroImage.url}
+        <ArtDirectedImage
+          desktop={{ src: desktopHeroImage.url, unoptimized: true }}
+          mobile={{ src: mobileHeroImage.url }}
           alt={desktopHeroImage.alt}
-          fill
-          preload
-          className="hidden md:block object-cover object-top z-0"
-        />
-        {/* Mobile Hero */}
-        <Image
-          src={mobileHeroImage.url}
-          alt={mobileHeroImage.alt}
-          fill
-          sizes="(max-width: 767px) 100vw, 0px"
-          preload
-          className="block md:hidden object-cover object-top z-0"
+          className="object-cover object-top z-0"
         />
         <div className="absolute inset-0 gradient-easing border-b border-background">
           <div className="mx-auto h-full flex flex-col justify-end">

@@ -1,9 +1,7 @@
+import { FadeImage } from '@/components/ui/fade-image';
 import { fetchAllProjectsWithImages } from '@/features/portfolio/actions/fetch-projects';
 import { IndexPopover } from '@/features/portfolio/components/index-popover';
-import { MasonryGrid } from '@/features/portfolio/components/masonry-grid';
 import { createSlugFromProjectTitle } from '@/lib/utils';
-import { ChevronDown } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata = {
@@ -14,83 +12,63 @@ export const metadata = {
 
 export default async function WorkPage() {
   const projects = await fetchAllProjectsWithImages();
+  const tiles = projects.flatMap((project) => {
+    const thumbnail = project.images.find((i) => i.imageType === 'thumbnail');
+    return thumbnail
+      ? [
+          {
+            id: project.id,
+            title: project.title,
+            category: project.category,
+            href: `/portfolio/${createSlugFromProjectTitle(project.title)}`,
+            imageUrl: thumbnail.imageUrl,
+            alt: thumbnail.altText || project.title,
+          },
+        ]
+      : [];
+  });
+
   return (
     <main data-mobile-snap>
-      <h1 className="hidden text-md md:text-xl w-fit mx-auto text-center font-light tracking-hero-heading z-20 h-15 fixed top-0 left-1/2 -translate-x-1/2 md:flex items-center mix-blend-difference">
+      {/* Phones go straight to the first project; the heading stays for
+          screen readers. From md up it sits above the grid. */}
+      <h1 className="sr-only md:not-sr-only md:flex md:h-15 md:items-center md:justify-center md:text-xl font-light tracking-hero-heading">
         PROJECTS
       </h1>
-      <section className="md:hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-3 relative">
-          <div className="group overflow-hidden snap-start relative h-dvh lg:h-[500px] flex items-center bg-linear-to-b from-background via-background/95 to-background">
-            <div className="w-full my-auto text-center space-y-6 px-8">
-              <div className="space-y-4">
-                <h1 className="text-xl font-light tracking-hero-heading">
-                  PROJECTS
-                </h1>
-                <p className="text-xs tracking-widest text-muted-foreground font-light before:content-['—'] before:mr-3 after:content-['—'] after:ml-3">
-                  EXPLORE THE PORTFOLIO
+
+      {/* One full-screen project per swipe on phones, a uniform grid above */}
+      <ul className="md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-1 md:p-1">
+        {tiles.map((tile, index) => (
+          <li key={tile.id} className="snap-start">
+            <Link
+              href={tile.href}
+              className="group relative block h-dvh md:h-auto md:aspect-[3/4] overflow-hidden -outline-offset-2"
+            >
+              <FadeImage
+                unoptimized
+                src={tile.imageUrl}
+                alt={tile.alt}
+                fill
+                sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+                loading={index === 0 ? 'eager' : undefined}
+                className="object-cover object-center transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent px-6 pt-24 pb-16 md:px-4 md:pt-16 md:pb-4">
+                <p className="text-lg md:text-sm tracking-item-heading uppercase">
+                  {tile.title}
+                </p>
+                <p className="mt-1 text-xs tracking-item-subheading uppercase text-foreground/70">
+                  {tile.category}
                 </p>
               </div>
-              <div className="flex items-center justify-center gap-4 pt-4">
-                <ChevronDown
-                  aria-hidden
-                  className="absolute bottom-4 text-muted-foreground/70"
-                />
-              </div>
-            </div>
-          </div>
-          {projects.map((item, index) => {
-            if (item === null) {
-              return <div className="h-0" key={'empty' + index} />;
-            }
-            const thumbnail = item.images.find(
-              (image) => image.imageType === 'thumbnail'
-            );
-            return (
-              <Link
-                href={`/portfolio/${createSlugFromProjectTitle(item.title)}`}
-                key={item.id}
-                className="group overflow-hidden snap-start relative h-dvh lg:h-[500px]"
-              >
-                <figure
-                  key={item.id}
-                  className="flex flex-1 w-full h-full relative"
-                >
-                  <Image
-                    unoptimized
-                    src={thumbnail?.imageUrl ?? ''}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 767px) 100vw, 0px"
-                    className="object-cover object-center group-hover:scale-110 transition-all group-hover:brightness-75"
-                  />
-                  <figcaption className="backdrop-brightness-75 absolute inset-0 lg:hidden flex lg:group-hover:flex flex-col justify-center items-center h-full">
-                    <div className="text-center z-20">
-                      <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
-                        {item.title}
-                      </p>
-                    </div>
-                  </figcaption>
-                </figure>
-              </Link>
-            );
-          })}
-          <IndexPopover projects={projects} />
-        </div>
-      </section>
-      <section className="hidden md:block">
-        <MasonryGrid
-          images={projects
-            .map((project) => {
-              const thumbnail = project.images.find(
-                (i) => i.imageType === 'thumbnail'
-              );
-              if (!thumbnail) return undefined;
-              return { ...thumbnail, title: project.title };
-            })
-            .filter((img) => img !== undefined)}
-        />
-      </section>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      <div className="md:hidden">
+        <IndexPopover projects={projects} />
+      </div>
     </main>
   );
 }

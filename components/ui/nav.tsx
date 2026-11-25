@@ -36,14 +36,14 @@ export const Nav = ({ open, onOpen, onClose }: NavProps) => {
         <div className="flex flex-1 w-full items-center">
           <Link
             href="/"
-            className="text-foreground font-semibold mr-auto mix-blend-difference"
+            className="text-foreground font-semibold mr-auto"
           >
             {NAME}
           </Link>
 
           <button
             type="button"
-            className="font-semibold mix-blend-difference p-2 cursor-pointer"
+            className="font-semibold px-2 py-3 cursor-pointer"
             aria-expanded={open}
             aria-controls={MENU_ID}
             onClick={open ? onClose : onOpen}
@@ -71,17 +71,17 @@ export const Nav = ({ open, onOpen, onClose }: NavProps) => {
                 <Link
                   onClick={onClose}
                   aria-current={isCurrent ? 'page' : undefined}
-                  className={`text-5xl hover:text-foreground/85 ${
+                  className={`text-5xl w-fit transition-colors hover:text-foreground ${
                     isCurrent || isDetailsPage
-                      ? 'text-muted-foreground italic'
-                      : 'text-foreground'
+                      ? 'text-foreground underline decoration-1 underline-offset-8'
+                      : 'text-foreground/60'
                   }`}
                   href={route.url}
                 >
                   {route.id}
                 </Link>
                 {isDetailsPage ? (
-                  <div className="flex gap-2 items-center justify-start text-muted-foreground italic">
+                  <div className="flex gap-2 items-center justify-start text-muted-foreground">
                     <CornerDownRight aria-hidden className="w-4 h-4" />
                     {pathname.split('/').length > 2
                       ? getProjectTitleFromSlug(pathname.split('/')[2])

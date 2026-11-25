@@ -180,7 +180,7 @@ function IconButton({
     <button
       type="button"
       className={cn(
-        "absolute rounded-full size-7 bg-background/50 inline-flex items-center justify-center [&_svg:not([class*='size-'])]:size-4 z-30",
+        "absolute rounded-full size-11 bg-background/50 inline-flex items-center justify-center [&_svg:not([class*='size-'])]:size-5 z-30",
         props.disabled ? 'opacity-0' : 'opacity-100',
         className
       )}
