@@ -12,7 +12,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       <div className="relative group">
         <textarea
           className={cn(
-            'w-full p-4 text-foreground outline-0 border-muted-foreground border resize-none min-h-[120px] h-full block bg-transparent placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+            'w-full p-4 text-foreground outline-0 border-muted-foreground border resize-none field-sizing-content min-h-[120px] block bg-transparent placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
             className
           )}
           ref={ref}

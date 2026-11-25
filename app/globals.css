@@ -126,6 +126,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* One consistent keyboard focus indicator for links and buttons. */
+  :where(a, button, [role='button'], summary):focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 3px;
+  }
 }
 
 @layer utilities {

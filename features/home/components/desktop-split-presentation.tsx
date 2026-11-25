@@ -1,5 +1,5 @@
 import { FeaturedProject } from '@/features/home/actions/fetch-featured';
-import Image from 'next/image';
+import { FadeImage as Image } from '@/components/ui/fade-image';
 import Link from 'next/link';
 
 type Props = {
@@ -18,7 +18,7 @@ export const DesktopSplitPresentation = ({ projects }: Props) => {
 
             return (
               <Link
-                className="group relative overflow-hidden flex shrink-0 flex-1 h-dvh"
+                className="group relative overflow-hidden flex shrink-0 flex-1 h-dvh -outline-offset-2"
                 key={index}
                 href={`/portfolio/${project.projectSlug}`}
               >
@@ -33,7 +33,7 @@ export const DesktopSplitPresentation = ({ projects }: Props) => {
                       unoptimized
                     />
                   ) : null}
-                  <figcaption className="absolute inset-0 hidden bottom-0 group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
+                  <figcaption className="absolute inset-0 hidden bottom-0 group-hover:flex group-focus-visible:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
                     <div className="h-full flex items-center justify-center flex-col text-center z-20">
                       <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
                         {project.projectTitle}

@@ -6,12 +6,12 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { loginUser, type LoginFormData } from '@/lib/auth-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -59,13 +59,13 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="snap-y snap-mandatory overflow-y-scroll h-dvh md:h-auto md:overflow-y-hidden overscroll-none">
-      <section className="relative h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6">
+    <main>
+      <section className="relative min-h-[calc(100dvh-60px)] mt-15 flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-2xl">
           {formState !== 'error' && (
-            <h2 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
+            <h1 className="text-xl md:text-3xl w-fit mx-auto text-center font-light tracking-hero-heading flex items-center mb-12">
               LOGIN
-            </h2>
+            </h1>
           )}
 
           {formState === 'error' ? (
@@ -88,6 +88,7 @@ export default function LoginPage() {
           ) : (
             <Form {...form}>
               <form
+                noValidate
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6 max-w-xl mx-auto"
               >
@@ -96,10 +97,14 @@ export default function LoginPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-xs font-light uppercase tracking-item-subheading text-muted-foreground">
+                        Email
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="Email*"
+                          autoComplete="username"
+                          required
                           disabled={formState === 'loading'}
                           {...field}
                         />
@@ -114,10 +119,14 @@ export default function LoginPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-xs font-light uppercase tracking-item-subheading text-muted-foreground">
+                        Password
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="password"
-                          placeholder="Password*"
+                          autoComplete="current-password"
+                          required
                           disabled={formState === 'loading'}
                           {...field}
                         />
@@ -131,15 +140,6 @@ export default function LoginPage() {
                   {formState === 'loading' ? 'Logging in...' : 'Login'}
                 </Button>
 
-                <p className="text-center text-sm text-muted-foreground">
-                  Need an account?{' '}
-                  <Link
-                    href="/register"
-                    className="underline hover:text-foreground"
-                  >
-                    Register
-                  </Link>
-                </p>
               </form>
             </Form>
           )}

@@ -20,9 +20,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {process.env.DEV && <ReactQueryDevtools />}
-        {children}
-        <Toaster />
+      {children}
+      <Toaster />
+      {/* Tree-shaken out of production builds by the package itself. */}
+      <ReactQueryDevtools buttonPosition="bottom-left" />
     </QueryClientProvider>
   );
 };

@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  FullscreenDialog,
+  FullscreenDialogDescription,
+  FullscreenDialogTitle,
+} from '@/components/ui/fullscreen-dialog';
 import { Button } from '@/components/ui/button';
 
 interface Project {
@@ -21,20 +26,18 @@ export function ProjectSelectorDialog({
   onClose,
   onSelect,
 }: ProjectSelectorDialogProps) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-background/95 overflow-y-auto">
+    <FullscreenDialog open={isOpen} onClose={onClose}>
       <div className="w-full max-w-2xl py-12">
         <div className="space-y-8">
           {/* Header */}
           <div>
-            <h2 className="text-xl font-light tracking-item-subheading uppercase mb-2">
+            <FullscreenDialogTitle className="text-xl font-light tracking-item-subheading uppercase mb-2">
               SELECT PROJECT
-            </h2>
-            <p className="text-sm text-muted-foreground font-light">
+            </FullscreenDialogTitle>
+            <FullscreenDialogDescription className="text-sm text-muted-foreground font-light">
               Choose a project to feature
-            </p>
+            </FullscreenDialogDescription>
           </div>
 
           {/* Project List */}
@@ -66,6 +69,6 @@ export function ProjectSelectorDialog({
           </div>
         </div>
       </div>
-    </div>
+    </FullscreenDialog>
   );
 }

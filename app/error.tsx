@@ -8,7 +8,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <main className="h-dvh w-dvw flex flex-col items-center justify-center bg-background text-foreground">
+    <main className="min-h-dvh w-full flex flex-col items-center justify-center bg-background text-foreground">
       <div className="text-center space-y-8">
         <h1 className="text-6xl md:text-8xl tracking-hero-heading font-light">
           ERROR

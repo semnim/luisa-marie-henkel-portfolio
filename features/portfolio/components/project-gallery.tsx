@@ -14,7 +14,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
   return (
-    <section className="snap-start h-[calc(100dvh-60px)] md:h-auto md:mt-12">
+    <section className="snap-start h-dvh md:h-auto md:mt-12">
       <MobileSlideshow
         images={images}
         withCount
