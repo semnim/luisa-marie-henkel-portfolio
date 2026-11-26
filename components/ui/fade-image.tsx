@@ -40,6 +40,8 @@ type ArtDirectedImageProps = {
   mobile: Source;
   alt: string;
   className?: string;
+  /** For images further down the page: load when they come near. */
+  lazy?: boolean;
 };
 
 /**
@@ -52,6 +54,7 @@ export function ArtDirectedImage({
   mobile,
   alt,
   className,
+  lazy = false,
 }: ArtDirectedImageProps) {
   const { loaded, ref, onLoad } = useLoaded();
   const common = { alt, fill: true, sizes: '100vw' } as const;
@@ -70,8 +73,8 @@ export function ArtDirectedImage({
         alt={alt}
         ref={ref}
         onLoad={onLoad}
-        loading="eager"
-        fetchPriority="high"
+        loading={lazy ? 'lazy' : 'eager'}
+        fetchPriority={lazy ? undefined : 'high'}
         className={cn(fadeClasses(loaded), className)}
       />
     </picture>

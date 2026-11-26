@@ -5,35 +5,42 @@ type ProjectMetadataProps = {
   team: Project['team'];
 };
 
+const EYEBROW =
+  'text-[11px] uppercase tracking-item-subheading text-foreground/50';
+
 export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
   const hasTeam = !!team && team.length > 0;
   if (!description && !hasTeam) return null;
 
   return (
-    // Phones: its own snap stop, only as tall as its content.
-    // Desktop: overlaid on the bottom of the hero.
+    // Phones: a full screen of its own, text at the top and credits at the
+    // bottom. Desktop: overlaid on the bottom of the hero.
     <section
       aria-label="About this project"
-      className="snap-start md:snap-align-none w-full px-8 pt-20 pb-10 md:pt-0 md:pb-8 md:absolute md:bottom-0 md:inset-x-0 md:max-h-[300px] md:overflow-hidden"
+      className="flex min-h-dvh w-full snap-start flex-col px-6 pt-20 pb-[max(1.5rem,env(safe-area-inset-bottom))] md:absolute md:inset-x-0 md:bottom-0 md:block md:max-h-[300px] md:min-h-0 md:snap-align-none md:overflow-hidden md:px-8 md:pt-0 md:pb-8"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-8 md:items-center md:gap-5">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-between gap-10 md:items-center md:justify-start md:gap-5">
         {description && (
-          <p className="max-w-prose text-sm leading-relaxed text-muted-foreground md:text-center">
-            {description}
-          </p>
+          <div>
+            <h2 className={`${EYEBROW} mb-5 md:sr-only`}>About</h2>
+            <p className="max-w-prose text-lg leading-relaxed font-light text-foreground/90 md:text-center md:text-sm md:font-normal md:text-muted-foreground">
+              {description}
+            </p>
+          </div>
         )}
         {hasTeam && (
           <div className="w-full md:w-auto">
-            <h2 className="mb-4 text-xs uppercase tracking-item-subheading text-foreground/70 md:sr-only">
-              Team
-            </h2>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-4 md:flex md:flex-wrap md:justify-center md:gap-x-8 md:gap-y-3">
+            <h2 className={`${EYEBROW} mb-4 md:sr-only`}>Credits</h2>
+            <dl className="border-b border-foreground/15 md:flex md:flex-wrap md:justify-center md:gap-x-8 md:gap-y-3 md:border-0">
               {team.map((credit, index) => (
-                <div key={credit.name + index} className="flex flex-col gap-1">
-                  <dt className="text-xs font-light tracking-wide text-foreground">
+                <div
+                  key={credit.name + index}
+                  className="flex items-baseline justify-between gap-6 border-t border-foreground/15 py-2.5 md:flex-col md:items-start md:justify-start md:gap-1 md:border-0 md:py-0"
+                >
+                  <dt className="text-[11px] tracking-item-subheading text-foreground/60 uppercase md:text-xs md:font-light md:tracking-wide md:text-foreground md:normal-case">
                     {credit.role}
                   </dt>
-                  <dd className="text-xs text-muted-foreground">
+                  <dd className="text-right text-sm md:text-left md:text-xs md:text-muted-foreground">
                     {credit.name}
                   </dd>
                 </div>

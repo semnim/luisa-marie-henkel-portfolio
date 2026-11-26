@@ -16,6 +16,8 @@ export default function PublicLayout({
   return (
     <>
       <header
+        // Stops the page behind the open menu from scrolling on phones.
+        data-scroll-locked={menuOpen ? '' : undefined}
         className={cn(
           `fixed flex flex-col max-w-dvw top-0 z-40 h-15 w-full overflow-hidden transition-[height,backdrop-filter] ease-in-out duration-750 bg-linear-to-b from-black/60 to-transparent`,
           menuOpen

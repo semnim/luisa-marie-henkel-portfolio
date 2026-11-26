@@ -1,6 +1,5 @@
 import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
-import { CtaOverlay } from '@/features/home/components/cta-overlay';
 import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
 import { ArtDirectedImage } from '@/components/ui/fade-image';
 
@@ -68,10 +67,16 @@ export default async function Home() {
             {HERO_SUBTITLE}
           </p>
         </div>
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-[10px] tracking-item-subheading text-foreground/70 uppercase"
+        >
+          Scroll
+          <span className="h-10 w-px bg-foreground/50" />
+        </div>
       </section>
-      <section className="relative h-dvh md:h-screen md:max-h-screen flex flex-col snap-start overflow-hidden">
+      <section className="snap-start">
         <FeaturedShowcase projects={featuredProjects} />
-        <CtaOverlay />
       </section>
     </main>
   );

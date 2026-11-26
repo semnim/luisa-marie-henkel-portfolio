@@ -8,7 +8,23 @@ import { ProjectGallery } from '@/features/portfolio/components/project-gallery'
 import { ProjectMetadata } from '@/features/portfolio/components/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { ArtDirectedImage } from '@/components/ui/fade-image';
+import type { Image } from '@/lib/schema';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+
+/** Hero per breakpoint, falling back to the shared one, then to any image. */
+function pickHeroImages(images: Image[]) {
+  const heroOf = (variant: Image['variant']) =>
+    images.find(
+      (img) => img.imageType === 'project_hero' && img.variant === variant
+    );
+  const fallback = heroOf('both') ?? images[0];
+  return {
+    desktop: heroOf('desktop') ?? fallback,
+    mobile: heroOf('mobile') ?? fallback,
+  };
+}
 
 export async function generateMetadata({
   params,
@@ -78,20 +94,7 @@ export default async function DetailPage({
     );
   }
 
-  // Filter hero and gallery images by type
-  const heroDesktop = projectImages.find(
-    (img) => img.imageType === 'project_hero' && img.variant === 'desktop'
-  );
-  const heroMobile = projectImages.find(
-    (img) => img.imageType === 'project_hero' && img.variant === 'mobile'
-  );
-  const heroBoth = projectImages.find(
-    (img) => img.imageType === 'project_hero' && img.variant === 'both'
-  );
-
-  // Determine which images to use
-  const desktopHeroImage = heroDesktop || heroBoth || projectImages[0];
-  const mobileHeroImage = heroMobile || heroBoth || projectImages[0];
+  const hero = pickHeroImages(projectImages);
 
   // "Next project" wraps around, so the page never ends in a dead end
   const allProjects = await fetchAllProjects();
@@ -100,6 +103,10 @@ export default async function DetailPage({
     allProjects.length > 1
       ? allProjects[(currentIndex + 1) % allProjects.length]
       : undefined;
+
+  const nextHero = nextProject
+    ? pickHeroImages(await fetchProjectImages(nextProject.slug))
+    : undefined;
 
   const galleryImages = projectImages.filter(
     (img) => img.imageType === 'gallery'
@@ -132,11 +139,11 @@ export default async function DetailPage({
       <div className="md:h-dvh md:max-h-dvh relative">
         <HeroSection
           desktopHeroImage={{
-            url: desktopHeroImage.imageUrl,
+            url: hero.desktop.imageUrl,
             alt: title,
           }}
           mobileHeroImage={{
-            url: mobileHeroImage.imageUrl,
+            url: hero.mobile.imageUrl,
             alt: title,
           }}
           title={title}
@@ -152,26 +159,48 @@ export default async function DetailPage({
       <ProjectGallery images={galleryImages} />
       <nav
         aria-label="More projects"
-        className="snap-start flex flex-col items-center gap-8 px-8 py-24 text-center"
+        className="relative flex snap-start flex-col md:h-[85dvh] max-md:h-dvh"
       >
         {nextProject && (
           <Link
             href={`/portfolio/${nextProject.slug}`}
-            className="group flex flex-col items-center gap-3"
+            className="group relative flex min-h-0 flex-1 flex-col justify-end overflow-hidden px-6 pb-10 -outline-offset-2 md:px-10 md:pb-14"
           >
-            <span className="text-xs uppercase tracking-item-subheading text-muted-foreground">
+            {nextHero && (
+              <ArtDirectedImage
+                lazy
+                desktop={{ src: nextHero.desktop.imageUrl, unoptimized: true }}
+                mobile={{ src: nextHero.mobile.imageUrl, unoptimized: true }}
+                alt=""
+                className="object-cover brightness-50 transition-[scale,filter,opacity] duration-1000 ease-out group-hover:scale-105 group-hover:brightness-[.65] motion-reduce:transition-none"
+              />
+            )}
+            <span className="relative text-[11px] tracking-item-subheading text-foreground/70 uppercase">
               Next project
             </span>
-            <span className="text-2xl md:text-4xl font-light uppercase tracking-hero-heading border-b border-transparent pb-1 transition-colors group-hover:border-foreground">
+            <span className="relative mt-3 text-4xl leading-tight font-light tracking-item-subheading uppercase md:text-7xl">
               {nextProject.title}
+            </span>
+            <span className="relative mt-6 flex items-center gap-3 text-xs tracking-item-subheading uppercase">
+              View project
+              <ArrowRight
+                aria-hidden
+                className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
+                strokeWidth={1.25}
+              />
             </span>
           </Link>
         )}
         <Link
           href="/portfolio"
-          className="text-xs uppercase tracking-item-subheading border-b border-foreground/50 pb-1 transition-colors hover:border-foreground"
+          className="group flex h-14 shrink-0 items-center justify-between px-6 pb-[env(safe-area-inset-bottom)] text-xs tracking-item-subheading uppercase -outline-offset-2 max-md:box-content md:px-10"
         >
           All projects
+          <ArrowRight
+            aria-hidden
+            className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
+            strokeWidth={1.25}
+          />
         </Link>
       </nav>
     </main>

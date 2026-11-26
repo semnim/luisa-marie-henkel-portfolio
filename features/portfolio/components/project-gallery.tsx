@@ -13,11 +13,13 @@ type ProjectGalleryProps = {
 export function ProjectGallery({ images }: ProjectGalleryProps) {
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
+  const mobileImages = images.filter((img) => img.variant !== 'desktop');
+
   return (
     <section className="snap-start h-dvh md:h-auto md:mt-12">
       <MobileSlideshow
-        images={images}
-        withCount
+        images={mobileImages.length > 0 ? mobileImages : images}
+        label="Project gallery"
         onImageClick={setSelectedImage}
       />
       <MasonryGrid images={images} onImageClick={setSelectedImage} />

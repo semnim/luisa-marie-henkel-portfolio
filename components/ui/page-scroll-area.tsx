@@ -5,11 +5,14 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
 /**
- * The single page scroller. The document itself never scrolls, so there are
- * no native scrollbars anywhere.
+ * The page scroller from md up: the document does not scroll there, so there
+ * are no native scrollbars.
  *
- * Pages opt into full-screen snapping on mobile by putting `data-mobile-snap`
- * on their root element.
+ * Below md the viewport is switched off and the document scrolls natively.
+ * Mobile Safari only collapses its toolbar and only draws the page underneath
+ * its bars for a scrolling document; inside an inner scroller a `100dvh` hero
+ * stops short of the screen edge. The matching rules (hidden native scrollbar,
+ * `data-mobile-snap` snapping) are in globals.css.
  */
 export function PageScrollArea({ children }: { children: React.ReactNode }) {
   const viewportRef = React.useRef<HTMLDivElement>(null);
@@ -28,14 +31,15 @@ export function PageScrollArea({ children }: { children: React.ReactNode }) {
 
   return (
     <ScrollArea
-      className="h-dvh"
+      className="md:h-dvh max-md:[&>[data-slot=scroll-area-scrollbar]]:hidden"
       viewportProps={{
         ref: viewportRef,
         // Focusable for keyboard scrolling, but not a tab stop. It is the
         // page itself, so it gets no focus ring.
         tabIndex: -1,
+        // Radix sets overflow inline, hence the important modifier.
         className:
-          'focus-visible:ring-0 focus-visible:outline-none max-md:has-data-mobile-snap:snap-y max-md:has-data-mobile-snap:snap-mandatory',
+          'focus-visible:ring-0 focus-visible:outline-none max-md:overflow-visible!',
       }}
     >
       {children}

@@ -163,3 +163,21 @@
     z-index: 1;
   }
 }
+
+/* Phones scroll the document itself (see PageScrollArea). No scrollbar is
+   drawn, and pages that mark their root with data-mobile-snap move one
+   full screen per swipe. */
+@media (max-width: 47.9375rem) {
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  html:has([data-mobile-snap]) {
+    scroll-snap-type: y mandatory;
+  }
+  html:has([data-scroll-locked]) {
+    overflow: hidden;
+  }
+}
