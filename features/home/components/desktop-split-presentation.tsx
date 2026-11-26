@@ -36,7 +36,6 @@ export const DesktopSplitPresentation = ({ projects }: Props) => {
                 fill
                 sizes="(max-width: 767px) 100vw, 50vw"
                 className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105 motion-reduce:transition-none lg:object-[50%_20%] xl:object-center"
-                unoptimized
               />
               <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/35 to-transparent px-6 pt-40 pb-6">
                 <p className="text-xs tracking-item-subheading text-foreground/60 tabular-nums">

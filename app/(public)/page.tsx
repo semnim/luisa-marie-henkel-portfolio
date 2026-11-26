@@ -52,10 +52,10 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="relative h-dvh snap-start">
+      <section className="relative h-lvh snap-start">
         <ArtDirectedImage
           desktop={{ src: heroDesktop }}
-          mobile={{ src: heroMobile, unoptimized: true }}
+          mobile={{ src: heroMobile }}
           alt={heroAlt}
           className="object-cover z-0"
         />
@@ -69,7 +69,7 @@ export default async function Home() {
         </div>
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-[10px] tracking-item-subheading text-foreground/70 uppercase"
+          className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 pb-[calc(var(--bar-clearance)+1.5rem)] text-[10px] tracking-item-subheading text-foreground/70 uppercase"
         >
           Scroll
           <span className="h-10 w-px bg-foreground/50" />

@@ -26,7 +26,7 @@ export function MasonryGrid({ images, onImageClick }: MasonryGridProps) {
           <figure className="break-inside-avoid p-1 group cursor-pointer">
             <div className="relative overflow-hidden">
               <Image
-                unoptimized
+                sizes="(max-width: 1023px) 50vw, 34vw"
                 src={img.imageUrl}
                 alt={
                   img.altText ||

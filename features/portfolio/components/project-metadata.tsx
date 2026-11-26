@@ -17,9 +17,9 @@ export function ProjectMetadata({ description, team }: ProjectMetadataProps) {
     // bottom. Desktop: overlaid on the bottom of the hero.
     <section
       aria-label="About this project"
-      className="flex min-h-dvh w-full snap-start flex-col px-6 pt-20 pb-[max(1.5rem,env(safe-area-inset-bottom))] md:absolute md:inset-x-0 md:bottom-0 md:block md:max-h-[300px] md:min-h-0 md:snap-align-none md:overflow-hidden md:px-8 md:pt-0 md:pb-8"
+      className="flex min-h-lvh w-full snap-start flex-col px-6 pt-20 pb-14 md:absolute md:inset-x-0 md:bottom-0 md:block md:max-h-[300px] md:min-h-0 md:snap-align-none md:overflow-hidden md:px-8 md:pt-0 md:pb-8"
     >
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-between gap-10 md:items-center md:justify-start md:gap-5">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-between gap-8 md:items-center md:justify-start md:gap-5">
         {description && (
           <div>
             <h2 className={`${EYEBROW} mb-5 md:sr-only`}>About</h2>

@@ -159,22 +159,36 @@ export default async function DetailPage({
       <ProjectGallery images={galleryImages} />
       <nav
         aria-label="More projects"
-        className="relative flex snap-start flex-col md:h-[85dvh] max-md:h-dvh"
+        className={
+          nextProject
+            ? 'relative h-lvh snap-start overflow-hidden md:h-[85dvh]'
+            : 'relative h-24 snap-start'
+        }
       >
         {nextProject && (
           <Link
             href={`/portfolio/${nextProject.slug}`}
-            className="group relative flex min-h-0 flex-1 flex-col justify-end overflow-hidden px-6 pb-10 -outline-offset-2 md:px-10 md:pb-14"
+            className="group absolute inset-0 flex flex-col justify-end px-6 pb-[calc(var(--bar-clearance)+6rem)] -outline-offset-2 md:px-10 md:pb-28"
           >
             {nextHero && (
               <ArtDirectedImage
                 lazy
-                desktop={{ src: nextHero.desktop.imageUrl, unoptimized: true }}
-                mobile={{ src: nextHero.mobile.imageUrl, unoptimized: true }}
+                desktop={{ src: nextHero.desktop.imageUrl }}
+                mobile={{ src: nextHero.mobile.imageUrl }}
                 alt=""
-                className="object-cover brightness-50 transition-[scale,filter,opacity] duration-1000 ease-out group-hover:scale-105 group-hover:brightness-[.65] motion-reduce:transition-none"
+                className="object-cover brightness-[.6] transition-[scale,filter,opacity] duration-1000 ease-out group-hover:scale-105 group-hover:brightness-75 motion-reduce:transition-none"
               />
             )}
+            {/* The image dissolves into the page background, top and bottom,
+                so there is no hard edge around the links. */}
+            <span
+              aria-hidden
+              className="absolute inset-x-0 top-0 hidden h-40 bg-linear-to-b from-background to-transparent md:block"
+            />
+            <span
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-background from-10% via-background/70 via-45% to-transparent"
+            />
             <span className="relative text-[11px] tracking-item-subheading text-foreground/70 uppercase">
               Next project
             </span>
@@ -193,7 +207,7 @@ export default async function DetailPage({
         )}
         <Link
           href="/portfolio"
-          className="group flex h-14 shrink-0 items-center justify-between px-6 pb-[env(safe-area-inset-bottom)] text-xs tracking-item-subheading uppercase -outline-offset-2 max-md:box-content md:px-10"
+          className="group absolute inset-x-0 bottom-[calc(var(--bar-clearance)+0.5rem)] flex h-14 items-center justify-between px-6 text-xs tracking-item-subheading text-foreground/70 uppercase transition-colors -outline-offset-2 hover:text-foreground md:bottom-4 md:px-10"
         >
           All projects
           <ArrowRight
