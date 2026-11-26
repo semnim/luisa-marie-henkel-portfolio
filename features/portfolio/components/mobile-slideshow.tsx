@@ -60,10 +60,10 @@ export function MobileSlideshow({
 
   const title = images[current]?.title;
   const slideClassName =
-    'relative block h-lvh w-full shrink-0 overflow-hidden -outline-offset-2';
+    'relative block h-(--screen) w-full shrink-0 overflow-hidden -outline-offset-2';
 
   return (
-    <div className="relative h-lvh md:hidden">
+    <div className="relative h-(--screen) md:hidden">
       <Carousel className="h-full" setApi={setApi} aria-label={label}>
         <CarouselContent className="ml-0 h-full">
           {images.map((img, index) => {

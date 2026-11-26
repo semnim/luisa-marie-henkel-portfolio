@@ -124,6 +124,9 @@
     @apply overscroll-none;
   }
   :root {
+    /* Height of a full-screen section, see the phone rules at the end. */
+    --screen-extra: 0px;
+    --screen: calc(100lvh + var(--screen-extra));
     --bar-clearance: 0px;
   }
   body {
@@ -172,12 +175,14 @@
    full screen per swipe. */
 @media (max-width: 47.9375rem) {
   :root {
-    /* Full-screen sections are 100lvh tall, so they reach behind mobile
-       Safari's floating toolbar and never resize while it collapses (a
-       section that resizes mid-swipe makes scroll snapping jump). This is
-       how far the toolbar currently covers the bottom of such a section;
-       controls add it to their bottom padding to stay clear. */
-    --bar-clearance: calc(100lvh - 100dvh + env(safe-area-inset-bottom, 0px));
+    /* Full-screen sections are --screen tall: a fixed height, so they never
+       resize while the browser toolbar collapses (a section that resizes
+       mid-swipe makes scroll snapping jump). --bar-clearance is how far the
+       bottom of such a section currently lies below the visible viewport,
+       toolbar included; controls add it to their bottom padding. */
+    --bar-clearance: calc(
+      var(--screen) - 100dvh + env(safe-area-inset-bottom, 0px)
+    );
   }
   html {
     scrollbar-width: none;
@@ -190,5 +195,18 @@
   }
   html:has([data-scroll-locked]) {
     overflow: hidden;
+  }
+}
+
+/* iOS only (the query matches no other engine). Safari paints the page
+   behind its floating toolbar, but no viewport unit, 100lvh included,
+   reaches down there, so a 100lvh section ends above the screen edge and the
+   next one shows through. Sections run 7rem past 100lvh instead; the surplus
+   is image that is cut off below the screen. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 47.9375rem) {
+    :root {
+      --screen-extra: 7rem;
+    }
   }
 }

@@ -8,6 +8,7 @@ import { ProjectGallery } from '@/features/portfolio/components/project-gallery'
 import { ProjectMetadata } from '@/features/portfolio/components/project-metadata';
 import { getProjectTitleFromSlug } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { SnapMarker } from '@/components/ui/snap-marker';
 import { ArtDirectedImage } from '@/components/ui/fade-image';
 import type { Image } from '@/lib/schema';
 import { ArrowRight } from 'lucide-react';
@@ -161,14 +162,17 @@ export default async function DetailPage({
         aria-label="More projects"
         className={
           nextProject
-            ? 'relative h-lvh snap-start overflow-hidden md:h-[85dvh]'
-            : 'relative h-24 snap-start'
+            ? 'relative h-(--screen) md:h-[85dvh]'
+            : 'relative h-24'
         }
       >
+        {/* No overflow clipping on the nav itself: that would make it the
+            marker's scroll container and the page would not snap to it. */}
+        <SnapMarker />
         {nextProject && (
           <Link
             href={`/portfolio/${nextProject.slug}`}
-            className="group absolute inset-0 flex flex-col justify-end px-6 pb-[calc(var(--bar-clearance)+6rem)] -outline-offset-2 md:px-10 md:pb-28"
+            className="group absolute inset-0 flex flex-col justify-end overflow-hidden px-6 pb-[calc(var(--bar-clearance)+6rem)] -outline-offset-2 md:px-10 md:pb-28"
           >
             {nextHero && (
               <ArtDirectedImage

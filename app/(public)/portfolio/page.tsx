@@ -2,6 +2,7 @@ import { FadeImage } from '@/components/ui/fade-image';
 import { fetchAllProjectsWithImages } from '@/features/portfolio/actions/fetch-projects';
 import { IndexPopover } from '@/features/portfolio/components/index-popover';
 import { createSlugFromProjectTitle } from '@/lib/utils';
+import { SnapMarker } from '@/components/ui/snap-marker';
 import Link from 'next/link';
 
 export const metadata = {
@@ -39,10 +40,11 @@ export default async function WorkPage() {
       {/* One full-screen project per swipe on phones, a uniform grid above */}
       <ul className="md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-1 md:p-1">
         {tiles.map((tile, index) => (
-          <li key={tile.id} className="snap-start">
+          <li key={tile.id} className="relative">
+            <SnapMarker />
             <Link
               href={tile.href}
-              className="group relative block h-lvh md:h-auto md:aspect-[3/4] overflow-hidden -outline-offset-2"
+              className="group relative block h-(--screen) md:h-auto md:aspect-[3/4] overflow-hidden -outline-offset-2"
             >
               <FadeImage
                 src={tile.imageUrl}
