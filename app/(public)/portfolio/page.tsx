@@ -42,10 +42,9 @@ export default async function WorkPage() {
           <li key={tile.id} className="snap-start">
             <Link
               href={tile.href}
-              className="group relative block h-dvh md:h-auto md:aspect-[3/4] overflow-hidden -outline-offset-2"
+              className="group relative block h-lvh md:h-auto md:aspect-[3/4] overflow-hidden -outline-offset-2"
             >
               <FadeImage
-                unoptimized
                 src={tile.imageUrl}
                 alt={tile.alt}
                 fill
@@ -53,7 +52,7 @@ export default async function WorkPage() {
                 loading={index === 0 ? 'eager' : undefined}
                 className="object-cover object-center transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
               />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent px-6 pt-24 pb-16 md:px-4 md:pt-16 md:pb-4">
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent px-6 pt-24 pb-[calc(var(--bar-clearance)+3.5rem)] md:px-4 md:pt-16 md:pb-4">
                 <p className="text-lg md:text-sm tracking-item-heading uppercase">
                   {tile.title}
                 </p>

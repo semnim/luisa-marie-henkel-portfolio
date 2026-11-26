@@ -123,6 +123,9 @@
   html {
     @apply overscroll-none;
   }
+  :root {
+    --bar-clearance: 0px;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -168,6 +171,14 @@
    drawn, and pages that mark their root with data-mobile-snap move one
    full screen per swipe. */
 @media (max-width: 47.9375rem) {
+  :root {
+    /* Full-screen sections are 100lvh tall, so they reach behind mobile
+       Safari's floating toolbar and never resize while it collapses (a
+       section that resizes mid-swipe makes scroll snapping jump). This is
+       how far the toolbar currently covers the bottom of such a section;
+       controls add it to their bottom padding to stay clear. */
+    --bar-clearance: calc(100lvh - 100dvh + env(safe-area-inset-bottom, 0px));
+  }
   html {
     scrollbar-width: none;
   }

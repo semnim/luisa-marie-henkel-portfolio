@@ -60,10 +60,10 @@ export function MobileSlideshow({
 
   const title = images[current]?.title;
   const slideClassName =
-    'relative block h-dvh w-full shrink-0 overflow-hidden -outline-offset-2';
+    'relative block h-lvh w-full shrink-0 overflow-hidden -outline-offset-2';
 
   return (
-    <div className="relative h-dvh md:hidden">
+    <div className="relative h-lvh md:hidden">
       <Carousel className="h-full" setApi={setApi} aria-label={label}>
         <CarouselContent className="ml-0 h-full">
           {images.map((img, index) => {
@@ -73,9 +73,7 @@ export function MobileSlideshow({
                 alt={img.altText || img.title || `Image ${index + 1}`}
                 fill
                 sizes="100vw"
-                loading={index === 0 ? 'eager' : undefined}
                 className="object-cover"
-                unoptimized
               />
             );
             return img.href ? (
@@ -99,7 +97,7 @@ export function MobileSlideshow({
 
       {/* Swipes and taps pass through to the slide; only the controls and
           links in here take pointer events. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-black/85 via-black/45 to-transparent px-5 pt-32 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-black/85 via-black/45 to-transparent px-5 pt-32 pb-[calc(var(--bar-clearance)+0.75rem)]">
         {header}
         {title && (
           <p

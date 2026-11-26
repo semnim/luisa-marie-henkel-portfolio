@@ -2,6 +2,7 @@
 
 import { useReturnFocus } from '@/hooks/use-return-focus';
 import * as Dialog from '@radix-ui/react-dialog';
+import { cloudinaryLoader } from '@/lib/cloudinary-loader';
 import Image from 'next/image';
 
 type ImageOverlayProps = {
@@ -52,7 +53,8 @@ export function ImageOverlay({
                 width={width || 1200}
                 height={height || 1600}
                 className="max-w-full max-h-[calc(100dvh-2rem)] md:max-h-[calc(100dvh-4rem)] w-auto h-auto object-contain"
-                unoptimized
+                loader={cloudinaryLoader}
+                sizes="100vw"
               />
             ) : null}
           </div>
