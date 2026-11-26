@@ -29,6 +29,7 @@ export function IndexPopover({ projects }: IndexPopoverProps) {
       <div
         id={PANEL_ID}
         inert={!open}
+        data-scroll-locked={open ? '' : undefined}
         className={`fixed inset-0 ${
           open ? 'left-0' : 'left-[200dvw]'
         } z-35 transition-all duration-700 overflow-hidden w-dvw backdrop-blur-md backdrop-brightness-50`}

@@ -2,172 +2,151 @@
 
 import {
   Carousel,
-  CarouselApi,
+  type CarouselApi,
   CarouselContent,
-  CarouselNext,
-  CarouselPrevious,
 } from '@/components/ui/carousel';
-import { useIsMobile } from '@/hooks/use-is-mobile';
-import type { Image as ImageType } from '@/lib/schema';
-import { cn } from '@/lib/utils';
 import { FadeImage as Image } from '@/components/ui/fade-image';
+import type { Image as ImageType } from '@/lib/schema';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-type ExtendedImage = ImageType & {
+export type SlideshowImage = ImageType & {
+  /** Makes the slide a link; without it the slide is a button. */
   href?: string;
+  /** Shown large above the progress bar while the slide is current. */
   title?: string;
-};
-type ImageWithLink = ImageType & {
-  title?: string;
-  href: string;
-};
-type ImageWithTitle = ImageType & {
-  title: string;
-  href?: string;
 };
 
 type MobileSlideshowProps = {
-  images: ExtendedImage[];
-  withCount?: boolean;
-  onImageClick?: (image: ExtendedImage) => void;
+  images: SlideshowImage[];
+  /** Accessible name of the carousel, e.g. "Featured projects". */
+  label: string;
+  /** Row above the title, e.g. a section heading and a link. */
+  header?: React.ReactNode;
+  onImageClick?: (image: SlideshowImage) => void;
 };
 
-const withOverlay = (img: ExtendedImage): img is ImageWithTitle => {
-  return img.title !== undefined;
-};
-const withLink = (img: ExtendedImage): img is ImageWithLink => {
-  return img.href !== undefined;
-};
+const pad = (n: number) => String(n).padStart(2, '0');
 
+/**
+ * Full-screen swipeable slideshow for phones. Every slideshow on the site
+ * shares the same controls: a counter, a progress line and two arrows in the
+ * bottom bar, clear of the screen edges.
+ */
 export function MobileSlideshow({
   images,
-  withCount = false,
+  label,
+  header,
   onImageClick,
 }: MobileSlideshowProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const count = images.length;
-  const isMobile = useIsMobile();
 
   React.useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCurrent(api.selectedScrollSnap());
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap());
-    });
+    if (!api) return;
+    const onSelect = () => setCurrent(api.selectedScrollSnap());
+    onSelect();
+    api.on('select', onSelect);
+    api.on('reInit', onSelect);
+    return () => {
+      api.off('select', onSelect);
+      api.off('reInit', onSelect);
+    };
   }, [api]);
 
-  if (images.length === 0) {
-    return (
-      <div className="md:hidden flex items-center justify-start h-dvh bg-gray-100">
-        <p className="text-gray-500">No images available</p>
-      </div>
-    );
-  }
+  if (count === 0) return null;
 
-  const desktopImages = images.filter(
-    (img) => img.variant === 'desktop' || img.variant === 'both'
-  );
-  const mobileImages = images.filter(
-    (img) => img.variant === 'mobile' || img.variant === 'both'
-  );
+  const title = images[current]?.title;
+  const slideClassName =
+    'relative block h-dvh w-full shrink-0 overflow-hidden -outline-offset-2';
+
   return (
-    <div className="relative md:hidden flex flex-col justify-start max-h-dvh h-dvh">
-      <Carousel
-        className="flex-1 flex flex-col justify-center max-h-dvh h-dvh"
-        setApi={setApi}
-      >
-        <CarouselContent className="h-full">
-          {(isMobile ? mobileImages : desktopImages).map((img, index) => {
-            const figure = (
-              <figure className="flex flex-1 relative">
-                <Image
-                  src={img.imageUrl}
-                  alt={img.altText || img.title || `Image ${index + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                  loading={index === 0 ? 'eager' : undefined}
-                  className="object-cover lg:object-[50%_20%] xl:object-center group-hover:scale-110 transition-all group-hover:brightness-75"
-                  unoptimized
-                />
-                {withOverlay(img) && (
-                  <figcaption className="absolute inset-0 lg:hidden bottom-0 flex lg:group-hover:flex flex-col justify-start items-center h-full bg-linear-to-b from-black/50 to-transparent mb-auto">
-                    <div className="h-full flex items-center justify-center flex-col text-center z-20">
-                      <p className="text-md w-full px-4 text-center flex items-start justify-center tracking-item-heading">
-                        {img.title}
-                      </p>
-                    </div>
-                  </figcaption>
-                )}
-              </figure>
+    <div className="relative h-dvh md:hidden">
+      <Carousel className="h-full" setApi={setApi} aria-label={label}>
+        <CarouselContent className="ml-0 h-full">
+          {images.map((img, index) => {
+            const image = (
+              <Image
+                src={img.imageUrl}
+                alt={img.altText || img.title || `Image ${index + 1}`}
+                fill
+                sizes="100vw"
+                loading={index === 0 ? 'eager' : undefined}
+                className="object-cover"
+                unoptimized
+              />
             );
-
-            const wrapperClassName =
-              'group relative overflow-hidden flex shrink-0 w-full md:w-auto md:flex-1 h-dvh snap-start';
-            if (withLink(img)) {
-              return (
-                <Link key={index} href={img.href} className={wrapperClassName}>
-                  {figure}
-                </Link>
-              );
-            }
-            return (
+            return img.href ? (
+              <Link key={img.id} href={img.href} className={slideClassName}>
+                {image}
+              </Link>
+            ) : (
               <button
                 type="button"
-                key={index}
-                className={wrapperClassName}
+                key={img.id}
+                className={slideClassName}
                 onClick={() => onImageClick?.(img)}
                 aria-label={`Enlarge image ${index + 1}`}
               >
-                {figure}
+                {image}
               </button>
             );
           })}
         </CarouselContent>
-        <CarouselPrevious className="left-2" />
-        <CarouselNext className="right-2" />
       </Carousel>
 
-      {withCount && (
-        <div className="absolute inset-x-0 bottom-6 z-30 flex justify-center">
-          <div className="flex items-center gap-2 rounded-full bg-background/60 px-4 backdrop-blur-sm">
-            <p className="text-sm tabular-nums" aria-live="polite">
-              {current + 1} / {count}
-            </p>
-            {/* Dots stay usable up to a handful of images; beyond that the
-                counter alone is clearer than a row of tiny targets. */}
-            {count <= 8 && (
-              <div className="flex">
-                {images.map((_, index) => (
-                  <button
-                    type="button"
-                    key={index}
-                    onClick={() => api?.scrollTo(index)}
-                    className="flex h-11 w-6 items-center justify-center"
-                    aria-label={`Go to image ${index + 1}`}
-                    aria-current={index === current}
-                  >
-                    <span
-                      className={cn(
-                        'h-2 rounded-full transition-all',
-                        index === current
-                          ? 'w-4 bg-foreground'
-                          : 'w-2 bg-foreground/40'
-                      )}
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-            {count > 8 && <span className="h-11" />}
+      {/* Swipes and taps pass through to the slide; only the controls and
+          links in here take pointer events. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-black/85 via-black/45 to-transparent px-5 pt-32 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        {header}
+        {title && (
+          <p
+            aria-live="polite"
+            className="mt-3 text-3xl leading-tight font-light tracking-item-subheading uppercase"
+          >
+            {title}
+          </p>
+        )}
+        <div className="mt-3 flex items-center gap-4">
+          <p className="text-xs tracking-item-subheading tabular-nums">
+            <span className="sr-only">Image </span>
+            {pad(current + 1)}
+            <span className="text-foreground/50">
+              <span aria-hidden> / </span>
+              <span className="sr-only"> of </span>
+              {pad(count)}
+            </span>
+          </p>
+          <div aria-hidden className="h-px flex-1 bg-foreground/25">
+            <div
+              className="h-px bg-foreground transition-[width] duration-500 ease-out motion-reduce:transition-none"
+              style={{ width: `${((current + 1) / count) * 100}%` }}
+            />
+          </div>
+          <div className="pointer-events-auto -mr-3 flex">
+            <button
+              type="button"
+              onClick={() => api?.scrollPrev()}
+              disabled={current === 0}
+              aria-label="Previous image"
+              className="flex size-11 items-center justify-center transition-opacity disabled:opacity-30"
+            >
+              <ArrowLeft aria-hidden className="size-5" strokeWidth={1.25} />
+            </button>
+            <button
+              type="button"
+              onClick={() => api?.scrollNext()}
+              disabled={current === count - 1}
+              aria-label="Next image"
+              className="flex size-11 items-center justify-center transition-opacity disabled:opacity-30"
+            >
+              <ArrowRight aria-hidden className="size-5" strokeWidth={1.25} />
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

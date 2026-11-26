@@ -1,6 +1,6 @@
 import './globals.css';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { PageScrollArea } from '@/components/ui/page-scroll-area';
 import NextTopLoader from 'nextjs-toploader';
@@ -78,6 +78,13 @@ export const metadata: Metadata = {
   },
 };
 
+// Lets the page run edge to edge behind the notch and tints Safari's bars
+// with the page background instead of white.
+export const viewport: Viewport = {
+  themeColor: '#0a0a0a',
+  viewportFit: 'cover',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -85,7 +92,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${inter.className} antialiased h-dvh overflow-hidden`}>
+      <body className={`${inter.className} antialiased md:h-dvh md:overflow-hidden`}>
         <NextTopLoader color="#fafafa" showSpinner={false} />
 
         <AppProvider>
