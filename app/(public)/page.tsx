@@ -1,6 +1,7 @@
 import { fetchFeaturedProjects } from '@/features/home/actions/fetch-featured';
 import { fetchCurrentHero } from '@/features/home/actions/fetch-hero';
 import { FeaturedShowcase } from '@/features/home/components/featured-showcase';
+import { SnapMarker } from '@/components/ui/snap-marker';
 import { ArtDirectedImage } from '@/components/ui/fade-image';
 
 export const metadata = {
@@ -52,7 +53,8 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <section className="relative h-lvh snap-start">
+      <section className="relative h-(--screen)">
+        <SnapMarker />
         <ArtDirectedImage
           desktop={{ src: heroDesktop }}
           mobile={{ src: heroMobile }}
@@ -75,7 +77,8 @@ export default async function Home() {
           <span className="h-10 w-px bg-foreground/50" />
         </div>
       </section>
-      <section className="snap-start">
+      <section className="relative">
+        <SnapMarker />
         <FeaturedShowcase projects={featuredProjects} />
       </section>
     </main>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Image } from '@/lib/schema';
+import { SnapMarker } from '@/components/ui/snap-marker';
 import { useState } from 'react';
 import { ImageOverlay } from './image-overlay';
 import { MasonryGrid } from './masonry-grid';
@@ -16,7 +17,8 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
   const mobileImages = images.filter((img) => img.variant !== 'desktop');
 
   return (
-    <section className="snap-start h-lvh md:h-auto md:mt-12">
+    <section className="relative h-(--screen) md:h-auto md:mt-12">
+      <SnapMarker />
       <MobileSlideshow
         images={mobileImages.length > 0 ? mobileImages : images}
         label="Project gallery"

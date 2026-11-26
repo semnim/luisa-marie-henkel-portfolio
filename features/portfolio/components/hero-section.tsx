@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDate } from '@/lib/utils';
+import { SnapMarker } from '@/components/ui/snap-marker';
 import { ArtDirectedImage } from '@/components/ui/fade-image';
 
 type HeroSectionProps = {
@@ -27,8 +28,9 @@ export function HeroSection({
   publishedAt,
 }: HeroSectionProps) {
   return (
-    <section className="relative h-lvh w-full flex flex-col snap-start">
-      <figure className="relative h-lvh w-full flex-4 overflow-hidden z-0">
+    <section className="relative h-(--screen) w-full flex flex-col">
+      <SnapMarker />
+      <figure className="relative h-(--screen) w-full flex-4 overflow-hidden z-0">
         <div className="absolute inset-0 bg-linear-to-b from-background via-15% via-black/20 to-transparent z-10" />
         <ArtDirectedImage
           desktop={{ src: desktopHeroImage.url }}
